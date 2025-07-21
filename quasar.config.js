@@ -93,6 +93,7 @@ export default defineConfig((/* ctx */) => {
       // Quasar plugins
       plugins: [
         'Notify',
+        'Dark',
       ],
     },
 
@@ -130,7 +131,6 @@ export default defineConfig((/* ctx */) => {
       // manualStoreHydration: true,
       // manualPostHydrationTrigger: true,
 
-      pwa: false,
       // pwaOfflineHtmlFilename: 'offline.html', // do NOT use index.html as name!
 
       // pwaExtendGenerateSWOptions (cfg) {},
@@ -140,14 +140,61 @@ export default defineConfig((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
       workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      // swFilename: 'sw.js',
-      // manifestFilename: 'manifest.json',
-      // extendManifestJson (json) {},
-      // useCredentialsForManifestTag: true,
-      // injectPwaMetaTags: false,
-      // extendPWACustomSWConf (esbuildConf) {},
-      // extendGenerateSWOptions (cfg) {},
-      // extendInjectManifestOptions (cfg) {}
+      injectPwaMetaTags: true,
+      swFilename: 'sw.js',
+      manifestFilename: 'manifest.json',
+      useCredentialsForManifestTag: false,
+      
+      // PWA Manifest configuration
+      extendManifestJson (json) {
+        Object.assign(json, {
+          name: 'FastTrack - Calorie & Fasting Tracker',
+          short_name: 'FastTrack',
+          description: 'Track your calories and intermittent fasting with reminders',
+          start_url: '/',
+          display: 'standalone',
+          orientation: 'portrait',
+          background_color: '#ffffff',
+          theme_color: '#4f7cff',
+          categories: ['health', 'lifestyle', 'fitness'],
+          icons: [
+            {
+              src: 'icons/favicon-128x128.png',
+              sizes: '128x128',
+              type: 'image/png'
+            },
+            {
+              src: 'icons/favicon-96x96.png',
+              sizes: '96x96',
+              type: 'image/png'
+            }
+          ]
+        })
+      },
+
+      // Service Worker options
+      extendGenerateSWOptions (cfg) {
+        Object.assign(cfg, {
+          skipWaiting: true,
+          clientsClaim: true,
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            }
+          ]
+        })
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova

@@ -1,11 +1,12 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="fit">
     <!-- Header -->
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-toolbar-title class="text-center">
+        <q-toolbar-title class="text-left">
           FastTrack
         </q-toolbar-title>
+        
         
         <!-- Logout Button -->
         <q-btn 
@@ -24,18 +25,15 @@
     </q-page-container>
 
     <!-- Bottom Navigation Tabs -->
-    <q-footer class="bg-white">
+    <q-footer elevated>
       <q-tabs
         v-model="currentTab"
         dense
-        class="text-grey-6"
-        active-color="primary"
-        indicator-color="primary"
         align="justify"
       >
         <q-tab 
           name="calories" 
-          icon="restaurant" 
+          icon="bolt" 
           label="Calories"
           @click="navigateTo('/calories')"
         />
@@ -59,13 +57,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
+import { useThemeStore } from '../stores/theme.js'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 
 const currentTab = ref('calories')
 
@@ -80,6 +80,16 @@ watch(() => route.path, (newPath) => {
   }
 }, { immediate: true })
 
+// Initialize theme system
+onMounted(() => {
+  try {
+    themeStore.init()
+    console.log('Theme initialized from MainLayout')
+  } catch (error) {
+    console.error('Theme init error:', error)
+  }
+})
+
 const navigateTo = (path) => {
   router.push(path)
 }
@@ -91,7 +101,5 @@ const logout = async () => {
 </script>
 
 <style scoped>
-.q-footer {
-  border-top: 1px solid #e0e0e0;
-}
+/* Let Quasar handle all theming automatically */
 </style>

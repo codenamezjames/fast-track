@@ -1,0 +1,324 @@
+// Notification Service for FastTrack App
+// Handles both PWA push notifications and browser notifications
+
+class NotificationService {
+  constructor() {
+    this.permission = 'default'
+    this.isSupported = typeof window !== 'undefined' && 'Notification' in window
+    this.swRegistration = null
+    this.vapidPublicKey = null // Will be set when we have a push server
+    this.scheduledNotifications = new Map()
+    
+    this.init()
+  }
+
+  async init() {
+    if (!this.isSupported) {
+      console.warn('Notifications not supported in this browser')
+      return
+    }
+
+    // Check current permission
+    this.permission = this.isSupported ? Notification.permission : 'default'
+
+    // Register service worker for PWA notifications
+    if ('serviceWorker' in navigator) {
+      try {
+        this.swRegistration = await navigator.serviceWorker.ready
+        console.log('Service Worker ready for notifications')
+      } catch (error) {
+        console.error('Service Worker registration failed:', error)
+      }
+    }
+
+    // Load scheduled notifications from localStorage
+    this.loadScheduledNotifications()
+  }
+
+  // Request notification permission
+  async requestPermission() {
+    if (!this.isSupported) {
+      throw new Error('Notifications not supported')
+    }
+
+    const permission = await Notification.requestPermission()
+    this.permission = permission
+    
+    if (permission === 'granted') {
+      console.log('Notification permission granted')
+      return true
+    } else {
+      console.log('Notification permission denied')
+      return false
+    }
+  }
+
+  // Check if notifications are enabled
+  isEnabled() {
+    return this.permission === 'granted'
+  }
+
+  // Show immediate notification
+  async showNotification(title, options = {}) {
+    if (!this.isEnabled()) {
+      console.warn('Notifications not enabled')
+      return false
+    }
+
+    const defaultOptions = {
+      icon: '/icons/favicon-96x96.png',
+      badge: '/icons/favicon-32x32.png',
+      vibrate: [200, 100, 200],
+      tag: 'fasttrack',
+      requireInteraction: false,
+      silent: false,
+      ...options
+    }
+
+    try {
+      // Use service worker notification if available (for PWA)
+      if (this.swRegistration && this.swRegistration.showNotification) {
+        await this.swRegistration.showNotification(title, defaultOptions)
+      } else {
+        // Fallback to browser notification
+        new Notification(title, defaultOptions)
+      }
+      return true
+    } catch (error) {
+      console.error('Failed to show notification:', error)
+      return false
+    }
+  }
+
+  // Schedule a notification for later
+  scheduleNotification(id, title, options, scheduledTime) {
+    const now = new Date().getTime()
+    const delay = new Date(scheduledTime).getTime() - now
+
+    if (delay <= 0) {
+      // If time has passed, show immediately
+      return this.showNotification(title, options)
+    }
+
+    // Clear existing notification with same ID
+    this.cancelScheduledNotification(id)
+
+    // Schedule the notification
+    const timeoutId = setTimeout(() => {
+      this.showNotification(title, options)
+      this.scheduledNotifications.delete(id)
+      this.saveScheduledNotifications()
+    }, delay)
+
+    // Store the scheduled notification
+    this.scheduledNotifications.set(id, {
+      title,
+      options,
+      scheduledTime,
+      timeoutId
+    })
+
+    this.saveScheduledNotifications()
+    console.log(`Notification scheduled for ${new Date(scheduledTime).toLocaleString()}`)
+    return true
+  }
+
+  // Cancel a scheduled notification
+  cancelScheduledNotification(id) {
+    const notification = this.scheduledNotifications.get(id)
+    if (notification) {
+      clearTimeout(notification.timeoutId)
+      this.scheduledNotifications.delete(id)
+      this.saveScheduledNotifications()
+      return true
+    }
+    return false
+  }
+
+  // Get all scheduled notifications
+  getScheduledNotifications() {
+    return Array.from(this.scheduledNotifications.entries()).map(([id, notification]) => ({
+      id,
+      title: notification.title,
+      scheduledTime: notification.scheduledTime,
+      options: notification.options
+    }))
+  }
+
+  // Clear all scheduled notifications
+  clearAllScheduledNotifications() {
+    this.scheduledNotifications.forEach(notification => {
+      clearTimeout(notification.timeoutId)
+    })
+    this.scheduledNotifications.clear()
+    this.saveScheduledNotifications()
+  }
+
+  // Fasting-specific notifications
+  async notifyFastingStart(fastDuration) {
+    return await this.showNotification('🚀 Fast Started!', {
+      body: `Your ${fastDuration}h fast has begun. Good luck!`,
+      tag: 'fasting-start',
+      icon: '/icons/favicon-96x96.png',
+      actions: [
+        { action: 'view', title: 'View Progress' }
+      ]
+    })
+  }
+
+  async notifyFastingEnd(fastDuration) {
+    return await this.showNotification('🎉 Fast Complete!', {
+      body: `Congratulations! You completed your ${fastDuration}h fast.`,
+      tag: 'fasting-end',
+      icon: '/icons/favicon-96x96.png',
+      actions: [
+        { action: 'log-meal', title: 'Log First Meal' },
+        { action: 'view', title: 'View Stats' }
+      ]
+    })
+  }
+
+  async notifyFastingProgress(remainingTime, totalDuration) {
+    const progress = Math.round(((totalDuration - remainingTime) / totalDuration) * 100)
+    return await this.showNotification(`⏰ Fast Progress: ${progress}%`, {
+      body: `${this.formatDuration(remainingTime)} remaining`,
+      tag: 'fasting-progress',
+      icon: '/icons/favicon-96x96.png',
+      requireInteraction: false
+    })
+  }
+
+  // Meal logging reminders
+  async notifyMealReminder(mealType = 'meal') {
+    return await this.showNotification('🍽️ Meal Reminder', {
+      body: `Don't forget to log your ${mealType}!`,
+      tag: 'meal-reminder',
+      icon: '/icons/favicon-96x96.png',
+      actions: [
+        { action: 'log-meal', title: 'Log Meal' },
+        { action: 'dismiss', title: 'Dismiss' }
+      ]
+    })
+  }
+
+  // Schedule fasting reminders
+  scheduleFastingReminders(startTime, duration) {
+    const start = new Date(startTime).getTime()
+    const end = start + (duration * 60 * 60 * 1000) // duration in hours
+
+    // Schedule start notification
+    this.scheduleNotification(
+      'fasting-start',
+      '🚀 Fast Starting Soon!',
+      {
+        body: 'Your fast begins in 5 minutes. Finish any last snacks!',
+        tag: 'fasting-start-warning'
+      },
+      new Date(start - 5 * 60 * 1000) // 5 minutes before
+    )
+
+    // Schedule progress notifications (25%, 50%, 75%)
+    [0.25, 0.5, 0.75].forEach(progress => {
+      const notificationTime = start + (duration * 60 * 60 * 1000 * progress)
+      const remaining = duration * (1 - progress)
+      
+      this.scheduleNotification(
+        `fasting-progress-${Math.round(progress * 100)}`,
+        `⏰ Fast ${Math.round(progress * 100)}% Complete`,
+        {
+          body: `${this.formatDuration(remaining)} hours remaining. Keep it up!`,
+          tag: 'fasting-progress'
+        },
+        new Date(notificationTime)
+      )
+    })
+
+    // Schedule end notification
+    this.scheduleNotification(
+      'fasting-end',
+      '🎉 Fast Complete!',
+      {
+        body: `Congratulations! You completed your ${duration}h fast.`,
+        tag: 'fasting-end',
+        actions: [
+          { action: 'log-meal', title: 'Log First Meal' }
+        ]
+      },
+      new Date(end)
+    )
+  }
+
+  // Schedule daily meal reminders
+  scheduleDailyMealReminders(reminderTimes) {
+    reminderTimes.forEach((time, index) => {
+      const [hours, minutes] = time.split(':').map(Number)
+      const now = new Date()
+      const reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
+      
+      // If time has passed today, schedule for tomorrow
+      if (reminderTime.getTime() <= now.getTime()) {
+        reminderTime.setDate(reminderTime.getDate() + 1)
+      }
+
+      this.scheduleNotification(
+        `meal-reminder-${index}`,
+        '🍽️ Meal Reminder',
+        {
+          body: 'Time to log your meal!',
+          tag: 'meal-reminder'
+        },
+        reminderTime
+      )
+    })
+  }
+
+  // Utility methods
+  formatDuration(hours) {
+    if (hours < 1) {
+      return `${Math.round(hours * 60)}m`
+    }
+    return `${Math.round(hours * 10) / 10}h`
+  }
+
+  // Persistence methods
+  saveScheduledNotifications() {
+    const data = Array.from(this.scheduledNotifications.entries()).map(([id, notification]) => ({
+      id,
+      title: notification.title,
+      options: notification.options,
+      scheduledTime: notification.scheduledTime
+    }))
+    localStorage.setItem('fasttrack-scheduled-notifications', JSON.stringify(data))
+  }
+
+  loadScheduledNotifications() {
+    try {
+      const data = localStorage.getItem('fasttrack-scheduled-notifications')
+      if (data) {
+        const notifications = JSON.parse(data)
+        const now = new Date().getTime()
+
+        notifications.forEach(notification => {
+          const delay = new Date(notification.scheduledTime).getTime() - now
+          if (delay > 0) {
+            // Re-schedule notifications that haven't expired
+            this.scheduleNotification(
+              notification.id,
+              notification.title,
+              notification.options,
+              notification.scheduledTime
+            )
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Failed to load scheduled notifications:', error)
+    }
+  }
+}
+
+// Create singleton instance
+export const notificationService = new NotificationService()
+
+// Export class for testing
+export { NotificationService } 

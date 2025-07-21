@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { db, offlineOperations } from '../services/offline.js'
 import { useAuthStore } from './auth.js'
+import { useNotificationsStore } from './notifications.js'
 // TODO: import { databases } from '../services/appwrite.js' // Will be used for sync later
 
 export const useCaloriesStore = defineStore('calories', {
@@ -54,17 +55,22 @@ export const useCaloriesStore = defineStore('calories', {
       } catch (error) {
         console.error('Error loading meals:', error)
         this.error = error.message
+        // Initialize empty array on error to prevent undefined issues
+        this.meals = []
       } finally {
         this.isLoading = false
       }
     },
 
-    async addMeal(calories, notes = '') {
+    async addMeal(calories, notes = '', customDateTime = null) {
       const authStore = useAuthStore()
+      const notificationsStore = useNotificationsStore()
+      const mealTime = customDateTime ? new Date(customDateTime).toISOString() : new Date().toISOString()
+      
       const mealData = {
         user_id: authStore.userId,
         calories: parseInt(calories),
-        meal_time: new Date().toISOString(),
+        meal_time: mealTime,
         notes: notes.trim()
       }
 
@@ -76,6 +82,11 @@ export const useCaloriesStore = defineStore('calories', {
         const newMeal = { id, ...mealData, synced: false }
         this.meals.push(newMeal)
         this.updateTodaysData()
+
+        // Reschedule meal reminders (they reset daily)
+        if (notificationsStore.isMealNotificationsEnabled) {
+          await notificationsStore.scheduleMealReminders()
+        }
 
         // Try to sync immediately if online
         await this.syncMeals()

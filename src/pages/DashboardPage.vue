@@ -1,48 +1,55 @@
 <template>
-  <q-page class="dashboard-page">
+  <q-page class="dashboard-page fit">
     <div class="dashboard-container">
       <!-- Add Calories Section -->
-      <div class="dashboard-section">
-        <h2 class="section-title">Add Calories</h2>
-        <div class="quick-add-calories">
-          <div class="calorie-buttons">
+      <q-card class="dashboard-card">
+        <q-card-section>
+          <div class="text-h6 q-mb-md">Add Calories</div>
+          <div class="row q-gutter-sm">
             <q-btn
               v-for="amount in [25, 50, 100]"
               :key="amount"
               :label="`+${amount}`"
-              class="calorie-btn"
+              color="primary"
               unelevated
               @click="addQuickCalories(amount)"
               :loading="caloriesStore.isLoading"
+              class="col-auto"
             />
             <q-input
               v-model="customCalories"
-              class="custom-input"
               outlined
-              placeholder="50 kcal"
+              placeholder="Custom amount"
+              type="number"
               @keyup.enter="addCustomCalories"
+              class="col"
+              dense
             />
           </div>
-        </div>
-      </div>
+        </q-card-section>
+      </q-card>
 
       <!-- Intermittent Fasting Section -->
-      <div class="dashboard-section">
-        <h2 class="section-title">Intermittent Fasting</h2>
-        <FastingTimer />
-      </div>
+      <q-card class="dashboard-card">
+        <q-card-section>
+          <div class="text-h6 q-mb-md">Intermittent Fasting</div>
+          <FastingTimer />
+        </q-card-section>
+      </q-card>
 
       <!-- Calories Section -->
-      <div class="dashboard-section">
-        <h2 class="section-title">Calories</h2>
-        <div class="calories-content">
-          <CaloriesChart />
-          <div class="daily-total">
-            <div class="total-number">{{ formatNumber(caloriesStore.todaysCalories) }}</div>
-            <div class="total-label">kcal</div>
+      <q-card class="dashboard-card">
+        <q-card-section>
+          <div class="text-h6 q-mb-md">Calories</div>
+          <div class="calories-content">
+            <CaloriesChart />
+            <div class="daily-total">
+              <div class="total-number">{{ formatNumber(caloriesStore.todaysCalories) }}</div>
+              <div class="total-label">kcal</div>
+            </div>
           </div>
-        </div>
-      </div>
+        </q-card-section>
+      </q-card>
     </div>
 
     <!-- Settings and Logout -->
@@ -142,24 +149,12 @@ const logout = async () => {
 
 <style scoped>
 .dashboard-page {
-  background: #f8f9fa;
-  min-height: 100vh;
-  padding: 24px 20px;
+  padding: 16px;
 }
 
 .dashboard-container {
   max-width: 400px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.dashboard-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .section-title {
@@ -183,7 +178,6 @@ const logout = async () => {
 
 .calorie-btn {
   background: #4f7cff;
-  color: white;
   border-radius: 12px;
   font-weight: 600;
   font-size: 16px;
@@ -204,7 +198,6 @@ const logout = async () => {
 .custom-input :deep(.q-field__control) {
   border-radius: 12px;
   border: 2px solid #e9ecef;
-  background: white;
   height: 48px;
 }
 
@@ -249,7 +242,6 @@ const logout = async () => {
 }
 
 .action-btn:hover {
-  background: white;
   color: #495057;
 }
 </style> 

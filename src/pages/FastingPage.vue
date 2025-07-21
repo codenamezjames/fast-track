@@ -1,5 +1,5 @@
 <template>
-  <q-page class="dashboard-page">
+  <q-page class="dashboard-page fit">
     <div class="dashboard-container">
       <!-- Intermittent Fasting Section -->
       <div class="dashboard-section">
@@ -16,7 +16,6 @@ import FastingTimer from '../components/FastingTimer.vue'
 
 <style scoped>
 .dashboard-page {
-  background: #f8f9fa;
   min-height: 100vh;
   padding: 24px 20px;
 }
@@ -29,12 +28,7 @@ import FastingTimer from '../components/FastingTimer.vue'
   gap: 32px;
 }
 
-.dashboard-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
+/* Use Quasar spacing classes instead */
 
 .section-title {
   font-size: 20px;

@@ -102,6 +102,20 @@ export const useAuthStore = defineStore('auth', {
             }
           }
           
+          // Default test credentials for offline development
+          if (email === 'test@test.com' && password === 'password') {
+            const testUser = {
+              $id: 'test-user-id',
+              email: 'test@test.com',
+              name: 'Test User'
+            }
+            this.user = testUser
+            this.isAuthenticated = true
+            localStorage.setItem('fasttrack-user', JSON.stringify(testUser))
+            localStorage.setItem('fasttrack-password', password)
+            return testUser
+          }
+          
           throw new Error('Invalid credentials')
         }
       } catch (error) {

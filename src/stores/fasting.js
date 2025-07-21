@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { db, offlineOperations } from '../services/offline.js'
 import { useAuthStore } from './auth.js'
+import { useNotificationsStore } from './notifications.js'
 
 export const useFastingStore = defineStore('fasting', {
   state: () => ({
@@ -166,6 +167,7 @@ export const useFastingStore = defineStore('fasting', {
 
     async startFast(duration = null, customEndTime = null) {
       const authStore = useAuthStore()
+      const notificationsStore = useNotificationsStore()
       const now = new Date()
       
       // Calculate end time based on active schedule or custom duration
@@ -206,6 +208,14 @@ export const useFastingStore = defineStore('fasting', {
         this.sessions.push(newSession)
         this.currentSession = newSession
         
+        // Schedule fasting notifications
+        if (notificationsStore.isFastingNotificationsEnabled) {
+          await notificationsStore.scheduleFastingNotifications(now, plannedDuration)
+          
+          // Send immediate start notification
+          await notificationsStore.notifyFastingStart(plannedDuration)
+        }
+        
         this.startTimer()
         
         return newSession
@@ -221,6 +231,7 @@ export const useFastingStore = defineStore('fasting', {
         throw new Error('No active fasting session')
       }
 
+      const notificationsStore = useNotificationsStore()
       const endTime = new Date()
       const startTime = new Date(this.currentSession.start_time)
       const actualDuration = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60) // hours
@@ -240,6 +251,14 @@ export const useFastingStore = defineStore('fasting', {
         const sessionIndex = this.sessions.findIndex(s => s.id === this.currentSession.id)
         if (sessionIndex !== -1) {
           this.sessions[sessionIndex] = { ...updatedSession, synced: false }
+        }
+
+        // Clear scheduled fasting notifications
+        notificationsStore.clearFastingNotifications()
+
+        // Send fast completion notification
+        if (notificationsStore.isFastingNotificationsEnabled) {
+          await notificationsStore.notifyFastingEnd(this.currentSession.planned_duration)
         }
 
         this.currentSession = null
