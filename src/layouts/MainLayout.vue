@@ -1,81 +1,97 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh lpR fFf">
+    <!-- Header -->
+    <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title class="text-center">
+          FastTrack
+        </q-toolbar-title>
+        
+        <!-- Logout Button -->
+        <q-btn 
+          flat 
+          round 
+          icon="logout" 
+          @click="logout"
+          size="sm"
+        />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
+    <!-- Main Content -->
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!-- Bottom Navigation Tabs -->
+    <q-footer class="bg-white">
+      <q-tabs
+        v-model="currentTab"
+        dense
+        class="text-grey-6"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+      >
+        <q-tab 
+          name="calories" 
+          icon="restaurant" 
+          label="Calories"
+          @click="navigateTo('/calories')"
+        />
+        
+        <q-tab 
+          name="fasting" 
+          icon="schedule" 
+          label="Fasting"
+          @click="navigateTo('/fasting')"
+        />
+        
+        <q-tab 
+          name="settings" 
+          icon="settings" 
+          label="Settings"
+          @click="navigateTo('/settings')"
+        />
+      </q-tabs>
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { ref, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAuthStore } from '../stores/auth.js'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-]
+const router = useRouter()
+const route = useRoute()
+const authStore = useAuthStore()
 
-const leftDrawerOpen = ref(false)
+const currentTab = ref('calories')
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+// Update tab based on current route
+watch(() => route.path, (newPath) => {
+  if (newPath.includes('fasting')) {
+    currentTab.value = 'fasting'
+  } else if (newPath.includes('settings')) {
+    currentTab.value = 'settings'
+  } else {
+    currentTab.value = 'calories'
+  }
+}, { immediate: true })
+
+const navigateTo = (path) => {
+  router.push(path)
+}
+
+const logout = async () => {
+  await authStore.logout()
+  router.push('/login')
 }
 </script>
+
+<style scoped>
+.q-footer {
+  border-top: 1px solid #e0e0e0;
+}
+</style>
