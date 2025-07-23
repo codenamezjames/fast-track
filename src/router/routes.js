@@ -22,6 +22,10 @@ const routes = [
         component: () => import('pages/FastingPage.vue')
       },
       { 
+        path: 'analytics', 
+        component: () => import('pages/AnalyticsPage.vue')
+      },
+      { 
         path: 'settings', 
         component: () => import('pages/SettingsPage.vue')
       },

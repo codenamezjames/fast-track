@@ -27,7 +27,7 @@
               <q-tooltip>Custom amount</q-tooltip>
             </q-btn>
             <q-btn
-              icon="schedule"
+              icon="history"
               color="secondary"
               unelevated
               @click="showPastMealDialog = true"
@@ -168,94 +168,11 @@
       </q-card>
     </q-dialog>
 
-    <!-- Past Meal Dialog -->
-    <q-dialog v-model="showPastMealDialog" persistent>
-      <q-card>
-        <DialogHeader title="Add Past Meal" @close="closePastMealDialog" />
-
-        <q-card-section class="dialog-content">
-          <div class="custom-input-large q-mb-md">
-            <q-input
-              v-model="pastMealAmount"
-              type="number"
-              outlined
-              placeholder="Enter calories"
-              autofocus
-              class="calorie-input"
-            >
-              <template v-slot:append>
-                <span class="input-suffix">kcal</span>
-              </template>
-            </q-input>
-          </div>
-
-          <div class="q-mb-md">
-            <div @click.stop="showDatePicker" class="cursor-pointer">
-              <q-input
-                v-model="pastMealDate"
-                outlined
-                label="Date"
-                class="q-mb-sm"
-                readonly
-              >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy ref="dateProxy" cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="pastMealDate">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-            
-            <div @click.stop="showTimePicker" class="cursor-pointer">
-              <q-input
-                v-model="pastMealTime"
-                outlined
-                label="Time"
-                readonly
-              >
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy ref="timeProxy" cover transition-show="scale" transition-hide="scale">
-                      <q-time v-model="pastMealTime" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-          </div>
-
-          <div class="q-mb-md">
-            <q-input
-              v-model="pastMealNotes"
-              outlined
-              placeholder="Notes (optional)"
-              maxlength="100"
-            />
-          </div>
-        </q-card-section>
-
-        <q-card-actions align="right" class="dialog-actions">
-          <q-btn flat label="Cancel" @click="closePastMealDialog" />
-          <q-btn 
-            label="Add Meal" 
-            color="primary" 
-            unelevated
-            @click="addPastMeal"
-            :disable="!pastMealAmount || pastMealAmount <= 0 || !pastMealDate || !pastMealTime"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <!-- Meal Dialog (for adding past meals) -->
+    <MealDialog 
+      v-model="showPastMealDialog" 
+      @saved="onMealSaved"
+    />
   </q-page>
 </template>
 
@@ -266,6 +183,7 @@ import { useCaloriesStore } from '../stores/calories.js'
 import CaloriesChart from '../components/CaloriesChart.vue'
 import MealsHistory from '../components/MealsHistory.vue'
 import DialogHeader from '../components/DialogHeader.vue'
+import MealDialog from '../components/MealDialog.vue'
 
 const caloriesStore = useCaloriesStore()
 const customAmount = ref('')
@@ -273,44 +191,13 @@ const caloriePool = ref(0)
 const poolNotes = ref('')
 const showCustomDialog = ref(false)
 const showPastMealDialog = ref(false)
-const pastMealAmount = ref('')
-const pastMealDate = ref('')
-const pastMealTime = ref('')
-const pastMealNotes = ref('')
 const chartViewMode = ref('daily')
-const dateProxy = ref(null)
-const timeProxy = ref(null)
 
 onMounted(async () => {
   await caloriesStore.loadMeals()
-  
-  // Set default date and time for past meal dialog to current date/time
-  setDefaultDateTime()
 })
 
-const setDefaultDateTime = () => {
-  const now = new Date()
-  // Format for Quasar date picker (YYYY/MM/DD)
-  pastMealDate.value = now.getFullYear() + '/' + 
-    String(now.getMonth() + 1).padStart(2, '0') + '/' + 
-    String(now.getDate()).padStart(2, '0')
-  
-  // Format for Quasar time picker (HH:mm)
-  pastMealTime.value = String(now.getHours()).padStart(2, '0') + ':' + 
-    String(now.getMinutes()).padStart(2, '0')
-}
 
-const showDatePicker = () => {
-  if (dateProxy.value) {
-    dateProxy.value.show()
-  }
-}
-
-const showTimePicker = () => {
-  if (timeProxy.value) {
-    timeProxy.value.show()
-  }
-}
 
 const addToPool = (amount) => {
   caloriePool.value += amount
@@ -339,13 +226,7 @@ const closeCustomDialog = () => {
   customAmount.value = ''
 }
 
-const closePastMealDialog = () => {
-  showPastMealDialog.value = false
-  pastMealAmount.value = ''
-  pastMealNotes.value = ''
-  // Reset to current date/time for next use
-  setDefaultDateTime()
-}
+
 
 const addMealFromPool = async () => {
   if (caloriePool.value <= 0) return
@@ -377,33 +258,9 @@ const clearPool = () => {
   poolNotes.value = ''
 }
 
-const addPastMeal = async () => {
-  const amount = parseInt(pastMealAmount.value)
-  if (!amount || amount <= 0 || !pastMealDate.value || !pastMealTime.value) return
-  
-  try {
-    // Combine date and time into a Date object
-    const dateTimeString = `${pastMealDate.value}T${pastMealTime.value}`
-    const mealDateTime = new Date(dateTimeString)
-    
-    await caloriesStore.addMeal(amount, pastMealNotes.value, mealDateTime.toISOString())
-    
-    Notify.create({
-      type: 'positive',
-      message: `Past meal logged: ${formatNumber(amount)} calories`,
-      position: 'top',
-      timeout: 2000
-    })
-    
-    closePastMealDialog()
-  } catch (error) {
-    console.error('Error adding past meal:', error)
-    Notify.create({
-      type: 'negative',
-      message: 'Failed to add past meal',
-      position: 'top'
-    })
-  }
+const onMealSaved = () => {
+  // Meal was saved successfully, no additional action needed
+  // The MealDialog component handles the notifications
 }
 
 const displayTotal = computed(() => {

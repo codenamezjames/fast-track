@@ -46,6 +46,13 @@
         />
         
         <q-tab 
+          name="analytics" 
+          icon="insights" 
+          label="Analytics"
+          @click="navigateTo('/analytics')"
+        />
+        
+        <q-tab 
           name="settings" 
           icon="settings" 
           label="Settings"
@@ -73,6 +80,8 @@ const currentTab = ref('calories')
 watch(() => route.path, (newPath) => {
   if (newPath.includes('fasting')) {
     currentTab.value = 'fasting'
+  } else if (newPath.includes('analytics')) {
+    currentTab.value = 'analytics'
   } else if (newPath.includes('settings')) {
     currentTab.value = 'settings'
   } else {

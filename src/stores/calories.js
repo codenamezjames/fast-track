@@ -39,6 +39,112 @@ export const useCaloriesStore = defineStore('calories', {
       return state.meals
         .filter(meal => new Date(meal.meal_time) >= weekAgo)
         .reduce((total, meal) => total + meal.calories, 0)
+    },
+
+    // New getters for chart data
+    dailyCaloriesData: (state) => {
+      return (days = 7) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = days - 1; i >= 0; i--) {
+          const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+          const dateString = date.toDateString()
+          const dayCalories = state.meals
+            .filter(meal => new Date(meal.meal_time).toDateString() === dateString)
+            .reduce((total, meal) => total + meal.calories, 0)
+          
+          data.push({
+            date: date.toISOString().split('T')[0], // YYYY-MM-DD format
+            label: date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+            calories: dayCalories
+          })
+        }
+        
+        return data
+      }
+    },
+
+    weeklyCaloriesData: (state) => {
+      return (weeks = 4) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = weeks - 1; i >= 0; i--) {
+          const weekStart = new Date(now.getTime() - (i * 7 + now.getDay()) * 24 * 60 * 60 * 1000)
+          const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000)
+          
+          const weekCalories = state.meals
+            .filter(meal => {
+              const mealDate = new Date(meal.meal_time)
+              return mealDate >= weekStart && mealDate <= weekEnd
+            })
+            .reduce((total, meal) => total + meal.calories, 0)
+          
+          data.push({
+            week: `Week ${weeks - i}`,
+            label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+            calories: weekCalories
+          })
+        }
+        
+        return data
+      }
+    },
+
+    monthlyCaloriesData: (state) => {
+      return (months = 6) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = months - 1; i >= 0; i--) {
+          const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
+          const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1)
+          const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0)
+          
+          const monthCalories = state.meals
+            .filter(meal => {
+              const mealDate = new Date(meal.meal_time)
+              return mealDate >= monthStart && mealDate <= monthEnd
+            })
+            .reduce((total, meal) => total + meal.calories, 0)
+          
+          data.push({
+            month: monthDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+            label: monthDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+            calories: monthCalories
+          })
+        }
+        
+        return data
+      }
+    },
+
+    averageDailyCalories: (state) => {
+      return (days = 30) => {
+        const now = new Date()
+        const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+        
+        const totalCalories = state.meals
+          .filter(meal => new Date(meal.meal_time) >= startDate)
+          .reduce((total, meal) => total + meal.calories, 0)
+        
+        return Math.round(totalCalories / days)
+      }
+    },
+
+    caloriesByDateRange: (state) => {
+      return (startDate, endDate) => {
+        const start = new Date(startDate)
+        const end = new Date(endDate)
+        
+        return state.meals
+          .filter(meal => {
+            const mealDate = new Date(meal.meal_time)
+            return mealDate >= start && mealDate <= end
+          })
+          .reduce((total, meal) => total + meal.calories, 0)
+      }
     }
   },
 
@@ -99,10 +205,15 @@ export const useCaloriesStore = defineStore('calories', {
       }
     },
 
-    async updateMeal(id, calories, notes = '') {
+    async updateMeal(id, calories, notes = '', customDateTime = null) {
       const mealData = {
         calories: parseInt(calories),
         notes: notes.trim()
+      }
+
+      // Add meal_time if provided
+      if (customDateTime) {
+        mealData.meal_time = new Date(customDateTime).toISOString()
       }
 
       try {

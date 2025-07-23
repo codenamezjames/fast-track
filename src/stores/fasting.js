@@ -99,6 +99,166 @@ export const useFastingStore = defineStore('fasting', {
       return state.sessions.filter(session => 
         new Date(session.start_time).toDateString() === today
       )
+    },
+
+    // New getters for analytics and charts
+    completedSessions: (state) => {
+      return state.sessions.filter(session => session.status === 'completed')
+    },
+
+    fastingStreak: (state) => {
+      const completedSessions = state.sessions
+        .filter(session => session.status === 'completed')
+        .sort((a, b) => new Date(b.start_time) - new Date(a.start_time))
+
+      if (completedSessions.length === 0) return 0
+
+      let streak = 0
+      let currentDate = new Date()
+      currentDate.setHours(0, 0, 0, 0)
+
+      for (const session of completedSessions) {
+        const sessionDate = new Date(session.start_time)
+        sessionDate.setHours(0, 0, 0, 0)
+
+        const daysDiff = Math.floor((currentDate - sessionDate) / (1000 * 60 * 60 * 24))
+
+        if (daysDiff === streak) {
+          streak++
+          currentDate.setDate(currentDate.getDate() - 1)
+        } else if (daysDiff > streak) {
+          break
+        }
+      }
+
+      return streak
+    },
+
+    totalFastingHours: (state) => {
+      return state.sessions
+        .filter(session => session.status === 'completed' && session.actual_duration)
+        .reduce((total, session) => total + session.actual_duration, 0)
+    },
+
+    averageFastingDuration: (state) => {
+      const completed = state.sessions.filter(session => 
+        session.status === 'completed' && session.actual_duration
+      )
+      
+      if (completed.length === 0) return 0
+      
+      const total = completed.reduce((sum, session) => sum + session.actual_duration, 0)
+      return Math.round(total / completed.length * 10) / 10 // Round to 1 decimal
+    },
+
+    fastingSessionsByDate: (state) => {
+      return (days = 7) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = days - 1; i >= 0; i--) {
+          const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+          const dateString = date.toDateString()
+          
+          const daySessions = state.sessions.filter(session => 
+            new Date(session.start_time).toDateString() === dateString &&
+            session.status === 'completed'
+          )
+          
+          const totalHours = daySessions.reduce((total, session) => 
+            total + (session.actual_duration || 0), 0
+          )
+          
+          data.push({
+            date: date.toISOString().split('T')[0],
+            label: date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+            sessions: daySessions.length,
+            hours: Math.round(totalHours * 10) / 10,
+            completed: daySessions.length > 0
+          })
+        }
+        
+        return data
+      }
+    },
+
+    weeklyFastingData: (state) => {
+      return (weeks = 4) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = weeks - 1; i >= 0; i--) {
+          const weekStart = new Date(now.getTime() - (i * 7 + now.getDay()) * 24 * 60 * 60 * 1000)
+          const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000)
+          
+          const weekSessions = state.sessions.filter(session => {
+            const sessionDate = new Date(session.start_time)
+            return sessionDate >= weekStart && sessionDate <= weekEnd &&
+                   session.status === 'completed'
+          })
+          
+          const totalHours = weekSessions.reduce((total, session) => 
+            total + (session.actual_duration || 0), 0
+          )
+          
+          data.push({
+            week: `Week ${weeks - i}`,
+            label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+            sessions: weekSessions.length,
+            hours: Math.round(totalHours * 10) / 10
+          })
+        }
+        
+        return data
+      }
+    },
+
+    monthlyFastingData: (state) => {
+      return (months = 6) => {
+        const now = new Date()
+        const data = []
+        
+        for (let i = months - 1; i >= 0; i--) {
+          const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
+          const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1)
+          const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0)
+          
+          const monthSessions = state.sessions.filter(session => {
+            const sessionDate = new Date(session.start_time)
+            return sessionDate >= monthStart && sessionDate <= monthEnd &&
+                   session.status === 'completed'
+          })
+          
+          const totalHours = monthSessions.reduce((total, session) => 
+            total + (session.actual_duration || 0), 0
+          )
+          
+          data.push({
+            month: monthDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+            label: monthDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+            sessions: monthSessions.length,
+            hours: Math.round(totalHours * 10) / 10
+          })
+        }
+        
+        return data
+      }
+    },
+
+    fastingSuccessRate: (state) => {
+      return (days = 30) => {
+        const now = new Date()
+        const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+        
+        const recentSessions = state.sessions.filter(session => 
+          new Date(session.start_time) >= startDate
+        )
+        
+        if (recentSessions.length === 0) return 0
+        
+        const completed = recentSessions.filter(session => session.status === 'completed')
+        return Math.round((completed.length / recentSessions.length) * 100)
+      }
     }
   },
 

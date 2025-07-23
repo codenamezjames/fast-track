@@ -274,9 +274,12 @@ export const useNotificationsStore = defineStore('notifications', {
         throw new Error('Notifications not enabled')
       }
       
+      // Use unique tag to ensure each test notification shows
+      const uniqueTag = `test-notification-${Date.now()}`
+      
       return await notificationService.showNotification('🧪 Test Notification', {
         body: 'FastTrack notifications are working correctly!',
-        tag: 'test-notification'
+        tag: uniqueTag
       })
     },
 

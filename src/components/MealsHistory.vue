@@ -83,62 +83,11 @@
     </q-list>
 
     <!-- Edit Meal Dialog -->
-    <q-dialog v-model="showEditDialog" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Edit Meal</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input
-            v-model="editMealData.calories"
-            label="Calories"
-            type="number"
-            outlined
-            dense
-            class="q-mb-md"
-          />
-          
-          <q-input
-            v-model="editMealData.notes"
-            label="Notes (optional)"
-            outlined
-            dense
-            rows="2"
-            type="textarea"
-            class="q-mb-md"
-          />
-          
-          <q-input
-            v-model="editMealTime"
-            label="Time"
-            outlined
-            dense
-            readonly
-            @click="showTimePicker = true"
-          >
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer" @click="showTimePicker = true" />
-            </template>
-          </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" @click="closeEditDialog" />
-          <q-btn color="primary" label="Save" @click="saveEdit" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- Time Picker Dialog -->
-    <q-dialog v-model="showTimePicker">
-      <q-time v-model="editMealTime" format24h>
-        <div class="row items-center justify-end">
-          <q-btn flat label="Cancel" color="primary" @click="showTimePicker = false" />
-          <q-btn flat label="OK" color="primary" @click="showTimePicker = false" />
-        </div>
-      </q-time>
-    </q-dialog>
+    <MealDialog 
+      v-model="showEditDialog" 
+      :meal="mealToEdit"
+      @saved="onMealSaved"
+    />
 
     <!-- Delete Confirmation Dialog -->
     <q-dialog v-model="showDeleteDialog" persistent>
@@ -161,15 +110,14 @@
 import { ref, computed, onMounted } from 'vue'
 import { Notify } from 'quasar'
 import { useCaloriesStore } from '../stores/calories.js'
+import MealDialog from './MealDialog.vue'
 
 const caloriesStore = useCaloriesStore()
 
 // Component state
 const showEditDialog = ref(false)
 const showDeleteDialog = ref(false)
-const showTimePicker = ref(false)
-const editMealData = ref({})
-const editMealTime = ref('')
+const mealToEdit = ref(null)
 const mealToDelete = ref(null)
 const displayCount = ref(5)
 
@@ -206,42 +154,13 @@ const refreshMeals = async () => {
 }
 
 const editMeal = (meal) => {
-  editMealData.value = { ...meal }
-  editMealTime.value = formatTimeForInput(meal.meal_time)
+  mealToEdit.value = meal
   showEditDialog.value = true
 }
 
-const closeEditDialog = () => {
-  showEditDialog.value = false
-  editMealData.value = {}
-  editMealTime.value = ''
-}
-
-const saveEdit = async () => {
-  try {
-    const updatedMeal = {
-      ...editMealData.value,
-      calories: parseInt(editMealData.value.calories),
-      meal_time: combineDateAndTime(editMealData.value.meal_time, editMealTime.value)
-    }
-    
-    await caloriesStore.updateMeal(updatedMeal)
-    
-    Notify.create({
-      type: 'positive',
-      message: 'Meal updated successfully',
-      position: 'top'
-    })
-    
-    closeEditDialog()
-  } catch (error) {
-    console.error('Failed to update meal:', error)
-    Notify.create({
-      type: 'negative',
-      message: 'Failed to update meal',
-      position: 'top'
-    })
-  }
+const onMealSaved = () => {
+  // Meal was saved successfully, no additional action needed
+  // The MealDialog component handles the notifications
 }
 
 const deleteMeal = (meal) => {
@@ -285,17 +204,7 @@ const formatTime = (dateStr) => {
   })
 }
 
-const formatTimeForInput = (dateStr) => {
-  const date = new Date(dateStr)
-  return date.toTimeString().slice(0, 5)
-}
 
-const combineDateAndTime = (originalDate, timeStr) => {
-  const date = new Date(originalDate)
-  const [hours, minutes] = timeStr.split(':')
-  date.setHours(parseInt(hours), parseInt(minutes))
-  return date.toISOString()
-}
 </script>
 
 <style scoped>
