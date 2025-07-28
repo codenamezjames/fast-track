@@ -10,27 +10,27 @@
           :y1="i * 20"
           :x2="320"
           :y2="i * 20"
-          stroke="#f1f3f4"
+          :stroke="gridColor"
           stroke-width="1"
         />
       </g>
 
       <!-- Chart area gradient -->
       <defs>
-        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color: #4f7cff; stop-opacity: 0.3" />
-          <stop offset="100%" style="stop-color: #4f7cff; stop-opacity: 0.1" />
+        <linearGradient :id="gradientId" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" :style="`stop-color: ${chartColor}; stop-opacity: 0.3`" />
+          <stop offset="100%" :style="`stop-color: ${chartColor}; stop-opacity: 0.1`" />
         </linearGradient>
       </defs>
 
       <!-- Chart area fill -->
-      <path :d="areaPath" fill="url(#chartGradient)" stroke="none" />
+      <path :d="areaPath" :fill="`url(#${gradientId})`" stroke="none" />
 
       <!-- Chart line -->
       <path
         :d="linePath"
         fill="none"
-        stroke="#4f7cff"
+        :stroke="chartColor"
         stroke-width="3"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -43,8 +43,8 @@
         :cx="point.x"
         :cy="point.y"
         r="4"
-        fill="#4f7cff"
-        stroke="white"
+        :fill="chartColor"
+        :stroke="pointStrokeColor"
         stroke-width="2"
       />
     </svg>
@@ -66,6 +66,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useCaloriesStore } from '../stores/calories.js'
+import { useThemeStore } from '../stores/theme.js'
 
 const props = defineProps({
   viewMode: {
@@ -76,10 +77,28 @@ const props = defineProps({
 })
 
 const caloriesStore = useCaloriesStore()
+const themeStore = useThemeStore()
 
 const chartWidth = 320
 const chartHeight = 120
 const chartPadding = 20
+
+// Theme-aware colors
+const chartColor = computed(() => {
+  return themeStore.isDark ? '#60a5fa' : '#4f7cff'
+})
+
+const gridColor = computed(() => {
+  return themeStore.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+})
+
+const pointStrokeColor = computed(() => {
+  return themeStore.isDark ? '#1f2937' : '#ffffff'
+})
+
+const gradientId = computed(() => {
+  return `chartGradient-${themeStore.isDark ? 'dark' : 'light'}`
+})
 
 // Labels and data based on view mode
 const dayLabels = computed(() => {
@@ -225,7 +244,7 @@ onMounted(() => {
 
 .day-label {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--q-text-color);
   font-weight: 500;
   text-align: center;
   min-width: 30px;
@@ -233,7 +252,7 @@ onMounted(() => {
 }
 
 .day-label.active {
-  color: #4f7cff;
+  color: var(--q-primary);
   font-weight: 600;
 }
 

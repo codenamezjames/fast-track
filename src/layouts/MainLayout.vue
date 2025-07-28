@@ -24,7 +24,7 @@
     <!-- Bottom Navigation Tabs -->
     <q-footer elevated>
       <q-tabs v-model="currentTab" dense align="justify">
-        <q-tab name="calories" icon="bolt" label="Calories" @click="navigateTo('/calories')" />
+        <q-tab name="logging" icon="restaurant" label="Logging" @click="navigateTo('/logging')" />
 
         <q-tab name="fasting" icon="schedule" label="Fasting" @click="navigateTo('/fasting')" />
 
@@ -54,7 +54,7 @@ const route = useRoute()
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
 
-const currentTab = ref('calories')
+const currentTab = ref('logging')
 
 // Update tab based on current route
 watch(
@@ -66,8 +66,10 @@ watch(
       currentTab.value = 'analytics'
     } else if (newPath.includes('settings')) {
       currentTab.value = 'settings'
+    } else if (newPath.includes('logging') || newPath.includes('calories')) {
+      currentTab.value = 'logging'
     } else {
-      currentTab.value = 'calories'
+      currentTab.value = 'logging'
     }
   },
   { immediate: true },

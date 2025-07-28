@@ -19,7 +19,7 @@
             <q-icon name="monitor_weight" color="primary" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Current Weight: {{ currentWeight.weight }} lbs</q-item-label>
+            <q-item-label>Current Weight: {{ currentWeight.weight }} {{ displayUnit }}</q-item-label>
             <q-item-label caption>{{ formatDate(currentWeight.date) }} • View trends</q-item-label>
           </q-item-section>
         </q-item>
@@ -53,7 +53,8 @@ const showWeightEntryDialog = ref(false)
 const weightStore = useWeightStore()
 
 // Computed
-const currentWeight = computed(() => weightStore.latestWeight)
+const displayUnit = ref('lbs') // Default to lbs for display
+const currentWeight = computed(() => weightStore.latestWeightForDisplay(displayUnit.value))
 
 // Methods
 const formatDate = (dateString) => {

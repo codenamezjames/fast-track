@@ -16,12 +16,32 @@ const routes = [
     children: [
       {
         path: '',
-        redirect: '/app/calories',
+        redirect: '/app/logging/calories',
+      },
+      {
+        path: 'logging',
+        name: 'logging',
+        component: () => import('../pages/CaloriesPage.vue'),
+        children: [
+          {
+            path: '',
+            redirect: 'calories',
+          },
+          {
+            path: 'calories',
+            name: 'logging-calories',
+            component: () => import('../pages/CaloriesPage.vue'),
+          },
+          {
+            path: 'weight',
+            name: 'logging-weight',
+            component: () => import('../pages/CaloriesPage.vue'),
+          },
+        ],
       },
       {
         path: 'calories',
-        name: 'calories',
-        component: () => import('../pages/CaloriesPage.vue'),
+        redirect: '/app/logging/calories',
       },
       {
         path: 'fasting',
@@ -42,7 +62,11 @@ const routes = [
   },
   {
     path: '/calories',
-    redirect: '/app/calories',
+    redirect: '/app/logging/calories',
+  },
+  {
+    path: '/logging',
+    redirect: '/app/logging/calories',
   },
   {
     path: '/fasting',

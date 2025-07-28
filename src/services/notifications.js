@@ -49,13 +49,18 @@ class NotificationService {
     // Check current permission
     this.permission = this.isSupported ? Notification.permission : 'default'
 
-    // Register service worker for PWA notifications
+    // Register service worker for PWA notifications (optional)
     if ('serviceWorker' in navigator) {
-      try {
-        this.swRegistration = await navigator.serviceWorker.ready
-      } catch (error) {
-        console.error('Service Worker registration failed:', error)
-      }
+      // Don't block on service worker registration
+      navigator.serviceWorker.getRegistrations()
+        .then(registrations => {
+          if (registrations.length > 0) {
+            this.swRegistration = registrations[0]
+          }
+        })
+        .catch(error => {
+          console.warn('Service Worker not available, continuing without PWA notifications:', error)
+        })
     }
 
     // Load scheduled notifications from localStorage
@@ -72,10 +77,8 @@ class NotificationService {
     this.permission = permission
 
     if (permission === 'granted') {
-      console.log('Notification permission granted')
       return true
     } else {
-      console.log('Notification permission denied')
       return false
     }
   }
@@ -119,8 +122,11 @@ class NotificationService {
       if (this.swRegistration && this.swRegistration.showNotification) {
         await this.swRegistration.showNotification(title, defaultOptions)
       } else {
-        // Fallback to browser notification
-        new Notification(title, defaultOptions)
+        // Fallback to browser notification - remove actions as they're not supported
+        const browserOptions = { ...defaultOptions }
+        delete browserOptions.actions // Remove actions for browser notifications
+        
+        new Notification(title, browserOptions)
       }
       return true
     } catch (error) {
@@ -158,7 +164,6 @@ class NotificationService {
     })
 
     this.saveScheduledNotifications()
-    console.log(`Notification scheduled for ${new Date(scheduledTime).toLocaleString()}`)
     return true
   }
 
@@ -254,23 +259,23 @@ class NotificationService {
       new Date(start - 5 * 60 * 1000), // 5 minutes before
     )
 
-      [
-        // Schedule progress notifications (25%, 50%, 75%)
-        (0.25, 0.5, 0.75)
-      ].forEach((progress) => {
-        const notificationTime = start + duration * 60 * 60 * 1000 * progress
-        const remaining = duration * (1 - progress)
+    // Schedule progress notifications (25%, 50%, 75%)
+    const progressArray = [0.25, 0.5, 0.75]
+    
+    progressArray.forEach((progress) => {
+      const notificationTime = start + duration * 60 * 60 * 1000 * progress
+      const remaining = duration * (1 - progress)
 
-        this.scheduleNotification(
-          `fasting-progress-${Math.round(progress * 100)}`,
-          `⏰ Fast ${Math.round(progress * 100)}% Complete`,
-          {
-            body: `${this.formatDuration(remaining)} hours remaining. Keep it up!`,
-            tag: 'fasting-progress',
-          },
-          new Date(notificationTime),
-        )
-      })
+      this.scheduleNotification(
+        `fasting-progress-${Math.round(progress * 100)}`,
+        `⏰ Fast ${Math.round(progress * 100)}% Complete`,
+        {
+          body: `${this.formatDuration(remaining)} hours remaining. Keep it up!`,
+          tag: 'fasting-progress',
+        },
+        new Date(notificationTime),
+      )
+    })
 
     // Schedule end notification
     this.scheduleNotification(
@@ -287,6 +292,11 @@ class NotificationService {
 
   // Schedule daily meal reminders
   scheduleDailyMealReminders(reminderTimes) {
+    if (!reminderTimes || !Array.isArray(reminderTimes)) {
+      console.warn('Invalid reminderTimes provided to scheduleDailyMealReminders:', reminderTimes)
+      return
+    }
+    
     reminderTimes.forEach((time, index) => {
       const [hours, minutes] = time.split(':').map(Number)
       const now = new Date()

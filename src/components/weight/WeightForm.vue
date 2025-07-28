@@ -279,11 +279,24 @@ const showTimePicker = () => {
 
 // Watch for changes and emit updates
 watch(
-  formData,
-  (newValue) => {
-    emit('update:modelValue', { ...newValue, unit: weightUnit.value })
+  () => formData.value.weight,
+  (newWeight) => {
+    emit('update:modelValue', { ...formData.value, weight: newWeight, unit: weightUnit.value })
   },
-  { deep: true },
+)
+
+watch(
+  () => formData.value.date,
+  (newDate) => {
+    emit('update:modelValue', { ...formData.value, date: newDate, unit: weightUnit.value })
+  },
+)
+
+watch(
+  () => formData.value.time,
+  (newTime) => {
+    emit('update:modelValue', { ...formData.value, time: newTime, unit: weightUnit.value })
+  },
 )
 
 watch(weightUnit, (newUnit) => {
@@ -292,12 +305,39 @@ watch(weightUnit, (newUnit) => {
 
 // Watch for prop changes
 watch(
-  () => props.modelValue,
-  (newValue) => {
-    formData.value = { ...newValue }
-    weightUnit.value = newValue.unit || 'lbs'
+  () => props.modelValue.weight,
+  (newWeight) => {
+    if (newWeight !== formData.value.weight) {
+      formData.value.weight = newWeight
+    }
   },
-  { deep: true },
+)
+
+watch(
+  () => props.modelValue.date,
+  (newDate) => {
+    if (newDate !== formData.value.date) {
+      formData.value.date = formatDateForInput(newDate)
+    }
+  },
+)
+
+watch(
+  () => props.modelValue.time,
+  (newTime) => {
+    if (newTime !== formData.value.time) {
+      formData.value.time = formatTimeForInput(newTime)
+    }
+  },
+)
+
+watch(
+  () => props.modelValue.unit,
+  (newUnit) => {
+    if (newUnit !== weightUnit.value) {
+      weightUnit.value = newUnit
+    }
+  },
 )
 
 // Initialize form data

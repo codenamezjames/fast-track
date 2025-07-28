@@ -42,6 +42,19 @@
           <div class="time-remaining">{{ timeDisplay }}</div>
         </div>
       </div>
+
+      <!-- Stop Fast Button -->
+      <div class="stop-fast-section q-mt-md">
+        <q-btn
+          label="Stop Fast"
+          color="negative"
+          outline
+          icon="stop"
+          @click="confirmStopFast"
+          :loading="fastingStore.isLoading"
+          class="stop-fast-btn"
+        />
+      </div>
     </div>
 
     <div v-else class="no-fast">
@@ -64,7 +77,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted } from 'vue'
-import { Notify } from 'quasar'
+import { Notify, Dialog } from 'quasar'
 import { useFastingStore } from '../stores/fasting.js'
 
 const fastingStore = useFastingStore()
@@ -136,6 +149,37 @@ const startQuickFast = async (hours) => {
       position: 'top',
     })
   }
+}
+
+const confirmStopFast = () => {
+  Dialog.create({
+    title: 'Confirm Stop Fast',
+    message: 'Are you sure you want to stop your fast? This action cannot be undone.',
+    ok: {
+      label: 'Stop Fast',
+      color: 'negative',
+    },
+    cancel: {
+      label: 'Cancel',
+      color: 'primary',
+    },
+  }).onOk(async () => {
+    try {
+      await fastingStore.endFast()
+      Notify.create({
+        type: 'positive',
+        message: 'Fast stopped!',
+        position: 'top',
+        timeout: 2000,
+      })
+    } catch {
+      Notify.create({
+        type: 'negative',
+        message: 'Failed to stop fast',
+        position: 'top',
+      })
+    }
+  })
 }
 </script>
 
@@ -209,5 +253,15 @@ const startQuickFast = async (hours) => {
   border-radius: 8px;
   font-weight: 600;
   min-width: 50px;
+}
+
+.stop-fast-section {
+  margin-top: 16px;
+}
+
+.stop-fast-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  min-width: 120px;
 }
 </style>

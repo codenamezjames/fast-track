@@ -83,11 +83,13 @@ export const APP_CONSTANTS = {
   PRESET_FAST_DURATIONS: [12, 16, 18, 20, 24],
   MAX_FAST_DURATION: 72,
 
-  // Weight tracking
-  DEFAULT_WEIGHT_UNIT: 'lbs',
-  SUPPORTED_WEIGHT_UNITS: ['lbs', 'kg'],
-  MAX_WEIGHT: 1000,
-  MIN_WEIGHT: 1,
+  // Weight tracking (stored in kg, displayed in user preference)
+  DEFAULT_WEIGHT_UNIT: 'kg',
+  SUPPORTED_WEIGHT_UNITS: ['kg', 'lbs'],
+  MAX_WEIGHT_KG: 300, // ~661 lbs
+  MIN_WEIGHT_KG: 20,  // ~44 lbs
+  MAX_WEIGHT_LBS: 661,
+  MIN_WEIGHT_LBS: 44,
 
   // UI
   MAX_NOTES_LENGTH: 100,

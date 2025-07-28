@@ -85,6 +85,7 @@ import {
 } from 'chart.js'
 import { useWeightStore } from '../stores/weight.js'
 import { useThemeStore } from '../stores/theme.js'
+import { getWeightForDisplay } from '../utils/weightConversions.js'
 
 // Register Chart.js components
 ChartJS.register(
@@ -153,14 +154,14 @@ const chartData = computed(() => {
   if (!hasData.value) return { labels: [], datasets: [] }
 
   const data = rawChartData.value
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
 
   return {
     labels: data.map((item) => item.label),
     datasets: [
       {
         label: `Weight (${props.weightUnit})`,
-        data: data.map((item) => item.weight),
+        data: data.map((item) => getWeightForDisplay(item.weight, props.weightUnit)),
         borderColor: isDarkMode ? '#81C784' : '#4CAF50',
         backgroundColor: isDarkMode ? 'rgba(129, 199, 132, 0.1)' : 'rgba(76, 175, 80, 0.1)',
         fill: true,
@@ -178,7 +179,7 @@ const chartData = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
   const textColor = isDarkMode ? '#FFFFFF' : '#000000'
   const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
 
@@ -252,7 +253,7 @@ const chartOptions = computed(() => {
 
 // Stats computed properties
 const currentWeight = computed(() => {
-  const latest = weightStore.latestWeight
+  const latest = weightStore.latestWeightForDisplay(props.weightUnit)
   return latest ? latest.weight.toFixed(1) : '0'
 })
 
@@ -262,10 +263,8 @@ const weightChange = computed(() => {
 })
 
 const weightChangeDisplay = computed(() => {
-  const change = weightChange.value
-  if (change === 0) return '0'
-  const sign = change > 0 ? '+' : ''
-  return `${sign}${change.toFixed(1)}`
+  const days = selectedPeriod.value === 'month' ? 30 : selectedPeriod.value === 'weeks' ? 28 : 180
+  return weightStore.weightChangeForDisplay(days, props.weightUnit)
 })
 
 const trendColorClass = computed(() => {
@@ -277,8 +276,7 @@ const trendColorClass = computed(() => {
 
 const averageWeightDisplay = computed(() => {
   const days = selectedPeriod.value === 'month' ? 30 : selectedPeriod.value === 'weeks' ? 28 : 180
-  const avg = weightStore.averageWeight(days)
-  return avg > 0 ? avg.toFixed(1) : '0'
+  return weightStore.averageWeightForDisplay(days, props.weightUnit)
 })
 
 // Methods
@@ -299,7 +297,7 @@ onMounted(async () => {
 
 // Watchers
 watch(
-  () => themeStore.isDarkMode,
+  () => themeStore.isDark,
   () => {
     // Chart will reactively update due to computed properties
   },

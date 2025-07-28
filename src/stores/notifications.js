@@ -85,10 +85,7 @@ export const useNotificationsStore = defineStore('notifications', {
     async init() {
       this.isLoading = true
       try {
-        // Load preferences from localStorage
-        this.loadPreferences()
-
-        // Initialize notification service
+        // Initialize notification service first
         await notificationService.init()
 
         // Re-check support in case it wasn't detected initially
@@ -97,6 +94,9 @@ export const useNotificationsStore = defineStore('notifications', {
         // Update state from service
         this.permission = notificationService.permission
         this.isSupported = notificationService.isSupported
+
+        // Load preferences from localStorage after service is ready
+        this.loadPreferences()
 
         // Force refresh state from service
         this.refreshStateFromService()
@@ -206,7 +206,12 @@ export const useNotificationsStore = defineStore('notifications', {
       this.clearMealNotifications()
 
       // Schedule new meal reminders
-      notificationService.scheduleDailyMealReminders(this.preferences.meals.reminderTimes)
+      const reminderTimes = this.preferences.meals.reminderTimes
+      if (reminderTimes && Array.isArray(reminderTimes)) {
+        notificationService.scheduleDailyMealReminders(reminderTimes)
+      } else {
+        console.warn('No valid reminderTimes found in preferences:', reminderTimes)
+      }
 
       // Update scheduled notifications list
       this.scheduledNotifications = notificationService.getScheduledNotifications()
@@ -289,14 +294,6 @@ export const useNotificationsStore = defineStore('notifications', {
     },
 
     // Persistence methods
-    savePreferences() {
-      try {
-        localStorage.setItem('fasttrack-notification-preferences', JSON.stringify(this.preferences))
-      } catch (error) {
-        console.error('Failed to save notification preferences:', error)
-      }
-    },
-
     loadPreferences() {
       try {
         const saved = localStorage.getItem('fasttrack-notification-preferences')
@@ -307,6 +304,14 @@ export const useNotificationsStore = defineStore('notifications', {
         }
       } catch (error) {
         console.error('Failed to load notification preferences:', error)
+      }
+    },
+
+    savePreferences() {
+      try {
+        localStorage.setItem('fasttrack-notification-preferences', JSON.stringify(this.preferences))
+      } catch (error) {
+        console.error('Failed to save notification preferences:', error)
       }
     },
 
@@ -356,6 +361,9 @@ export const useNotificationsStore = defineStore('notifications', {
     refreshStateFromService() {
       this.permission = notificationService.permission
       this.isSupported = notificationService.isSupported
+      
+      // Also load preferences from localStorage
+      this.loadPreferences()
     },
   },
 })

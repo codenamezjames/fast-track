@@ -148,7 +148,7 @@ const chartData = computed(() => {
   if (!hasData.value) return { labels: [], datasets: [] }
 
   const data = rawChartData.value
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
 
   return {
     labels: data.map((item) => item.label),
@@ -173,7 +173,7 @@ const chartData = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
   const textColor = isDarkMode ? '#FFFFFF' : '#000000'
   const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
 
@@ -286,7 +286,7 @@ onMounted(async () => {
 
 // Watchers
 watch(
-  () => themeStore.isDarkMode,
+  () => themeStore.isDark,
   () => {
     // Chart will reactively update due to computed properties
   },

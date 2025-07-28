@@ -92,6 +92,7 @@ const { executeWithErrorHandling } = useErrorHandling()
 
 // Force refresh notification state when component mounts
 onMounted(() => {
+  // Refresh state in case the boot file hasn't run yet
   notificationsStore.refreshStateFromService()
 })
 

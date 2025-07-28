@@ -219,7 +219,7 @@ const hoursChartData = computed(() => {
   if (!hasData.value) return { labels: [], datasets: [] }
 
   const data = fastingStore.fastingSessionsByDate(7)
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
 
   return {
     labels: data.map((item) => item.label),
@@ -241,7 +241,7 @@ const successChartData = computed(() => {
   if (!hasData.value) return { labels: [], datasets: [] }
 
   const rate = successRate.value
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
 
   return {
     labels: ['Completed', 'Failed'],
@@ -258,7 +258,7 @@ const successChartData = computed(() => {
 
 // Chart options
 const barChartOptions = computed(() => {
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
   const textColor = isDarkMode ? '#FFFFFF' : '#000000'
   const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
 
@@ -314,7 +314,7 @@ const barChartOptions = computed(() => {
 })
 
 const doughnutChartOptions = computed(() => {
-  const isDarkMode = themeStore.isDarkMode
+  const isDarkMode = themeStore.isDark
   const textColor = isDarkMode ? '#FFFFFF' : '#000000'
 
   return {
@@ -364,7 +364,7 @@ onMounted(async () => {
 
 // Watchers
 watch(
-  () => themeStore.isDarkMode,
+  () => themeStore.isDark,
   () => {
     // Chart will reactively update due to computed properties
   },

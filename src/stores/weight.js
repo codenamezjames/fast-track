@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { db, offlineOperations } from '../services/offline.js'
 import { useAuthStore } from './auth.js'
+import { convertToKg, getWeightForDisplay, formatWeightChange, formatAverageWeight } from '../utils/weightConversions.js'
 
 export const useWeightStore = defineStore('weight', {
   state: () => ({
@@ -13,6 +14,18 @@ export const useWeightStore = defineStore('weight', {
     latestWeight: (state) => {
       if (state.entries.length === 0) return null
       return state.entries.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+    },
+
+    // Get latest weight for display in specified unit
+    latestWeightForDisplay: (state) => {
+      return (displayUnit = 'kg') => {
+        if (state.entries.length === 0) return null
+        const latest = state.entries.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+        return {
+          ...latest,
+          weight: getWeightForDisplay(latest.weight, displayUnit)
+        }
+      }
     },
 
     weightByDate: (state) => {
@@ -44,12 +57,12 @@ export const useWeightStore = defineStore('weight', {
             .sort((a, b) => new Date(b.date) - new Date(a.date))
 
           // Use most recent entry in the week
-          const weight = weekEntries.length > 0 ? weekEntries[0].weight : null
+          const weightKg = weekEntries.length > 0 ? weekEntries[0].weight : null
 
           data.push({
             week: `Week ${weeks - i}`,
             label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
-            weight: weight,
+            weight: weightKg, // Keep in kg for chart data
             date: weekStart.toISOString().split('T')[0],
           })
         }
@@ -121,7 +134,7 @@ export const useWeightStore = defineStore('weight', {
       }
     },
 
-    // Weight statistics
+    // Weight statistics (all calculations done in kg)
     weightTrend: (state) => {
       if (state.entries.length < 2) return { direction: 'stable', change: 0 }
 
@@ -155,7 +168,7 @@ export const useWeightStore = defineStore('weight', {
         if (pastEntries.length === 0) return 0
 
         const pastEntry = pastEntries[0]
-        return currentEntry.weight - pastEntry.weight
+        return currentEntry.weight - pastEntry.weight // Returns change in kg
       }
     },
 
@@ -171,7 +184,22 @@ export const useWeightStore = defineStore('weight', {
         if (recentEntries.length === 0) return 0
 
         const total = recentEntries.reduce((sum, entry) => sum + entry.weight, 0)
-        return Math.round((total / recentEntries.length) * 10) / 10 // Round to 1 decimal
+        return Math.round((total / recentEntries.length) * 100) / 100 // Round to 2 decimal places
+      }
+    },
+
+    // Display methods that handle unit conversion
+    weightChangeForDisplay: (state) => {
+      return (days = 30, displayUnit = 'kg') => {
+        const changeKg = state.weightChange(days)
+        return formatWeightChange(changeKg, displayUnit)
+      }
+    },
+
+    averageWeightForDisplay: (state) => {
+      return (days = 30, displayUnit = 'kg') => {
+        const avgKg = state.averageWeight(days)
+        return formatAverageWeight(avgKg, displayUnit)
       }
     },
   },
@@ -190,13 +218,16 @@ export const useWeightStore = defineStore('weight', {
       }
     },
 
-    async addWeightEntry(weight, date = null) {
+    async addWeightEntry(weight, date = null, inputUnit = 'kg') {
       const authStore = useAuthStore()
       const entryDate = date ? new Date(date).toISOString() : new Date().toISOString()
 
+      // Convert to kg for storage
+      const weightKg = convertToKg(parseFloat(weight), inputUnit)
+
       const weightData = {
         user_id: authStore.userId,
-        weight: parseFloat(weight),
+        weight: weightKg, // Always store in kg
         date: entryDate,
       }
 

@@ -99,20 +99,7 @@ const hideReconnectedBanner = () => {
   showReconnectedBanner.value = false
 }
 
-// Sync simulation (for future implementation)
-// const syncPendingData = async () => {
-//   try {
-//     // This would trigger actual sync operations
-//     console.log('Syncing pending data...')
-//
-//     // Simulate sync delay
-//     await new Promise(resolve => setTimeout(resolve, 1000))
-//
-//     console.log('Sync completed')
-//   } catch (error) {
-//     console.error('Sync failed:', error)
-//   }
-// }
+
 
 // Lifecycle
 onMounted(() => {
