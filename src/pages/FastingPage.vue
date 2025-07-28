@@ -36,4 +36,4 @@ import FastingTimer from '../components/FastingTimer.vue'
   color: #2c3e50;
   margin: 0 0 20px 0;
 }
-</style> 
+</style>

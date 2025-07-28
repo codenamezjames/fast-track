@@ -4,12 +4,15 @@ import { Quasar, Notify } from 'quasar'
 
 // Configure Vue Test Utils globally
 config.global.plugins = [
-  [Quasar, {
-    plugins: [Notify]
-  }],
+  [
+    Quasar,
+    {
+      plugins: [Notify],
+    },
+  ],
   createTestingPinia({
-    createSpy: vi.fn
-  })
+    createSpy: vi.fn,
+  }),
 ]
 
 // Mock Quasar's global properties
@@ -18,14 +21,14 @@ config.global.mocks = {
     notify: vi.fn(),
     loading: {
       show: vi.fn(),
-      hide: vi.fn()
+      hide: vi.fn(),
     },
     localStorage: {
       set: vi.fn(),
       get: vi.fn(),
-      remove: vi.fn()
-    }
-  }
+      remove: vi.fn(),
+    },
+  },
 }
 
 // Mock window.localStorage
@@ -43,7 +46,7 @@ Object.defineProperty(window, 'localStorage', {
 Object.defineProperty(window, 'location', {
   value: {
     href: 'http://localhost:3000',
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
   },
   writable: true,
 })
@@ -57,7 +60,7 @@ global.createMockUser = () => ({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
-  $createdAt: '2024-01-01T00:00:00.000Z'
+  $createdAt: '2024-01-01T00:00:00.000Z',
 })
 
 global.createMockMeal = (overrides = {}) => ({
@@ -67,7 +70,7 @@ global.createMockMeal = (overrides = {}) => ({
   meal_time: '2024-01-15T12:00:00.000Z',
   notes: 'Test meal',
   synced: false,
-  ...overrides
+  ...overrides,
 })
 
 global.createMockFastingSession = (overrides = {}) => ({
@@ -78,5 +81,5 @@ global.createMockFastingSession = (overrides = {}) => ({
   duration_hours: null,
   is_active: true,
   synced: false,
-  ...overrides
-}) 
+  ...overrides,
+})

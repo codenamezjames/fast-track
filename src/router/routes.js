@@ -1,47 +1,67 @@
 const routes = [
   {
     path: '/',
-    redirect: '/calories'
+    redirect: '/login',
   },
   {
     path: '/login',
-    component: () => import('pages/LoginPage.vue'),
-    meta: { requiresGuest: true }
+    name: 'login',
+    component: () => import('../pages/LoginPage.vue'),
+    meta: { requiresAuth: false },
   },
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/app',
+    component: () => import('../layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      { 
-        path: 'calories', 
-        component: () => import('pages/CaloriesPage.vue')
+      {
+        path: '',
+        redirect: '/app/calories',
       },
-      { 
-        path: 'fasting', 
-        component: () => import('pages/FastingPage.vue')
+      {
+        path: 'calories',
+        name: 'calories',
+        component: () => import('../pages/CaloriesPage.vue'),
       },
-      { 
-        path: 'analytics', 
-        component: () => import('pages/AnalyticsPage.vue')
+      {
+        path: 'fasting',
+        name: 'fasting',
+        component: () => import('../pages/FastingPage.vue'),
       },
-      { 
-        path: 'settings', 
-        component: () => import('pages/SettingsPage.vue')
+      {
+        path: 'analytics',
+        name: 'analytics',
+        component: () => import('../pages/AnalyticsPage.vue'),
       },
-      // Backwards compatibility
-      { 
-        path: 'dashboard', 
-        redirect: '/calories'
-      }
+      {
+        path: 'settings',
+        name: 'settings',
+        component: () => import('../pages/SettingsPage.vue'),
+      },
     ],
+  },
+  {
+    path: '/calories',
+    redirect: '/app/calories',
+  },
+  {
+    path: '/fasting',
+    redirect: '/app/fasting',
+  },
+  {
+    path: '/analytics',
+    redirect: '/app/analytics',
+  },
+  {
+    path: '/settings',
+    redirect: '/app/settings',
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('../pages/ErrorNotFound.vue'),
   },
 ]
 

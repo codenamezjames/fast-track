@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/assets/scroll-DGYQrll_.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1>
+          <a href="../../../index.html">All files</a> /
+          <a href="index.html">dist/pwa/assets</a> scroll-DGYQrll_.js
+        </h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import{aJ as u,aK as c}from"./index-Bfu9UyXH.js";let l,r=0;const t=new Array(256);for(let o=0;o&lt;256;o++)t[o]=(o+256).toString(16).substring(1);const a=(()=&gt;{const o=typeof crypto&lt;"u"?crypto:typeof window&lt;"u"?window.crypto||window.msCrypto:void 0;if(o!==void 0){if(o.randomBytes!==void 0)return o.randomBytes;if(o.getRandomValues!==void 0)return e=&gt;{const n=new Uint8Array(e);return o.getRandomValues(n),n}}return e=&gt;{const n=[];for(let i=e;i&gt;0;i--)n.push(Math.floor(Math.random()*256));return n}})(),d=4096;function p(){(l===void 0||r+16&gt;d)&amp;&amp;(r=0,l=a(d));const o=Array.prototype.slice.call(l,r,r+=16);return o[6]=o[6]&amp;15|64,o[8]=o[8]&amp;63|128,t[o[0]]+t[o[1]]+t[o[2]]+t[o[3]]+"-"+t[o[4]]+t[o[5]]+"-"+t[o[6]]+t[o[7]]+"-"+t[o[8]]+t[o[9]]+"-"+t[o[10]]+t[o[11]]+t[o[12]]+t[o[13]]+t[o[14]]+t[o[15]]}const m=[Element,String],f=[null,document,document.body,document.scrollingElement,document.documentElement];function y(o,e){let n=u(e);if(n===void 0){if(o==null)return window;n=o.closest(".scroll,.scroll-y,.overflow-auto")}return f.includes(n)?window:n}function h(o){return o===window?window.pageYOffset||window.scrollY||document.body.scrollTop||0:o.scrollTop}function g(o){return o===window?window.pageXOffset||window.scrollX||document.body.scrollLeft||0:o.scrollLeft}let s;function v(){if(s!==void 0)return s;const o=document.createElement("p"),e=document.createElement("div");c(o,{width:"100%",height:"200px"}),c(e,{position:"absolute",top:"0px",left:"0px",visibility:"hidden",width:"200px",height:"150px",overflow:"hidden"}),e.appendChild(o),document.body.appendChild(e);const n=o.offsetWidth;e.style.overflow="scroll";let i=o.offsetWidth;return n===i&amp;&amp;(i=e.clientWidth),e.remove(),s=n-i,s}function b(o,e=!0){return!o||o.nodeType!==Node.ELEMENT_NODE?!1:e?o.scrollHeight&gt;o.clientHeight&amp;&amp;(o.classList.contains("scroll")||o.classList.contains("overflow-auto")||["auto","scroll"].includes(window.getComputedStyle(o)["overflow-y"])):o.scrollWidth&gt;o.clientWidth&amp;&amp;(o.classList.contains("scroll")||o.classList.contains("overflow-auto")||["auto","scroll"].includes(window.getComputedStyle(o)["overflow-x"]))}export{h as a,g as b,v as c,y as g,b as h,m as s,p as u};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../../sorter.js"></script>
+    <script src="../../../block-navigation.js"></script>
+  </body>
+</html>

@@ -6,16 +6,16 @@ export const useNotificationsStore = defineStore('notifications', {
     // Permission status
     permission: 'default', // 'default', 'granted', 'denied'
     isSupported: false,
-    
+
     // User preferences
     preferences: {
       enabled: false,
       fasting: {
         enabled: true,
-        startReminder: true,        // Remind before fast starts
-        progressUpdates: true,      // Progress notifications during fast
-        endReminder: true,          // Remind when fast ends
-        customReminders: []         // Custom reminder times with offsets
+        startReminder: true, // Remind before fast starts
+        progressUpdates: true, // Progress notifications during fast
+        endReminder: true, // Remind when fast ends
+        customReminders: [], // Custom reminder times with offsets
       },
       meals: {
         enabled: true,
@@ -24,8 +24,8 @@ export const useNotificationsStore = defineStore('notifications', {
           breakfast: 'Time for breakfast! 🌅',
           lunch: 'Lunch time! 🍽️',
           dinner: 'Dinner time! 🌆',
-          snack: 'Snack reminder! 🥨'
-        }
+          snack: 'Snack reminder! 🥨',
+        },
       },
       general: {
         sound: true,
@@ -33,51 +33,51 @@ export const useNotificationsStore = defineStore('notifications', {
         quietHours: {
           enabled: false,
           startTime: '22:00',
-          endTime: '07:00'
-        }
-      }
+          endTime: '07:00',
+        },
+      },
     },
-    
+
     // Active notifications
     scheduledNotifications: [],
-    
+
     // Loading states
     isLoading: false,
-    error: null
+    error: null,
   }),
 
   getters: {
     isEnabled: (state) => state.permission === 'granted' && state.preferences.enabled,
     isFastingNotificationsEnabled: (state) => state.preferences.fasting.enabled && state.isEnabled,
     isMealNotificationsEnabled: (state) => state.preferences.meals.enabled && state.isEnabled,
-    
+
     // Get notification preferences for display
     notificationSummary: (state) => {
       if (!state.isEnabled) return 'Notifications disabled'
-      
+
       const activeTypes = []
       if (state.preferences.fasting.enabled) activeTypes.push('Fasting')
       if (state.preferences.meals.enabled) activeTypes.push('Meals')
-      
+
       return activeTypes.length > 0 ? activeTypes.join(', ') : 'No active notifications'
     },
 
     // Check if currently in quiet hours
     isQuietHours: (state) => {
       if (!state.preferences.general.quietHours.enabled) return false
-      
+
       const now = new Date()
       const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
       const startTime = state.preferences.general.quietHours.startTime
       const endTime = state.preferences.general.quietHours.endTime
-      
+
       // Handle overnight quiet hours (e.g., 22:00 to 07:00)
       if (startTime > endTime) {
         return currentTime >= startTime || currentTime <= endTime
       } else {
         return currentTime >= startTime && currentTime <= endTime
       }
-    }
+    },
   },
 
   actions: {
@@ -87,18 +87,22 @@ export const useNotificationsStore = defineStore('notifications', {
       try {
         // Load preferences from localStorage
         this.loadPreferences()
-        
+
         // Initialize notification service
         await notificationService.init()
-        
+
+        // Re-check support in case it wasn't detected initially
+        notificationService.recheckSupport()
+
         // Update state from service
         this.permission = notificationService.permission
         this.isSupported = notificationService.isSupported
-        
+
+        // Force refresh state from service
+        this.refreshStateFromService()
+
         // Load scheduled notifications
         this.scheduledNotifications = notificationService.getScheduledNotifications()
-        
-        console.log('Notifications store initialized')
       } catch (error) {
         this.error = error.message
         console.error('Failed to initialize notifications:', error)
@@ -113,12 +117,12 @@ export const useNotificationsStore = defineStore('notifications', {
       try {
         const granted = await notificationService.requestPermission()
         this.permission = notificationService.permission
-        
+
         if (granted) {
           this.preferences.enabled = true
           this.savePreferences()
         }
-        
+
         return granted
       } catch (error) {
         this.error = error.message
@@ -132,7 +136,7 @@ export const useNotificationsStore = defineStore('notifications', {
     updatePreferences(newPreferences) {
       this.preferences = { ...this.preferences, ...newPreferences }
       this.savePreferences()
-      
+
       // Reschedule notifications if needed
       if (this.isEnabled) {
         this.rescheduleNotifications()
@@ -145,10 +149,10 @@ export const useNotificationsStore = defineStore('notifications', {
         const granted = await this.requestPermission()
         if (!granted) return false
       }
-      
+
       this.preferences.enabled = enabled
       this.savePreferences()
-      
+
       if (!enabled) {
         // Clear all scheduled notifications
         this.clearAllNotifications()
@@ -156,73 +160,73 @@ export const useNotificationsStore = defineStore('notifications', {
         // Reschedule notifications
         this.rescheduleNotifications()
       }
-      
+
       return true
     },
 
     // Fasting notification methods
     async notifyFastingStart(duration) {
       if (!this.isFastingNotificationsEnabled) return false
-      
+
       return await notificationService.notifyFastingStart(duration)
     },
 
     async notifyFastingEnd(duration) {
       if (!this.isFastingNotificationsEnabled) return false
-      
+
       return await notificationService.notifyFastingEnd(duration)
     },
 
     async scheduleFastingNotifications(startTime, duration) {
       if (!this.isFastingNotificationsEnabled) return false
-      
+
       // Clear existing fasting notifications
       this.clearFastingNotifications()
-      
+
       // Schedule new notifications
       notificationService.scheduleFastingReminders(startTime, duration)
-      
+
       // Update scheduled notifications list
       this.scheduledNotifications = notificationService.getScheduledNotifications()
-      
+
       return true
     },
 
     // Meal notification methods
     async notifyMealReminder(mealType = 'meal') {
       if (!this.isMealNotificationsEnabled || this.isQuietHours) return false
-      
+
       return await notificationService.notifyMealReminder(mealType)
     },
 
     async scheduleMealReminders() {
       if (!this.isMealNotificationsEnabled) return false
-      
+
       // Clear existing meal notifications
       this.clearMealNotifications()
-      
+
       // Schedule new meal reminders
       notificationService.scheduleDailyMealReminders(this.preferences.meals.reminderTimes)
-      
+
       // Update scheduled notifications list
       this.scheduledNotifications = notificationService.getScheduledNotifications()
-      
+
       return true
     },
 
     // Custom notification scheduling
     async scheduleCustomNotification(id, title, message, scheduledTime, options = {}) {
       if (!this.isEnabled) return false
-      
+
       const notificationOptions = {
         body: message,
         tag: id,
-        ...options
+        ...options,
       }
-      
+
       notificationService.scheduleNotification(id, title, notificationOptions, scheduledTime)
       this.scheduledNotifications = notificationService.getScheduledNotifications()
-      
+
       return true
     },
 
@@ -231,24 +235,25 @@ export const useNotificationsStore = defineStore('notifications', {
       const fastingNotificationIds = [
         'fasting-start',
         'fasting-progress-25',
-        'fasting-progress-50', 
+        'fasting-progress-50',
         'fasting-progress-75',
-        'fasting-end'
+        'fasting-end',
       ]
-      
-      fastingNotificationIds.forEach(id => {
+
+      fastingNotificationIds.forEach((id) => {
         notificationService.cancelScheduledNotification(id)
       })
-      
+
       this.scheduledNotifications = notificationService.getScheduledNotifications()
     },
 
     clearMealNotifications() {
       // Clear meal reminder notifications
-      for (let i = 0; i < 10; i++) { // Clear up to 10 meal reminders
+      for (let i = 0; i < 10; i++) {
+        // Clear up to 10 meal reminders
         notificationService.cancelScheduledNotification(`meal-reminder-${i}`)
       }
-      
+
       this.scheduledNotifications = notificationService.getScheduledNotifications()
     },
 
@@ -260,11 +265,11 @@ export const useNotificationsStore = defineStore('notifications', {
     // Reschedule all notifications based on current preferences
     rescheduleNotifications() {
       this.clearAllNotifications()
-      
+
       if (this.preferences.meals.enabled) {
         this.scheduleMealReminders()
       }
-      
+
       // Note: Fasting notifications will be scheduled when a fast is started
     },
 
@@ -273,13 +278,13 @@ export const useNotificationsStore = defineStore('notifications', {
       if (!this.isEnabled) {
         throw new Error('Notifications not enabled')
       }
-      
+
       // Use unique tag to ensure each test notification shows
       const uniqueTag = `test-notification-${Date.now()}`
-      
+
       return await notificationService.showNotification('🧪 Test Notification', {
         body: 'FastTrack notifications are working correctly!',
-        tag: uniqueTag
+        tag: uniqueTag,
       })
     },
 
@@ -311,7 +316,7 @@ export const useNotificationsStore = defineStore('notifications', {
         this.preferences.meals.reminderTimes.push(time)
         this.preferences.meals.reminderTimes.sort()
         this.savePreferences()
-        
+
         if (this.isMealNotificationsEnabled) {
           this.scheduleMealReminders()
         }
@@ -324,7 +329,7 @@ export const useNotificationsStore = defineStore('notifications', {
       if (index > -1) {
         this.preferences.meals.reminderTimes.splice(index, 1)
         this.savePreferences()
-        
+
         if (this.isMealNotificationsEnabled) {
           this.scheduleMealReminders()
         }
@@ -336,7 +341,7 @@ export const useNotificationsStore = defineStore('notifications', {
       this.preferences.fasting.customReminders.push({
         offset: offsetMinutes,
         message: message,
-        enabled: true
+        enabled: true,
       })
       this.savePreferences()
     },
@@ -345,6 +350,12 @@ export const useNotificationsStore = defineStore('notifications', {
     removeCustomFastingReminder(index) {
       this.preferences.fasting.customReminders.splice(index, 1)
       this.savePreferences()
-    }
-  }
-}) 
+    },
+
+    // Force refresh state from service
+    refreshStateFromService() {
+      this.permission = notificationService.permission
+      this.isSupported = notificationService.isSupported
+    },
+  },
+})

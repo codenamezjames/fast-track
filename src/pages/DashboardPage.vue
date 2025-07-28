@@ -55,22 +55,15 @@
     <!-- Settings and Logout -->
     <q-page-sticky position="top-right" :offset="[20, 20]">
       <div class="top-actions">
-        <q-btn 
+        <q-btn
           flat
-          round 
-          icon="settings" 
+          round
+          icon="settings"
           @click="$router.push('/settings')"
           size="sm"
           class="action-btn"
         />
-        <q-btn 
-          flat
-          round 
-          icon="logout" 
-          @click="logout"
-          size="sm"
-          class="action-btn"
-        />
+        <q-btn flat round icon="logout" @click="logout" size="sm" class="action-btn" />
       </div>
     </q-page-sticky>
   </q-page>
@@ -98,18 +91,18 @@ onMounted(async () => {
 const addQuickCalories = async (amount) => {
   try {
     await caloriesStore.addMeal(amount)
-    
+
     Notify.create({
       type: 'positive',
       message: `Added ${amount} calories`,
       position: 'top',
-      timeout: 2000
+      timeout: 2000,
     })
   } catch {
     Notify.create({
       type: 'negative',
       message: 'Failed to add calories',
-      position: 'top'
+      position: 'top',
     })
   }
 }
@@ -117,22 +110,22 @@ const addQuickCalories = async (amount) => {
 const addCustomCalories = async () => {
   const amount = parseInt(customCalories.value)
   if (!amount || amount <= 0) return
-  
+
   try {
     await caloriesStore.addMeal(amount)
     customCalories.value = ''
-    
+
     Notify.create({
       type: 'positive',
       message: `Added ${amount} calories`,
       position: 'top',
-      timeout: 2000
+      timeout: 2000,
     })
   } catch {
     Notify.create({
       type: 'negative',
       message: 'Failed to add calories',
-      position: 'top'
+      position: 'top',
     })
   }
 }
@@ -244,4 +237,4 @@ const logout = async () => {
 .action-btn:hover {
   color: #495057;
 }
-</style> 
+</style>

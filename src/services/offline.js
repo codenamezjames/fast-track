@@ -4,13 +4,14 @@ import Dexie from 'dexie'
 class FastTrackDB extends Dexie {
   constructor() {
     super('FastTrackDB')
-    
+
     this.version(1).stores({
       meals: '++id, user_id, calories, meal_time, notes, synced',
-      fasting_sessions: '++id, user_id, start_time, end_time, planned_duration, actual_duration, session_type, synced',
+      fasting_sessions:
+        '++id, user_id, start_time, end_time, planned_duration, actual_duration, session_type, synced',
       fasting_schedules: '++id, user_id, name, schedule_data, is_active, created_at',
       weight_entries: '++id, user_id, weight, date, synced',
-      sync_queue: '++id, table_name, record_id, action, data, timestamp'
+      sync_queue: '++id, table_name, record_id, action, data, timestamp',
     })
   }
 }
@@ -24,7 +25,7 @@ export const offlineOperations = {
     try {
       const record = { ...data, synced: false }
       const id = await db[tableName].add(record)
-      
+
       // Skip sync queue for now (pure offline mode)
       // TODO: Re-enable when Appwrite sync is implemented
       // await db.sync_queue.add({
@@ -34,7 +35,7 @@ export const offlineOperations = {
       //   data: record,
       //   timestamp: new Date().toISOString()
       // })
-      
+
       return id
     } catch (error) {
       console.error(`Error adding to ${tableName}:`, error)
@@ -47,7 +48,7 @@ export const offlineOperations = {
     try {
       const updatedData = { ...data, synced: false }
       await db[tableName].update(id, updatedData)
-      
+
       // Skip sync queue for now (pure offline mode)
       // TODO: Re-enable when Appwrite sync is implemented
       // await db.sync_queue.add({
@@ -67,7 +68,7 @@ export const offlineOperations = {
   async deleteOffline(tableName, id) {
     try {
       await db[tableName].delete(id)
-      
+
       // Skip sync queue for now (pure offline mode)
       // TODO: Re-enable when Appwrite sync is implemented
       // await db.sync_queue.add({
@@ -97,5 +98,5 @@ export const offlineOperations = {
   // Mark items as synced
   async markAsSynced(tableName, ids) {
     await db[tableName].where('id').anyOf(ids).modify({ synced: true })
-  }
-} 
+  },
+}

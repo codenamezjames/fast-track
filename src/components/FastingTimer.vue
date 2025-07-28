@@ -5,15 +5,8 @@
       <div class="progress-container">
         <svg width="160" height="160" class="progress-svg">
           <!-- Background circle -->
-          <circle
-            cx="80"
-            cy="80"
-            r="70"
-            fill="none"
-            stroke="#e9ecef"
-            stroke-width="8"
-          />
-          
+          <circle cx="80" cy="80" r="70" fill="none" stroke="#e9ecef" stroke-width="8" />
+
           <!-- Fasting period (green) -->
           <circle
             cx="80"
@@ -27,7 +20,7 @@
             :stroke-dashoffset="fastingOffset"
             transform="rotate(-90 80 80)"
           />
-          
+
           <!-- Progress indicator (blue) -->
           <circle
             cx="80"
@@ -42,7 +35,7 @@
             transform="rotate(-90 80 80)"
           />
         </svg>
-        
+
         <!-- Center content -->
         <div class="center-content">
           <div class="fast-type">16:8</div>
@@ -50,7 +43,7 @@
         </div>
       </div>
     </div>
-    
+
     <div v-else class="no-fast">
       <div class="start-message">Ready to start fasting?</div>
       <div class="quick-start-buttons">
@@ -105,7 +98,7 @@ const progressOffset = computed(() => {
 
 const timeDisplay = computed(() => {
   if (!fastingStore.isFasting) return '00:00'
-  
+
   const remaining = fastingStore.fastingTimeRemaining
   if (remaining > 0) {
     const hours = Math.floor(remaining / (1000 * 60 * 60))
@@ -134,13 +127,13 @@ const startQuickFast = async (hours) => {
       type: 'positive',
       message: `Started ${hours}h fast!`,
       position: 'top',
-      timeout: 2000
+      timeout: 2000,
     })
   } catch {
     Notify.create({
       type: 'negative',
       message: 'Failed to start fast',
-      position: 'top'
+      position: 'top',
     })
   }
 }

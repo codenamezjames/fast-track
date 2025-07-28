@@ -29,8 +29,8 @@ defineProps({
   goals: {
     type: Array,
     required: true,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 </script>
 
@@ -85,4 +85,4 @@ defineProps({
 body.body--dark .goal-item {
   border-color: rgba(255, 255, 255, 0.12);
 }
-</style> 
+</style>

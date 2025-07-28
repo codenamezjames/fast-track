@@ -1,27 +1,36 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createTestingPinia } from '@pinia/testing'
 import CaloriesChart from '../../src/components/CaloriesChart.vue'
+import { useCaloriesStore } from '../../src/stores/calories.js'
 
 describe('CaloriesChart Component', () => {
   let wrapper
+  let caloriesStore
 
-  const mockData = [
-    { date: '2024-01-10', calories: 1800 },
-    { date: '2024-01-11', calories: 2100 },
-    { date: '2024-01-12', calories: 1950 },
-    { date: '2024-01-13', calories: 2200 },
-    { date: '2024-01-14', calories: 1750 },
-    { date: '2024-01-15', calories: 2000 }
+  const mockMeals = [
+    { id: 1, calories: 300, meal_time: '2024-01-15T08:00:00.000Z', notes: 'Breakfast' },
+    { id: 2, calories: 500, meal_time: '2024-01-15T12:00:00.000Z', notes: 'Lunch' },
+    { id: 3, calories: 400, meal_time: '2024-01-14T18:00:00.000Z', notes: 'Dinner' },
+    { id: 4, calories: 350, meal_time: '2024-01-13T19:00:00.000Z', notes: 'Dinner' },
   ]
 
   beforeEach(() => {
+    const pinia = createTestingPinia({
+      createSpy: vi.fn,
+    })
+
     wrapper = mount(CaloriesChart, {
       props: {
-        data: mockData,
-        height: 120,
-        width: 320
-      }
+        viewMode: 'weekly',
+      },
+      global: {
+        plugins: [pinia],
+      },
     })
+
+    caloriesStore = useCaloriesStore()
+    caloriesStore.meals = mockMeals
   })
 
   afterEach(() => {
@@ -41,7 +50,6 @@ describe('CaloriesChart Component', () => {
       expect(svg.exists()).toBe(true)
       expect(svg.attributes('width')).toBe('320')
       expect(svg.attributes('height')).toBe('120')
-      // Note: viewBox (camelCase) not viewbox in Vue
       expect(svg.attributes('viewBox')).toBe('0 0 320 120')
     })
 
@@ -57,14 +65,13 @@ describe('CaloriesChart Component', () => {
   })
 
   describe('Basic Functionality', () => {
-    it('should accept props correctly', () => {
-      expect(wrapper.props('data')).toEqual(mockData)
-      expect(wrapper.props('height')).toBe(120)
-      expect(wrapper.props('width')).toBe(320)
+    it('should accept viewMode prop correctly', () => {
+      expect(wrapper.props('viewMode')).toBe('weekly')
     })
 
     it('should handle empty data gracefully', async () => {
-      await wrapper.setProps({ data: [] })
+      caloriesStore.meals = []
+      await wrapper.vm.$nextTick()
       // Component should still render without errors
       expect(wrapper.find('svg').exists()).toBe(true)
     })
@@ -73,36 +80,39 @@ describe('CaloriesChart Component', () => {
   describe('SVG Structure', () => {
     it('should have correct SVG structure', () => {
       const svg = wrapper.find('svg')
-      expect(svg.find('defs').exists()).toBe(true)
-      expect(svg.find('.grid-lines').exists()).toBe(true)
+      expect(svg.classes()).toContain('chart-svg')
+
+      // Check for essential SVG elements
+      expect(wrapper.find('.grid-lines').exists()).toBe(true)
+      expect(wrapper.find('#chartGradient').exists()).toBe(true)
     })
 
-    it('should generate paths when data is provided', () => {
+    it('should generate paths when data is provided', async () => {
+      // Ensure we have data
+      caloriesStore.meals = mockMeals
+      await wrapper.vm.$nextTick()
+
+      // Should have chart paths
       const paths = wrapper.findAll('path')
       expect(paths.length).toBeGreaterThan(0)
     })
   })
 
   describe('Props Reactivity', () => {
-    it('should accept custom dimensions', async () => {
-      await wrapper.setProps({
-        width: 400,
-        height: 200
-      })
-
-      const svg = wrapper.find('svg')
-      expect(svg.attributes('width')).toBe('400')
-      expect(svg.attributes('height')).toBe('200')
+    it('should handle viewMode change', async () => {
+      await wrapper.setProps({ viewMode: 'daily' })
+      expect(wrapper.props('viewMode')).toBe('daily')
+      expect(wrapper.find('svg').exists()).toBe(true)
     })
 
-    it('should handle different data formats', async () => {
-      const newData = [
-        { date: '2024-01-01', calories: 1500 },
-        { date: '2024-01-02', calories: 1600 }
-      ]
+    it('should handle different viewMode values', async () => {
+      // Test weekly mode
+      await wrapper.setProps({ viewMode: 'weekly' })
+      expect(wrapper.props('viewMode')).toBe('weekly')
 
-      await wrapper.setProps({ data: newData })
-      expect(wrapper.props('data')).toEqual(newData)
+      // Test daily mode
+      await wrapper.setProps({ viewMode: 'daily' })
+      expect(wrapper.props('viewMode')).toBe('daily')
     })
   })
 
@@ -110,43 +120,59 @@ describe('CaloriesChart Component', () => {
     it('should maintain aspect ratio', () => {
       const svg = wrapper.find('svg')
       expect(svg.attributes('viewBox')).toBe('0 0 320 120')
-      expect(svg.classes()).toContain('chart-svg')
+      // Width/height ratio should be maintained via viewBox
     })
   })
 
   describe('Edge Cases', () => {
     it('should handle single data point', async () => {
-      await wrapper.setProps({
-        data: [{ date: '2024-01-01', calories: 2000 }]
-      })
+      caloriesStore.meals = [
+        { id: 1, calories: 1500, meal_time: '2024-01-15T12:00:00.000Z', notes: 'Lunch' },
+      ]
+      await wrapper.vm.$nextTick()
 
       // With single point, should still render without errors
       expect(wrapper.find('svg').exists()).toBe(true)
-      expect(wrapper.props('data')).toHaveLength(1)
+      expect(caloriesStore.meals).toHaveLength(1)
     })
 
-    it('should handle identical calorie values', async () => {
-      const identicalData = [
-        { date: '2024-01-01', calories: 2000 },
-        { date: '2024-01-02', calories: 2000 },
-        { date: '2024-01-03', calories: 2000 }
+    it('should handle no meals for current period', async () => {
+      // Set meals from a different time period
+      caloriesStore.meals = [
+        { id: 1, calories: 1500, meal_time: '2023-01-15T12:00:00.000Z', notes: 'Old meal' },
       ]
+      await wrapper.vm.$nextTick()
 
-      await wrapper.setProps({ data: identicalData })
-      expect(wrapper.props('data')).toHaveLength(3)
-      // Should handle flat line without errors
+      // Should handle gracefully
       expect(wrapper.find('svg').exists()).toBe(true)
     })
 
-    it('should handle very large numbers', async () => {
-      const largeData = [
-        { date: '2024-01-01', calories: 100000 },
-        { date: '2024-01-02', calories: 200000 }
+    it('should handle very large calorie values', async () => {
+      caloriesStore.meals = [
+        { id: 1, calories: 10000, meal_time: '2024-01-15T12:00:00.000Z', notes: 'Large meal' },
+        { id: 2, calories: 15000, meal_time: '2024-01-14T12:00:00.000Z', notes: 'Huge meal' },
       ]
+      await wrapper.vm.$nextTick()
 
-      await wrapper.setProps({ data: largeData })
-      expect(wrapper.props('data')).toHaveLength(2)
       expect(wrapper.find('svg').exists()).toBe(true)
     })
   })
-}) 
+
+  describe('Day Labels', () => {
+    it('should render day labels for weekly mode', async () => {
+      await wrapper.setProps({ viewMode: 'weekly' })
+      await wrapper.vm.$nextTick()
+
+      const dayLabels = wrapper.findAll('.day-label')
+      expect(dayLabels.length).toBe(7) // 7 days in week
+    })
+
+    it('should render time labels for daily mode', async () => {
+      await wrapper.setProps({ viewMode: 'daily' })
+      await wrapper.vm.$nextTick()
+
+      const dayLabels = wrapper.findAll('.day-label')
+      expect(dayLabels.length).toBe(6) // 6 time periods in day
+    })
+  })
+})

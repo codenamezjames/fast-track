@@ -4,12 +4,8 @@
       <q-page class="flex flex-center">
         <q-card class="q-pa-lg" style="min-width: 300px">
           <q-card-section class="text-center">
-            <div class="text-h4 text-weight-bold text-primary q-mb-md">
-              FastTrack
-            </div>
-            <div class="text-subtitle1 text-grey-7">
-              Calorie Tracker & Intermittent Fasting
-            </div>
+            <div class="text-h4 text-weight-bold text-primary q-mb-md">FastTrack</div>
+            <div class="text-subtitle1 text-grey-7">Calorie Tracker & Intermittent Fasting</div>
           </q-card-section>
 
           <q-card-section>
@@ -19,15 +15,15 @@
                 label="Email"
                 type="email"
                 outlined
-                :rules="[val => !!val || 'Email is required']"
+                :rules="[(val) => !!val || 'Email is required']"
               />
-              
+
               <q-input
                 v-model="password"
                 label="Password"
                 :type="showPassword ? 'text' : 'password'"
                 outlined
-                :rules="[val => !!val || 'Password is required']"
+                :rules="[(val) => !!val || 'Password is required']"
               >
                 <template v-slot:append>
                   <q-icon
@@ -43,7 +39,7 @@
                 v-model="name"
                 label="Full Name"
                 outlined
-                :rules="[val => !!val || 'Name is required']"
+                :rules="[(val) => !!val || 'Name is required']"
               />
 
               <div v-if="authStore.error" class="text-negative text-center">
@@ -64,7 +60,9 @@
           <q-card-section class="text-center">
             <q-btn
               flat
-              :label="isRegistering ? 'Already have an account? Login' : 'Need an account? Register'"
+              :label="
+                isRegistering ? 'Already have an account? Login' : 'Need an account? Register'
+              "
               @click="toggleMode"
             />
           </q-card-section>
@@ -100,11 +98,11 @@ const onSubmit = async () => {
     } else {
       await authStore.login(email.value, password.value)
     }
-    
+
     // Redirect to calories page on successful login/registration
     router.push('/calories')
   } catch (error) {
     console.error('Authentication error:', error)
   }
 }
-</script> 
+</script>

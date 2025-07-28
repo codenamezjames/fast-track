@@ -1,1 +1,985 @@
-{"numTotalTestSuites":35,"numPassedTestSuites":22,"numFailedTestSuites":13,"numPendingTestSuites":0,"numTotalTests":61,"numPassedTests":49,"numFailedTests":12,"numPendingTests":0,"numTodoTests":0,"snapshot":{"added":0,"failure":false,"filesAdded":0,"filesRemoved":0,"filesRemovedList":[],"filesUnmatched":0,"filesUpdated":0,"matched":0,"total":0,"unchecked":0,"uncheckedKeysByFile":[],"unmatched":0,"updated":0,"didUpdate":false},"startTime":1753149909394,"success":false,"testResults":[{"assertionResults":[{"ancestorTitles":["CaloriesChart Component","Rendering"],"fullName":"CaloriesChart Component Rendering should render the component","status":"passed","title":"should render the component","duration":23.23395800000003,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Rendering"],"fullName":"CaloriesChart Component Rendering should render SVG with correct dimensions","status":"passed","title":"should render SVG with correct dimensions","duration":3.3179589999999735,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Rendering"],"fullName":"CaloriesChart Component Rendering should render grid lines","status":"passed","title":"should render grid lines","duration":3.4976670000000922,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Rendering"],"fullName":"CaloriesChart Component Rendering should render gradient definition","status":"passed","title":"should render gradient definition","duration":4.491208000000029,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Basic Functionality"],"fullName":"CaloriesChart Component Basic Functionality should accept props correctly","status":"failed","title":"should accept props correctly","duration":7.389957999999979,"failureMessages":["AssertionError: expected undefined to deeply equal [ { date: '2024-01-10', …(1) }, …(5) ]\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:61:37\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at runSuite (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Basic Functionality"],"fullName":"CaloriesChart Component Basic Functionality should handle empty data gracefully","status":"passed","title":"should handle empty data gracefully","duration":3.9085420000000113,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","SVG Structure"],"fullName":"CaloriesChart Component SVG Structure should have correct SVG structure","status":"passed","title":"should have correct SVG structure","duration":2.022624999999948,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","SVG Structure"],"fullName":"CaloriesChart Component SVG Structure should generate paths when data is provided","status":"passed","title":"should generate paths when data is provided","duration":1.7517919999999094,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Props Reactivity"],"fullName":"CaloriesChart Component Props Reactivity should accept custom dimensions","status":"failed","title":"should accept custom dimensions","duration":4.602167000000009,"failureMessages":["AssertionError: expected '320' to be '400' // Object.is equality\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:94:39\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Props Reactivity"],"fullName":"CaloriesChart Component Props Reactivity should handle different data formats","status":"failed","title":"should handle different data formats","duration":2.1789170000000695,"failureMessages":["AssertionError: expected undefined to deeply equal [ { date: '2024-01-01', …(1) }, …(1) ]\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:105:37\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Responsive Behavior"],"fullName":"CaloriesChart Component Responsive Behavior should maintain aspect ratio","status":"passed","title":"should maintain aspect ratio","duration":3.396250000000009,"failureMessages":[],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Edge Cases"],"fullName":"CaloriesChart Component Edge Cases should handle single data point","status":"failed","title":"should handle single data point","duration":3.005125000000021,"failureMessages":["AssertionError: Target cannot be null or undefined.\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1706:25)\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:125:37\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Edge Cases"],"fullName":"CaloriesChart Component Edge Cases should handle identical calorie values","status":"failed","title":"should handle identical calorie values","duration":1.649000000000001,"failureMessages":["AssertionError: Target cannot be null or undefined.\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1706:25)\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:136:37\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["CaloriesChart Component","Edge Cases"],"fullName":"CaloriesChart Component Edge Cases should handle very large numbers","status":"failed","title":"should handle very large numbers","duration":1.284667000000013,"failureMessages":["AssertionError: Target cannot be null or undefined.\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1706:25)\n    at /Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js:148:37\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}}],"startTime":1753149909993,"endTime":1753149910058.2847,"status":"failed","message":"","name":"/Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js"},{"assertionResults":[{"ancestorTitles":["Auth Service","register"],"fullName":"Auth Service register should register a new user successfully","status":"passed","title":"should register a new user successfully","duration":2.290292000000022,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","register"],"fullName":"Auth Service register should handle registration errors","status":"passed","title":"should handle registration errors","duration":3.3841659999999933,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","register"],"fullName":"Auth Service register should log registration success","status":"passed","title":"should log registration success","duration":0.588374999999985,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","login"],"fullName":"Auth Service login should login user successfully","status":"passed","title":"should login user successfully","duration":0.3247079999999869,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","login"],"fullName":"Auth Service login should handle login errors","status":"passed","title":"should handle login errors","duration":0.5919999999999845,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","login"],"fullName":"Auth Service login should log login success","status":"passed","title":"should log login success","duration":0.2822500000000332,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","logout"],"fullName":"Auth Service logout should logout user successfully","status":"passed","title":"should logout user successfully","duration":0.18429099999997334,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","logout"],"fullName":"Auth Service logout should handle logout errors","status":"passed","title":"should handle logout errors","duration":0.37220800000000054,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","logout"],"fullName":"Auth Service logout should log logout success","status":"passed","title":"should log logout success","duration":0.21358300000002828,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","getCurrentUser"],"fullName":"Auth Service getCurrentUser should get current user successfully","status":"passed","title":"should get current user successfully","duration":0.2582500000000323,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","getCurrentUser"],"fullName":"Auth Service getCurrentUser should return null on error","status":"passed","title":"should return null on error","duration":0.6442499999999995,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","isLoggedIn"],"fullName":"Auth Service isLoggedIn should return true when user is logged in","status":"passed","title":"should return true when user is logged in","duration":0.2497500000000059,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","isLoggedIn"],"fullName":"Auth Service isLoggedIn should return false when user is not logged in","status":"passed","title":"should return false when user is not logged in","duration":0.1812500000000341,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","updatePreferences"],"fullName":"Auth Service updatePreferences should update user preferences successfully","status":"passed","title":"should update user preferences successfully","duration":0.5002499999999941,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Service","updatePreferences"],"fullName":"Auth Service updatePreferences should handle update preferences errors","status":"passed","title":"should handle update preferences errors","duration":0.4067919999999958,"failureMessages":[],"meta":{}}],"startTime":1753149909914,"endTime":1753149909924.5002,"status":"passed","message":"","name":"/Users/cronus/Dev/energy-track/fast-track/test/services/auth.test.js"},{"assertionResults":[{"ancestorTitles":["Auth Store","Initial State"],"fullName":"Auth Store Initial State should have correct initial state","status":"passed","title":"should have correct initial state","duration":1.5987499999999955,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","Getters"],"fullName":"Auth Store Getters should return correct userId","status":"passed","title":"should return correct userId","duration":0.3880829999999946,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","Getters"],"fullName":"Auth Store Getters should return userEmail","status":"passed","title":"should return userEmail","duration":0.3651249999999777,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","Getters"],"fullName":"Auth Store Getters should return userName","status":"passed","title":"should return userName","duration":0.1904580000000351,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","Getters"],"fullName":"Auth Store Getters should return default userId when no user","status":"passed","title":"should return default userId when no user","duration":0.26779099999998834,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","Getters"],"fullName":"Auth Store Getters should return userPreferences","status":"passed","title":"should return userPreferences","duration":0.41800000000000637,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","initAuth"],"fullName":"Auth Store initAuth should initialize with offline user from localStorage","status":"failed","title":"should initialize with offline user from localStorage","duration":4.711334000000022,"failureMessages":["AssertionError: expected null to deeply equal { id: 'test-user-123', …(3) }\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js:75:30\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["Auth Store","initAuth"],"fullName":"Auth Store initAuth should handle no stored user","status":"passed","title":"should handle no stored user","duration":0.30758400000001984,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","register"],"fullName":"Auth Store register should register user in offline mode when Appwrite fails","status":"failed","title":"should register user in offline mode when Appwrite fails","duration":2.6401669999999626,"failureMessages":["AssertionError: expected undefined to be truthy\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js:100:54\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["Auth Store","register"],"fullName":"Auth Store register should handle registration errors","status":"failed","title":"should handle registration errors","duration":3.395290999999986,"failureMessages":["Error: promise resolved \"{ id: 'offline-1705312800000', …(3) }\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1610:17)\n    at _Assertion.propertyGetter (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1577:27)\n    at Reflect.get (<anonymous>)\n    at Object.proxyGetter [as get] (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1665:22)\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js:110:9\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["Auth Store","login"],"fullName":"Auth Store login should login with offline credentials when Appwrite fails","status":"failed","title":"should login with offline credentials when Appwrite fails","duration":0.9748329999999896,"failureMessages":["Error: Invalid credentials\n    at Proxy.login (/Users/cronus/Dev/energy-track/fast-track/src/stores/auth.js:119:17)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js:126:22\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"],"meta":{}},{"ancestorTitles":["Auth Store","login"],"fullName":"Auth Store login should reject invalid offline credentials","status":"passed","title":"should reject invalid offline credentials","duration":0.6812080000000265,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","login"],"fullName":"Auth Store login should reject login with non-matching email","status":"passed","title":"should reject login with non-matching email","duration":0.377083999999968,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","login"],"fullName":"Auth Store login should handle login when no offline user exists","status":"passed","title":"should handle login when no offline user exists","duration":0.2091670000000363,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","login"],"fullName":"Auth Store login should login successfully with Appwrite when available","status":"passed","title":"should login successfully with Appwrite when available","duration":0.2390420000000404,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","error handling"],"fullName":"Auth Store error handling should set loading state correctly during async operations","status":"passed","title":"should set loading state correctly during async operations","duration":0.2437919999999849,"failureMessages":[],"meta":{}},{"ancestorTitles":["Auth Store","error handling"],"fullName":"Auth Store error handling should clear errors properly","status":"passed","title":"should clear errors properly","duration":0.1157500000000482,"failureMessages":[],"meta":{}}],"startTime":1753149909913,"endTime":1753149909931.1157,"status":"failed","message":"","name":"/Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js"},{"assertionResults":[{"ancestorTitles":["Calories Store","Initial State"],"fullName":"Calories Store Initial State should have correct initial state","status":"passed","title":"should have correct initial state","duration":3.1726659999999356,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Getters"],"fullName":"Calories Store Getters should get meals by date correctly","status":"failed","title":"should get meals by date correctly","duration":8.705249999999978,"failureMessages":["AssertionError: expected [ { id: 801, …(5) } ] to have a length of 2 but got 1\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/chai/chai.js:1706:25)\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/calories.test.js:72:27\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"],"meta":{}},{"ancestorTitles":["Calories Store","Getters"],"fullName":"Calories Store Getters should calculate calories by date correctly","status":"failed","title":"should calculate calories by date correctly","duration":1.8096249999999827,"failureMessages":["AssertionError: expected 400 to be 800 // Object.is equality\n    at /Users/cronus/Dev/energy-track/fast-track/test/stores/calories.test.js:84:30\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at runSuite (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///Users/cronus/Dev/energy-track/fast-track/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"],"meta":{}},{"ancestorTitles":["Calories Store","Getters"],"fullName":"Calories Store Getters should calculate weekly calories correctly","status":"passed","title":"should calculate weekly calories correctly","duration":0.5739169999999376,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","loadMeals"],"fullName":"Calories Store Actions loadMeals should load meals from offline storage","status":"passed","title":"should load meals from offline storage","duration":1.4645420000000513,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","loadMeals"],"fullName":"Calories Store Actions loadMeals should handle loading errors","status":"passed","title":"should handle loading errors","duration":1.3559999999999945,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","addMeal"],"fullName":"Calories Store Actions addMeal should add a meal successfully","status":"passed","title":"should add a meal successfully","duration":1.2750839999999926,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","addMeal"],"fullName":"Calories Store Actions addMeal should handle adding meal with no notes","status":"passed","title":"should handle adding meal with no notes","duration":0.3987919999999576,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","addMeal"],"fullName":"Calories Store Actions addMeal should handle add meal errors","status":"passed","title":"should handle add meal errors","duration":1.2872079999999642,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","updateMeal"],"fullName":"Calories Store Actions updateMeal should update a meal successfully","status":"passed","title":"should update a meal successfully","duration":0.48670900000001893,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","updateMeal"],"fullName":"Calories Store Actions updateMeal should handle update meal errors","status":"passed","title":"should handle update meal errors","duration":0.9567919999999503,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","deleteMeal"],"fullName":"Calories Store Actions deleteMeal should delete a meal successfully","status":"passed","title":"should delete a meal successfully","duration":0.46933400000000347,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","deleteMeal"],"fullName":"Calories Store Actions deleteMeal should handle delete meal errors","status":"passed","title":"should handle delete meal errors","duration":0.7982079999999314,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","updateTodaysData"],"fullName":"Calories Store Actions updateTodaysData should update todays meals and calories","status":"passed","title":"should update todays meals and calories","duration":0.29808300000001964,"failureMessages":[],"meta":{}},{"ancestorTitles":["Calories Store","Actions","clearError"],"fullName":"Calories Store Actions clearError should clear the error state","status":"passed","title":"should clear the error state","duration":0.1446250000000191,"failureMessages":[],"meta":{}}],"startTime":1753149909966,"endTime":1753149909989.298,"status":"failed","message":"","name":"/Users/cronus/Dev/energy-track/fast-track/test/stores/calories.test.js"}]}
+{
+  "numTotalTestSuites": 58,
+  "numPassedTestSuites": 58,
+  "numFailedTestSuites": 0,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 100,
+  "numPassedTests": 100,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "snapshot": {
+    "added": 0,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0,
+    "didUpdate": false
+  },
+  "startTime": 1753684479404,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Auth Service", "register"],
+          "fullName": "Auth Service register should register a new user successfully",
+          "status": "passed",
+          "title": "should register a new user successfully",
+          "duration": 2.3199160000000347,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "register"],
+          "fullName": "Auth Service register should handle registration errors",
+          "status": "passed",
+          "title": "should handle registration errors",
+          "duration": 3.5530840000000126,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "register"],
+          "fullName": "Auth Service register should log registration success",
+          "status": "passed",
+          "title": "should log registration success",
+          "duration": 0.6668339999999944,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "login"],
+          "fullName": "Auth Service login should login user successfully",
+          "status": "passed",
+          "title": "should login user successfully",
+          "duration": 0.3553750000000946,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "login"],
+          "fullName": "Auth Service login should handle login errors",
+          "status": "passed",
+          "title": "should handle login errors",
+          "duration": 0.48908399999993435,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "login"],
+          "fullName": "Auth Service login should log login success",
+          "status": "passed",
+          "title": "should log login success",
+          "duration": 0.4982080000000906,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "logout"],
+          "fullName": "Auth Service logout should logout user successfully",
+          "status": "passed",
+          "title": "should logout user successfully",
+          "duration": 0.29075000000000273,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "logout"],
+          "fullName": "Auth Service logout should handle logout errors",
+          "status": "passed",
+          "title": "should handle logout errors",
+          "duration": 0.38274999999998727,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "logout"],
+          "fullName": "Auth Service logout should log logout success",
+          "status": "passed",
+          "title": "should log logout success",
+          "duration": 0.13104199999997945,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "getCurrentUser"],
+          "fullName": "Auth Service getCurrentUser should get current user successfully",
+          "status": "passed",
+          "title": "should get current user successfully",
+          "duration": 0.1885410000001002,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "getCurrentUser"],
+          "fullName": "Auth Service getCurrentUser should return null on error",
+          "status": "passed",
+          "title": "should return null on error",
+          "duration": 0.32770799999991596,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "isLoggedIn"],
+          "fullName": "Auth Service isLoggedIn should return true when user is logged in",
+          "status": "passed",
+          "title": "should return true when user is logged in",
+          "duration": 0.06679099999996652,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "isLoggedIn"],
+          "fullName": "Auth Service isLoggedIn should return false when user is not logged in",
+          "status": "passed",
+          "title": "should return false when user is not logged in",
+          "duration": 0.11245900000005804,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "updatePreferences"],
+          "fullName": "Auth Service updatePreferences should update user preferences successfully",
+          "status": "passed",
+          "title": "should update user preferences successfully",
+          "duration": 0.332416999999964,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Service", "updatePreferences"],
+          "fullName": "Auth Service updatePreferences should handle update preferences errors",
+          "status": "passed",
+          "title": "should handle update preferences errors",
+          "duration": 0.26070800000002237,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480202,
+      "endTime": 1753684480212.3325,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/services/auth.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Rendering"],
+          "fullName": "CaloriesChart Component Rendering should render the component",
+          "status": "passed",
+          "title": "should render the component",
+          "duration": 28.669040999999993,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Rendering"],
+          "fullName": "CaloriesChart Component Rendering should render SVG with correct dimensions",
+          "status": "passed",
+          "title": "should render SVG with correct dimensions",
+          "duration": 2.7719169999999167,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Rendering"],
+          "fullName": "CaloriesChart Component Rendering should render grid lines",
+          "status": "passed",
+          "title": "should render grid lines",
+          "duration": 3.1335000000000264,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Rendering"],
+          "fullName": "CaloriesChart Component Rendering should render gradient definition",
+          "status": "passed",
+          "title": "should render gradient definition",
+          "duration": 2.4101249999999936,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Basic Functionality"],
+          "fullName": "CaloriesChart Component Basic Functionality should accept viewMode prop correctly",
+          "status": "passed",
+          "title": "should accept viewMode prop correctly",
+          "duration": 3.1069579999999632,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Basic Functionality"],
+          "fullName": "CaloriesChart Component Basic Functionality should handle empty data gracefully",
+          "status": "passed",
+          "title": "should handle empty data gracefully",
+          "duration": 5.573458000000073,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "SVG Structure"],
+          "fullName": "CaloriesChart Component SVG Structure should have correct SVG structure",
+          "status": "passed",
+          "title": "should have correct SVG structure",
+          "duration": 2.977624999999989,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "SVG Structure"],
+          "fullName": "CaloriesChart Component SVG Structure should generate paths when data is provided",
+          "status": "passed",
+          "title": "should generate paths when data is provided",
+          "duration": 6.471457999999984,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Props Reactivity"],
+          "fullName": "CaloriesChart Component Props Reactivity should handle viewMode change",
+          "status": "passed",
+          "title": "should handle viewMode change",
+          "duration": 3.2384160000000293,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Props Reactivity"],
+          "fullName": "CaloriesChart Component Props Reactivity should handle different viewMode values",
+          "status": "passed",
+          "title": "should handle different viewMode values",
+          "duration": 3.6962500000000773,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Responsive Behavior"],
+          "fullName": "CaloriesChart Component Responsive Behavior should maintain aspect ratio",
+          "status": "passed",
+          "title": "should maintain aspect ratio",
+          "duration": 2.203292000000033,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Edge Cases"],
+          "fullName": "CaloriesChart Component Edge Cases should handle single data point",
+          "status": "passed",
+          "title": "should handle single data point",
+          "duration": 4.576790999999957,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Edge Cases"],
+          "fullName": "CaloriesChart Component Edge Cases should handle no meals for current period",
+          "status": "passed",
+          "title": "should handle no meals for current period",
+          "duration": 1.7235419999999522,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Edge Cases"],
+          "fullName": "CaloriesChart Component Edge Cases should handle very large calorie values",
+          "status": "passed",
+          "title": "should handle very large calorie values",
+          "duration": 1.6689999999999827,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Day Labels"],
+          "fullName": "CaloriesChart Component Day Labels should render day labels for weekly mode",
+          "status": "passed",
+          "title": "should render day labels for weekly mode",
+          "duration": 1.4282500000000482,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["CaloriesChart Component", "Day Labels"],
+          "fullName": "CaloriesChart Component Day Labels should render time labels for daily mode",
+          "status": "passed",
+          "title": "should render time labels for daily mode",
+          "duration": 1.7337079999999787,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480341,
+      "endTime": 1753684480416.7336,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/components/CaloriesChart.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Auth Store", "Initial State"],
+          "fullName": "Auth Store Initial State should have correct initial state",
+          "status": "passed",
+          "title": "should have correct initial state",
+          "duration": 1.5269170000000258,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "Getters"],
+          "fullName": "Auth Store Getters should return correct userId",
+          "status": "passed",
+          "title": "should return correct userId",
+          "duration": 0.37079199999999446,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "Getters"],
+          "fullName": "Auth Store Getters should return userEmail",
+          "status": "passed",
+          "title": "should return userEmail",
+          "duration": 0.32875000000001364,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "Getters"],
+          "fullName": "Auth Store Getters should return userName",
+          "status": "passed",
+          "title": "should return userName",
+          "duration": 0.18137499999994589,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "Getters"],
+          "fullName": "Auth Store Getters should return default userId when no user",
+          "status": "passed",
+          "title": "should return default userId when no user",
+          "duration": 0.261415999999997,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "Getters"],
+          "fullName": "Auth Store Getters should return userPreferences",
+          "status": "passed",
+          "title": "should return userPreferences",
+          "duration": 0.3990840000000162,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "initAuth"],
+          "fullName": "Auth Store initAuth should initialize with offline user from localStorage",
+          "status": "passed",
+          "title": "should initialize with offline user from localStorage",
+          "duration": 0.4893339999999853,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "initAuth"],
+          "fullName": "Auth Store initAuth should handle no stored user",
+          "status": "passed",
+          "title": "should handle no stored user",
+          "duration": 0.211291000000017,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "register"],
+          "fullName": "Auth Store register should register user in offline mode when Appwrite fails",
+          "status": "passed",
+          "title": "should register user in offline mode when Appwrite fails",
+          "duration": 1.5103330000000028,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "register"],
+          "fullName": "Auth Store register should handle registration errors",
+          "status": "passed",
+          "title": "should handle registration errors",
+          "duration": 0.305417000000034,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "login"],
+          "fullName": "Auth Store login should login with offline credentials when Appwrite fails",
+          "status": "passed",
+          "title": "should login with offline credentials when Appwrite fails",
+          "duration": 0.3075829999999655,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "login"],
+          "fullName": "Auth Store login should reject invalid offline credentials",
+          "status": "passed",
+          "title": "should reject invalid offline credentials",
+          "duration": 0.6053749999999809,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "login"],
+          "fullName": "Auth Store login should reject login with non-matching email",
+          "status": "passed",
+          "title": "should reject login with non-matching email",
+          "duration": 0.19050000000004275,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "login"],
+          "fullName": "Auth Store login should handle login when no offline user exists",
+          "status": "passed",
+          "title": "should handle login when no offline user exists",
+          "duration": 0.30895799999996143,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "login"],
+          "fullName": "Auth Store login should login successfully with Appwrite when available",
+          "status": "passed",
+          "title": "should login successfully with Appwrite when available",
+          "duration": 0.1656669999999849,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "error handling"],
+          "fullName": "Auth Store error handling should set loading state correctly during async operations",
+          "status": "passed",
+          "title": "should set loading state correctly during async operations",
+          "duration": 0.23162500000000819,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "error handling"],
+          "fullName": "Auth Store error handling should clear errors properly",
+          "status": "passed",
+          "title": "should clear errors properly",
+          "duration": 0.10791699999998627,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480599,
+      "endTime": 1753684480607.2317,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/stores/auth.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Calories Store", "Initial State"],
+          "fullName": "Calories Store Initial State should have correct initial state",
+          "status": "passed",
+          "title": "should have correct initial state",
+          "duration": 4.671165999999971,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Getters"],
+          "fullName": "Calories Store Getters should get meals by date correctly",
+          "status": "passed",
+          "title": "should get meals by date correctly",
+          "duration": 5.342167000000018,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Getters"],
+          "fullName": "Calories Store Getters should calculate calories by date correctly",
+          "status": "passed",
+          "title": "should calculate calories by date correctly",
+          "duration": 5.384874999999965,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Getters"],
+          "fullName": "Calories Store Getters should calculate weekly calories correctly",
+          "status": "passed",
+          "title": "should calculate weekly calories correctly",
+          "duration": 0.8170830000000251,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "loadMeals"],
+          "fullName": "Calories Store Actions loadMeals should load meals from offline storage",
+          "status": "passed",
+          "title": "should load meals from offline storage",
+          "duration": 1.9347080000000005,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "loadMeals"],
+          "fullName": "Calories Store Actions loadMeals should handle loading errors",
+          "status": "passed",
+          "title": "should handle loading errors",
+          "duration": 5.759957999999983,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "addMeal"],
+          "fullName": "Calories Store Actions addMeal should add a meal successfully",
+          "status": "passed",
+          "title": "should add a meal successfully",
+          "duration": 1.9769170000000713,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "addMeal"],
+          "fullName": "Calories Store Actions addMeal should handle adding meal with no notes",
+          "status": "passed",
+          "title": "should handle adding meal with no notes",
+          "duration": 0.41095899999993435,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "addMeal"],
+          "fullName": "Calories Store Actions addMeal should handle add meal errors",
+          "status": "passed",
+          "title": "should handle add meal errors",
+          "duration": 1.1972500000000537,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "updateMeal"],
+          "fullName": "Calories Store Actions updateMeal should update a meal successfully",
+          "status": "passed",
+          "title": "should update a meal successfully",
+          "duration": 0.46124999999995,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "updateMeal"],
+          "fullName": "Calories Store Actions updateMeal should handle update meal errors",
+          "status": "passed",
+          "title": "should handle update meal errors",
+          "duration": 0.46375000000000455,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "deleteMeal"],
+          "fullName": "Calories Store Actions deleteMeal should delete a meal successfully",
+          "status": "passed",
+          "title": "should delete a meal successfully",
+          "duration": 0.3048750000000382,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "deleteMeal"],
+          "fullName": "Calories Store Actions deleteMeal should handle delete meal errors",
+          "status": "passed",
+          "title": "should handle delete meal errors",
+          "duration": 0.41762500000004366,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "updateTodaysData"],
+          "fullName": "Calories Store Actions updateTodaysData should update todays meals and calories",
+          "status": "passed",
+          "title": "should update todays meals and calories",
+          "duration": 0.375,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Calories Store", "Actions", "clearError"],
+          "fullName": "Calories Store Actions clearError should clear the error state",
+          "status": "passed",
+          "title": "should clear the error state",
+          "duration": 0.14433299999996052,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480299,
+      "endTime": 1753684480329.375,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/stores/calories.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Fasting Store", "Initial State"],
+          "fullName": "Fasting Store Initial State should have correct initial state",
+          "status": "passed",
+          "title": "should have correct initial state",
+          "duration": 14.761416000000054,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should return correct isFasting status",
+          "status": "passed",
+          "title": "should return correct isFasting status",
+          "duration": 4.452375000000075,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should calculate fastingTimeElapsed correctly",
+          "status": "passed",
+          "title": "should calculate fastingTimeElapsed correctly",
+          "duration": 5.984749999999963,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should calculate fastingTimeRemaining correctly",
+          "status": "passed",
+          "title": "should calculate fastingTimeRemaining correctly",
+          "duration": 1.3187500000000227,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should calculate fastingProgress correctly",
+          "status": "passed",
+          "title": "should calculate fastingProgress correctly",
+          "duration": 3.8023749999999836,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should return todaysSessions correctly",
+          "status": "passed",
+          "title": "should return todaysSessions correctly",
+          "duration": 6.55441600000006,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Getters"],
+          "fullName": "Fasting Store Getters should return completedSessions correctly",
+          "status": "passed",
+          "title": "should return completedSessions correctly",
+          "duration": 0.9125830000000406,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "loadFastingData"],
+          "fullName": "Fasting Store Actions loadFastingData should load fasting data from offline storage",
+          "status": "passed",
+          "title": "should load fasting data from offline storage",
+          "duration": 1.8055420000000595,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "loadFastingData"],
+          "fullName": "Fasting Store Actions loadFastingData should handle loading errors",
+          "status": "passed",
+          "title": "should handle loading errors",
+          "duration": 16.23208299999999,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "createSchedule"],
+          "fullName": "Fasting Store Actions createSchedule should create a new fasting schedule",
+          "status": "passed",
+          "title": "should create a new fasting schedule",
+          "duration": 1.7879590000000007,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "startFast"],
+          "fullName": "Fasting Store Actions startFast should start a new fasting session",
+          "status": "passed",
+          "title": "should start a new fasting session",
+          "duration": 1.8343339999998989,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "startFast"],
+          "fullName": "Fasting Store Actions startFast should handle start fasting errors",
+          "status": "passed",
+          "title": "should handle start fasting errors",
+          "duration": 5.485082999999918,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "endFast"],
+          "fullName": "Fasting Store Actions endFast should end the current fasting session",
+          "status": "passed",
+          "title": "should end the current fasting session",
+          "duration": 1.376583000000096,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "endFast"],
+          "fullName": "Fasting Store Actions endFast should handle no active session",
+          "status": "passed",
+          "title": "should handle no active session",
+          "duration": 1.347709000000009,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "endFast"],
+          "fullName": "Fasting Store Actions endFast should handle end fasting errors",
+          "status": "passed",
+          "title": "should handle end fasting errors",
+          "duration": 5.680292000000009,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Actions", "clearError"],
+          "fullName": "Fasting Store Actions clearError should clear the error state",
+          "status": "passed",
+          "title": "should clear the error state",
+          "duration": 0.8019590000000107,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Fasting Store", "Timer Management"],
+          "fullName": "Fasting Store Timer Management should have timer management methods",
+          "status": "passed",
+          "title": "should have timer management methods",
+          "duration": 0.679625000000101,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480234,
+      "endTime": 1753684480314.6797,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/stores/fasting.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Weight Store", "Initial State"],
+          "fullName": "Weight Store Initial State should have correct initial state",
+          "status": "passed",
+          "title": "should have correct initial state",
+          "duration": 4.512124999999969,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Getters"],
+          "fullName": "Weight Store Getters should return latest weight",
+          "status": "passed",
+          "title": "should return latest weight",
+          "duration": 1.5772500000000491,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Getters"],
+          "fullName": "Weight Store Getters should return weight by date correctly",
+          "status": "passed",
+          "title": "should return weight by date correctly",
+          "duration": 0.9582080000000133,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Getters"],
+          "fullName": "Weight Store Getters should return weekly weight data",
+          "status": "passed",
+          "title": "should return weekly weight data",
+          "duration": 16.955375000000004,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Getters"],
+          "fullName": "Weight Store Getters should return daily weight data",
+          "status": "passed",
+          "title": "should return daily weight data",
+          "duration": 0.6822909999999638,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Getters"],
+          "fullName": "Weight Store Getters should return weight trend",
+          "status": "passed",
+          "title": "should return weight trend",
+          "duration": 0.8466670000000249,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "loadWeightEntries"],
+          "fullName": "Weight Store Actions loadWeightEntries should load weight entries from offline storage",
+          "status": "passed",
+          "title": "should load weight entries from offline storage",
+          "duration": 1.2417500000000246,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "loadWeightEntries"],
+          "fullName": "Weight Store Actions loadWeightEntries should handle loading errors",
+          "status": "passed",
+          "title": "should handle loading errors",
+          "duration": 5.617042000000083,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "addWeightEntry"],
+          "fullName": "Weight Store Actions addWeightEntry should add a new weight entry",
+          "status": "passed",
+          "title": "should add a new weight entry",
+          "duration": 1.3471660000000156,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "addWeightEntry"],
+          "fullName": "Weight Store Actions addWeightEntry should add entry with custom date",
+          "status": "passed",
+          "title": "should add entry with custom date",
+          "duration": 0.6257910000000493,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "addWeightEntry"],
+          "fullName": "Weight Store Actions addWeightEntry should handle add entry errors",
+          "status": "passed",
+          "title": "should handle add entry errors",
+          "duration": 1.1415839999999662,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "updateWeightEntry"],
+          "fullName": "Weight Store Actions updateWeightEntry should update an existing weight entry",
+          "status": "passed",
+          "title": "should update an existing weight entry",
+          "duration": 0.29291699999998855,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "updateWeightEntry"],
+          "fullName": "Weight Store Actions updateWeightEntry should handle entry not found",
+          "status": "passed",
+          "title": "should handle entry not found",
+          "duration": 1.1786670000000186,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "updateWeightEntry"],
+          "fullName": "Weight Store Actions updateWeightEntry should handle update entry errors",
+          "status": "passed",
+          "title": "should handle update entry errors",
+          "duration": 0.5019579999999451,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "deleteWeightEntry"],
+          "fullName": "Weight Store Actions deleteWeightEntry should delete a weight entry",
+          "status": "passed",
+          "title": "should delete a weight entry",
+          "duration": 0.5159169999999449,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "deleteWeightEntry"],
+          "fullName": "Weight Store Actions deleteWeightEntry should handle entry not found",
+          "status": "passed",
+          "title": "should handle entry not found",
+          "duration": 0.4475410000000011,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "deleteWeightEntry"],
+          "fullName": "Weight Store Actions deleteWeightEntry should handle delete entry errors",
+          "status": "passed",
+          "title": "should handle delete entry errors",
+          "duration": 0.40962500000000546,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Actions", "clearError"],
+          "fullName": "Weight Store Actions clearError should clear the error state",
+          "status": "passed",
+          "title": "should clear the error state",
+          "duration": 0.12616700000000947,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Data Export"],
+          "fullName": "Weight Store Data Export should export weight data to CSV format",
+          "status": "passed",
+          "title": "should export weight data to CSV format",
+          "duration": 0.33350000000007185,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Weight Store", "Data Export"],
+          "fullName": "Weight Store Data Export should export weight data to JSON format",
+          "status": "passed",
+          "title": "should export weight data to JSON format",
+          "duration": 0.5444589999999607,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1753684480291,
+      "endTime": 1753684480331.5444,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/cronus/Dev/energy-track/fast-track/test/stores/weight.test.js"
+    }
+  ]
+}

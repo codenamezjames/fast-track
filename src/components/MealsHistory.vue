@@ -15,7 +15,10 @@
     </div>
 
     <!-- Loading state -->
-    <div v-if="caloriesStore.isLoading && (!displayMeals || displayMeals.length === 0)" class="text-center q-py-xl">
+    <div
+      v-if="caloriesStore.isLoading && (!displayMeals || displayMeals.length === 0)"
+      class="text-center q-py-xl"
+    >
       <q-spinner color="primary" size="24px" />
       <div class="text-caption text-grey-6 q-mt-sm">Loading meals...</div>
     </div>
@@ -29,11 +32,7 @@
 
     <!-- Meals list -->
     <q-list v-else separator>
-      <q-item 
-        v-for="meal in displayMeals" 
-        :key="meal.id"
-        class="q-py-md"
-      >
+      <q-item v-for="meal in displayMeals" :key="meal.id" class="q-py-md">
         <q-item-section>
           <q-item-label class="text-weight-bold">
             {{ formatNumber(meal.calories) }} kcal
@@ -45,25 +44,11 @@
             {{ meal.notes }}
           </q-item-label>
         </q-item-section>
-        
+
         <q-item-section side>
           <div class="row q-gutter-xs">
-            <q-btn
-              flat
-              round
-              icon="edit"
-              size="sm"
-              @click="editMeal(meal)"
-              color="grey-6"
-            />
-            <q-btn
-              flat
-              round
-              icon="delete"
-              size="sm"
-              @click="deleteMeal(meal)"
-              color="negative"
-            />
+            <q-btn flat round icon="edit" size="sm" @click="editMeal(meal)" color="grey-6" />
+            <q-btn flat round icon="delete" size="sm" @click="deleteMeal(meal)" color="negative" />
           </div>
         </q-item-section>
       </q-item>
@@ -71,23 +56,13 @@
       <!-- Show More Button -->
       <q-item v-if="hasMoreMeals" class="text-center">
         <q-item-section>
-          <q-btn
-            flat
-            label="Show More"
-            @click="showMore"
-            icon="expand_more"
-            color="primary"
-          />
+          <q-btn flat label="Show More" @click="showMore" icon="expand_more" color="primary" />
         </q-item-section>
       </q-item>
     </q-list>
 
     <!-- Edit Meal Dialog -->
-    <MealDialog 
-      v-model="showEditDialog" 
-      :meal="mealToEdit"
-      @saved="onMealSaved"
-    />
+    <MealDialog v-model="showEditDialog" :meal="mealToEdit" @saved="onMealSaved" />
 
     <!-- Delete Confirmation Dialog -->
     <q-dialog v-model="showDeleteDialog" persistent>
@@ -149,7 +124,7 @@ const refreshMeals = async () => {
     type: 'positive',
     message: 'Meals refreshed',
     position: 'top',
-    timeout: 1000
+    timeout: 1000,
   })
 }
 
@@ -171,13 +146,13 @@ const deleteMeal = (meal) => {
 const confirmDelete = async () => {
   try {
     await caloriesStore.deleteMeal(mealToDelete.value.id)
-    
+
     Notify.create({
       type: 'positive',
       message: 'Meal deleted',
-      position: 'top'
+      position: 'top',
     })
-    
+
     showDeleteDialog.value = false
     mealToDelete.value = null
   } catch (error) {
@@ -185,7 +160,7 @@ const confirmDelete = async () => {
     Notify.create({
       type: 'negative',
       message: 'Failed to delete meal',
-      position: 'top'
+      position: 'top',
     })
   }
 }
@@ -200,11 +175,9 @@ const formatTime = (dateStr) => {
   return date.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
-    hour12: true
+    hour12: true,
   })
 }
-
-
 </script>
 
 <style scoped>
@@ -212,4 +185,4 @@ const formatTime = (dateStr) => {
 .formatNumber {
   font-variant-numeric: tabular-nums;
 }
-</style> 
+</style>

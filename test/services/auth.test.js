@@ -8,15 +8,15 @@ vi.mock('../../src/services/appwrite.js', () => ({
     createEmailPasswordSession: vi.fn(),
     deleteSession: vi.fn(),
     get: vi.fn(),
-    updatePrefs: vi.fn()
-  }
+    updatePrefs: vi.fn(),
+  },
 }))
 
 // Mock Appwrite ID
 vi.mock('appwrite', () => ({
   ID: {
-    unique: vi.fn(() => 'mock-unique-id')
-  }
+    unique: vi.fn(() => 'mock-unique-id'),
+  },
 }))
 
 describe('Auth Service', () => {
@@ -33,9 +33,9 @@ describe('Auth Service', () => {
       const mockUser = {
         $id: 'mock-unique-id',
         email: 'test@example.com',
-        name: 'Test User'
+        name: 'Test User',
       }
-      
+
       mockAccount.create.mockResolvedValue(mockUser)
 
       const result = await authService.register('test@example.com', 'password123', 'Test User')
@@ -44,7 +44,7 @@ describe('Auth Service', () => {
         'mock-unique-id',
         'test@example.com',
         'password123',
-        'Test User'
+        'Test User',
       )
       expect(result).toEqual(mockUser)
     })
@@ -53,8 +53,9 @@ describe('Auth Service', () => {
       const error = new Error('Email already exists')
       mockAccount.create.mockRejectedValue(error)
 
-      await expect(authService.register('test@example.com', 'password123', 'Test User'))
-        .rejects.toThrow('Email already exists')
+      await expect(
+        authService.register('test@example.com', 'password123', 'Test User'),
+      ).rejects.toThrow('Email already exists')
     })
 
     it('should log registration success', async () => {
@@ -73,16 +74,16 @@ describe('Auth Service', () => {
     it('should login user successfully', async () => {
       const mockSession = {
         $id: 'session-id',
-        userId: 'user-id'
+        userId: 'user-id',
       }
-      
+
       mockAccount.createEmailPasswordSession.mockResolvedValue(mockSession)
 
       const result = await authService.login('test@example.com', 'password123')
 
       expect(mockAccount.createEmailPasswordSession).toHaveBeenCalledWith(
         'test@example.com',
-        'password123'
+        'password123',
       )
       expect(result).toEqual(mockSession)
     })
@@ -91,8 +92,9 @@ describe('Auth Service', () => {
       const error = new Error('Invalid credentials')
       mockAccount.createEmailPasswordSession.mockRejectedValue(error)
 
-      await expect(authService.login('test@example.com', 'wrongpassword'))
-        .rejects.toThrow('Invalid credentials')
+      await expect(authService.login('test@example.com', 'wrongpassword')).rejects.toThrow(
+        'Invalid credentials',
+      )
     })
 
     it('should log login success', async () => {
@@ -139,9 +141,9 @@ describe('Auth Service', () => {
       const mockUser = {
         $id: 'user-id',
         email: 'test@example.com',
-        name: 'Test User'
+        name: 'Test User',
       }
-      
+
       mockAccount.get.mockResolvedValue(mockUser)
 
       const result = await authService.getCurrentUser()
@@ -182,7 +184,7 @@ describe('Auth Service', () => {
     it('should update user preferences successfully', async () => {
       const preferences = { theme: 'dark', notifications: true }
       const mockResult = { success: true }
-      
+
       mockAccount.updatePrefs.mockResolvedValue(mockResult)
 
       const result = await authService.updatePreferences(preferences)
@@ -195,8 +197,9 @@ describe('Auth Service', () => {
       const error = new Error('Update failed')
       mockAccount.updatePrefs.mockRejectedValue(error)
 
-      await expect(authService.updatePreferences({ theme: 'dark' }))
-        .rejects.toThrow('Update failed')
+      await expect(authService.updatePreferences({ theme: 'dark' })).rejects.toThrow(
+        'Update failed',
+      )
     })
   })
-}) 
+})

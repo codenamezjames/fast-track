@@ -18,12 +18,12 @@
     </div>
 
     <!-- Chart container -->
-    <div class="chart-container" :class="{ 'loading': isLoading }">
+    <div class="chart-container" :class="{ loading: isLoading }">
       <div v-if="isLoading" class="chart-loading">
         <q-spinner-dots size="40px" color="primary" />
         <div class="text-body2 q-mt-sm text-grey-6">Loading chart data...</div>
       </div>
-      
+
       <div v-else-if="!hasData" class="chart-no-data">
         <q-icon name="insights" size="48px" color="grey-4" />
         <div class="text-body2 q-mt-sm text-grey-6">No data available for this period</div>
@@ -31,11 +31,7 @@
       </div>
 
       <div v-else class="chart-wrapper">
-        <Line
-          :data="chartData"
-          :options="chartOptions"
-          :height="chartHeight"
-        />
+        <Line :data="chartData" :options="chartOptions" :height="chartHeight" />
       </div>
     </div>
 
@@ -50,7 +46,7 @@
             </q-card-section>
           </q-card>
         </div>
-        
+
         <div class="col">
           <q-card flat bordered class="stat-card">
             <q-card-section class="text-center">
@@ -59,7 +55,7 @@
             </q-card-section>
           </q-card>
         </div>
-        
+
         <div class="col">
           <q-card flat bordered class="stat-card">
             <q-card-section class="text-center">
@@ -85,7 +81,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 } from 'chart.js'
 import { useCaloriesStore } from '../stores/calories.js'
 import { useThemeStore } from '../stores/theme.js'
@@ -99,19 +95,19 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 )
 
 // Props
 const props = defineProps({
   height: {
     type: Number,
-    default: 200
+    default: 200,
   },
   showStats: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 })
 
 // Stores
@@ -125,7 +121,7 @@ const isLoading = ref(false)
 const periodOptions = [
   { label: '7D', value: 'week' },
   { label: '4W', value: 'month' },
-  { label: '6M', value: 'sixmonths' }
+  { label: '6M', value: 'sixmonths' },
 ]
 
 // Computed properties
@@ -145,8 +141,7 @@ const rawChartData = computed(() => {
 })
 
 const hasData = computed(() => {
-  return rawChartData.value.length > 0 && 
-         rawChartData.value.some(item => item.calories > 0)
+  return rawChartData.value.length > 0 && rawChartData.value.some((item) => item.calories > 0)
 })
 
 const chartData = computed(() => {
@@ -156,11 +151,11 @@ const chartData = computed(() => {
   const isDarkMode = themeStore.isDarkMode
 
   return {
-    labels: data.map(item => item.label),
+    labels: data.map((item) => item.label),
     datasets: [
       {
         label: 'Calories',
-        data: data.map(item => item.calories),
+        data: data.map((item) => item.calories),
         borderColor: isDarkMode ? '#82B1FF' : '#1976D2',
         backgroundColor: isDarkMode ? 'rgba(130, 177, 255, 0.1)' : 'rgba(25, 118, 210, 0.1)',
         fill: true,
@@ -171,9 +166,9 @@ const chartData = computed(() => {
         pointHoverBorderColor: isDarkMode ? '#FFFFFF' : '#FFFFFF',
         pointRadius: 4,
         pointHoverRadius: 6,
-        borderWidth: 2
-      }
-    ]
+        borderWidth: 2,
+      },
+    ],
   }
 })
 
@@ -187,11 +182,11 @@ const chartOptions = computed(() => {
     maintainAspectRatio: false,
     interaction: {
       intersect: false,
-      mode: 'index'
+      mode: 'index',
     },
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
@@ -202,52 +197,52 @@ const chartOptions = computed(() => {
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          title: function(context) {
+          title: function (context) {
             return context[0].label
           },
-          label: function(context) {
+          label: function (context) {
             return `${context.parsed.y} calories`
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         grid: {
           color: gridColor,
-          borderColor: gridColor
+          borderColor: gridColor,
         },
         ticks: {
           color: textColor,
           font: {
-            size: 12
+            size: 12,
           },
           maxRotation: 45,
-          minRotation: 0
-        }
+          minRotation: 0,
+        },
       },
       y: {
         beginAtZero: true,
         grid: {
           color: gridColor,
-          borderColor: gridColor
+          borderColor: gridColor,
         },
         ticks: {
           color: textColor,
           font: {
-            size: 12
+            size: 12,
           },
-          callback: function(value) {
+          callback: function (value) {
             return value + ' cal'
-          }
-        }
-      }
+          },
+        },
+      },
     },
     elements: {
       point: {
-        hoverRadius: 8
-      }
-    }
+        hoverRadius: 8,
+      },
+    },
   }
 })
 
@@ -255,31 +250,31 @@ const chartOptions = computed(() => {
 const averageCalories = computed(() => {
   if (!hasData.value) return 0
   const total = rawChartData.value.reduce((sum, item) => sum + item.calories, 0)
-  const count = rawChartData.value.filter(item => item.calories > 0).length || 1
+  const count = rawChartData.value.filter((item) => item.calories > 0).length || 1
   return Math.round(total / count)
 })
 
 const maxCalories = computed(() => {
   if (!hasData.value) return 0
-  return Math.max(...rawChartData.value.map(item => item.calories))
+  return Math.max(...rawChartData.value.map((item) => item.calories))
 })
 
 const minCalories = computed(() => {
   if (!hasData.value) return 0
   const nonZeroCalories = rawChartData.value
-    .map(item => item.calories)
-    .filter(calories => calories > 0)
-  
+    .map((item) => item.calories)
+    .filter((calories) => calories > 0)
+
   return nonZeroCalories.length > 0 ? Math.min(...nonZeroCalories) : 0
 })
 
 // Methods
 const updateChartData = async () => {
   isLoading.value = true
-  
+
   // Simulate loading for smooth UX
-  await new Promise(resolve => setTimeout(resolve, 300))
-  
+  await new Promise((resolve) => setTimeout(resolve, 300))
+
   isLoading.value = false
 }
 
@@ -290,9 +285,12 @@ onMounted(async () => {
 })
 
 // Watchers
-watch(() => themeStore.isDarkMode, () => {
-  // Chart will reactively update due to computed properties
-})
+watch(
+  () => themeStore.isDarkMode,
+  () => {
+    // Chart will reactively update due to computed properties
+  },
+)
 </script>
 
 <style scoped>
@@ -361,28 +359,28 @@ watch(() => themeStore.isDarkMode, () => {
   .chart-header {
     align-items: center;
   }
-  
+
   .period-selector {
     max-width: 180px;
   }
-  
+
   .chart-container {
     min-height: 200px;
   }
-  
+
   .chart-wrapper {
     padding: 12px;
     height: 200px;
   }
-  
+
   .chart-stats .row {
     gap: 8px;
   }
-  
+
   .stat-card .q-card-section {
     padding: 8px;
   }
-  
+
   .stat-card .text-h6 {
     font-size: 1.1rem;
   }
@@ -397,4 +395,4 @@ body.body--dark .stat-card {
   background: var(--q-dark-page);
   border-color: rgba(255, 255, 255, 0.12);
 }
-</style> 
+</style>

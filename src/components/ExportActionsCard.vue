@@ -27,12 +27,12 @@ defineEmits(['exportCalories', 'exportFasting', 'shareReport', 'printReport'])
 const props = defineProps({
   exportingCalories: {
     type: Boolean,
-    default: false
+    default: false,
   },
   exportingFasting: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const actions = [
@@ -42,7 +42,7 @@ const actions = [
     icon: 'file_download',
     label: 'Export Calories CSV',
     event: 'exportCalories',
-    loading: props.exportingCalories
+    loading: props.exportingCalories,
   },
   {
     id: 'fasting',
@@ -50,7 +50,7 @@ const actions = [
     icon: 'file_download',
     label: 'Export Fasting CSV',
     event: 'exportFasting',
-    loading: props.exportingFasting
+    loading: props.exportingFasting,
   },
   {
     id: 'share',
@@ -58,7 +58,7 @@ const actions = [
     icon: 'share',
     label: 'Share Report',
     event: 'shareReport',
-    loading: false
+    loading: false,
   },
   {
     id: 'print',
@@ -66,8 +66,8 @@ const actions = [
     icon: 'print',
     label: 'Print Report',
     event: 'printReport',
-    loading: false
-  }
+    loading: false,
+  },
 ]
 </script>
 
@@ -80,4 +80,4 @@ const actions = [
 .export-btn {
   height: 48px;
 }
-</style> 
+</style>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/assets/fasting-B_Lb0KE3.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1>
+          <a href="../../../index.html">All files</a> /
+          <a href="index.html">dist/pwa/assets</a> fasting-B_Lb0KE3.js
+        </h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import{aL as S,u as f}from"./index-Bfu9UyXH.js";import{o as h,u as g,d as m}from"./_plugin-vue_export-helper-DfXOXxoj.js";const p=S("fasting",{state:()=&gt;({currentSession:null,activeSchedule:null,schedules:[],sessions:[],isLoading:!1,error:null,timerInterval:null,currentTime:new Date,presetSchedules:[{id:"preset-16-8",name:"16:8 (16hr fast, 8hr eating)",description:"Fast for 16 hours, eat in 8-hour window",fastingHours:16,eatingHours:8,defaultStart:"20:00",defaultEnd:"12:00"},{id:"preset-18-6",name:"18:6 (18hr fast, 6hr eating)",description:"Fast for 18 hours, eat in 6-hour window",fastingHours:18,eatingHours:6,defaultStart:"18:00",defaultEnd:"12:00"},{id:"preset-20-4",name:"20:4 (20hr fast, 4hr eating)",description:"Fast for 20 hours, eat in 4-hour window",fastingHours:20,eatingHours:4,defaultStart:"16:00",defaultEnd:"12:00"},{id:"preset-24",name:"24-Hour Fast",description:"Complete 24-hour fast",fastingHours:24,eatingHours:0,defaultStart:"18:00",defaultEnd:"18:00"}]}),getters:{isFasting:t=&gt;t.currentSession&amp;&amp;t.currentSession.status==="active"&amp;&amp;new Date&gt;=new Date(t.currentSession.start_time)&amp;&amp;(!t.currentSession.end_time||new Date&lt;new Date(t.currentSession.end_time)),fastingTimeRemaining:t=&gt;{if(!t.currentSession||t.currentSession.status!=="active")return 0;const s=new Date,n=new Date(t.currentSession.planned_end_time).getTime()-s.getTime();return Math.max(0,n)},fastingTimeElapsed:t=&gt;{if(!t.currentSession||t.currentSession.status!=="active")return 0;const s=new Date,r=new Date(t.currentSession.start_time),n=s.getTime()-r.getTime();return Math.max(0,n)},fastingProgress:t=&gt;{if(!t.currentSession||t.currentSession.status!=="active")return 0;const s=t.currentSession.planned_duration*60*60*1e3,r=t.fastingTimeElapsed;return Math.min(100,r/s*100)},todaysSessions:t=&gt;{const s=new Date().toDateString();return t.sessions.filter(r=&gt;new Date(r.start_time).toDateString()===s)},completedSessions:t=&gt;t.sessions.filter(s=&gt;s.status==="completed"),fastingStreak:t=&gt;{const s=t.sessions.filter(e=&gt;e.status==="completed").sort((e,i)=&gt;new Date(i.start_time)-new Date(e.start_time));if(s.length===0)return 0;let r=0,n=new Date;n.setHours(0,0,0,0);for(const e of s){const i=new Date(e.start_time);i.setHours(0,0,0,0);const a=Math.floor((n-i)/(1e3*60*60*24));if(a===r)r++,n.setDate(n.getDate()-1);else if(a&gt;r)break}return r},totalFastingHours:t=&gt;t.sessions.filter(s=&gt;s.status==="completed"&amp;&amp;s.actual_duration).reduce((s,r)=&gt;s+r.actual_duration,0),averageFastingDuration:t=&gt;{const s=t.sessions.filter(n=&gt;n.status==="completed"&amp;&amp;n.actual_duration);if(s.length===0)return 0;const r=s.reduce((n,e)=&gt;n+e.actual_duration,0);return Math.round(r/s.length*10)/10},fastingSessionsByDate:t=&gt;(s=7)=&gt;{const r=new Date,n=[];for(let e=s-1;e&gt;=0;e--){const i=new Date(r.getTime()-e*24*60*60*1e3),a=i.toDateString(),c=t.sessions.filter(o=&gt;new Date(o.start_time).toDateString()===a&amp;&amp;o.status==="completed"),u=c.reduce((o,l)=&gt;o+(l.actual_duration||0),0);n.push({date:i.toISOString().split("T")[0],label:i.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}),sessions:c.length,hours:Math.round(u*10)/10,completed:c.length&gt;0})}return n},weeklyFastingData:t=&gt;(s=4)=&gt;{const r=new Date,n=[];for(let e=s-1;e&gt;=0;e--){const i=new Date(r.getTime()-(e*7+r.getDay())*24*60*60*1e3),a=new Date(i.getTime()+8640*60*1e3),c=t.sessions.filter(o=&gt;{const l=new Date(o.start_time);return l&gt;=i&amp;&amp;l&lt;=a&amp;&amp;o.status==="completed"}),u=c.reduce((o,l)=&gt;o+(l.actual_duration||0),0);n.push({week:`Week ${s-e}`,label:`${i.toLocaleDateString("en-US",{month:"short",day:"numeric"})} - ${a.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`,sessions:c.length,hours:Math.round(u*10)/10})}return n},monthlyFastingData:t=&gt;(s=6)=&gt;{const r=new Date,n=[];for(let e=s-1;e&gt;=0;e--){const i=new Date(r.getFullYear(),r.getMonth()-e,1),a=new Date(i.getFullYear(),i.getMonth(),1),c=new Date(i.getFullYear(),i.getMonth()+1,0),u=t.sessions.filter(l=&gt;{const d=new Date(l.start_time);return d&gt;=a&amp;&amp;d&lt;=c&amp;&amp;l.status==="completed"}),o=u.reduce((l,d)=&gt;l+(d.actual_duration||0),0);n.push({month:i.toLocaleDateString("en-US",{year:"numeric",month:"short"}),label:i.toLocaleDateString("en-US",{year:"numeric",month:"long"}),sessions:u.length,hours:Math.round(o*10)/10})}return n},fastingSuccessRate:t=&gt;(s=30)=&gt;{const r=new Date,n=new Date(r.getTime()-s*24*60*60*1e3),e=t.sessions.filter(a=&gt;new Date(a.start_time)&gt;=n);if(e.length===0)return 0;const i=e.filter(a=&gt;a.status==="completed");return Math.round(i.length/e.length*100)}},actions:{async loadFastingData(){this.isLoading=!0;try{this.schedules=await m.fasting_schedules.toArray(),this.sessions=await m.fasting_sessions.toArray(),this.currentSession=this.sessions.find(t=&gt;t.status==="active")||null,this.activeSchedule=this.schedules.find(t=&gt;t.is_active)||null,this.currentSession&amp;&amp;this.startTimer()}catch(t){console.error("Error loading fasting data:",t),this.error=t.message}finally{this.isLoading=!1}},async createSchedule(t){const r={user_id:f().userId,name:t.name,schedule_data:t,is_active:t.setAsActive||!1,created_at:new Date().toISOString()};try{r.is_active&amp;&amp;await this.deactivateAllSchedules();const e={id:await h.addToOffline("fasting_schedules",r),...r,synced:!1};return this.schedules.push(e),r.is_active&amp;&amp;(this.activeSchedule=e),e}catch(n){throw console.error("Error creating schedule:",n),this.error=n.message,n}},async startFast(t=null,s=null){const r=f(),n=g(),e=new Date;let i,a;if(s)i=new Date(s),a=(i.getTime()-e.getTime())/(1e3*60*60);else if(t)a=t,i=new Date(e.getTime()+t*60*60*1e3);else if(this.activeSchedule)a=this.activeSchedule.schedule_data.fastingHours,i=new Date(e.getTime()+a*60*60*1e3);else throw new Error("No duration specified and no active schedule");this.currentSession&amp;&amp;this.currentSession.status==="active"&amp;&amp;await this.endFast();const c={user_id:r.userId,start_time:e.toISOString(),planned_end_time:i.toISOString(),planned_duration:a,session_type:"regular",status:"active"};try{const o={id:await h.addToOffline("fasting_sessions",c),...c,synced:!1};return this.sessions.push(o),this.currentSession=o,n.isFastingNotificationsEnabled&amp;&amp;(await n.scheduleFastingNotifications(e,a),await n.notifyFastingStart(a)),this.startTimer(),o}catch(u){throw console.error("Error starting fast:",u),this.error=u.message,u}},async endFast(){if(!this.currentSession||this.currentSession.status!=="active")throw new Error("No active fasting session");const t=g(),s=new Date,r=new Date(this.currentSession.start_time),n=(s.getTime()-r.getTime())/(1e3*60*60);try{const e={...this.currentSession,end_time:s.toISOString(),actual_duration:n,status:"completed"};await h.updateOffline("fasting_sessions",this.currentSession.id,e);const i=this.sessions.findIndex(a=&gt;a.id===this.currentSession.id);return i!==-1&amp;&amp;(this.sessions[i]={...e,synced:!1}),t.clearFastingNotifications(),t.isFastingNotificationsEnabled&amp;&amp;await t.notifyFastingEnd(this.currentSession.planned_duration),this.currentSession=null,this.stopTimer(),e}catch(e){throw console.error("Error ending fast:",e),this.error=e.message,e}},async deactivateAllSchedules(){try{for(const t of this.schedules)t.is_active&amp;&amp;(await h.updateOffline("fasting_schedules",t.id,{...t,is_active:!1}),t.is_active=!1);this.activeSchedule=null}catch(t){throw console.error("Error deactivating schedules:",t),t}},startTimer(){this.stopTimer(),this.timerInterval=setInterval(()=&gt;{this.currentTime=new Date,this.currentSession&amp;&amp;this.currentSession.planned_end_time&amp;&amp;this.currentTime&gt;=new Date(this.currentSession.planned_end_time)&amp;&amp;this.endFast()},1e3)},stopTimer(){this.timerInterval&amp;&amp;(clearInterval(this.timerInterval),this.timerInterval=null)},formatDuration(t){const s=Math.floor(t/36e5),r=Math.floor(t%(1e3*60*60)/(1e3*60)),n=Math.floor(t%(1e3*60)/1e3);return s&gt;0?`${s}h ${r}m ${n}s`:r&gt;0?`${r}m ${n}s`:`${n}s`},clearError(){this.error=null}}});export{p as u};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../../sorter.js"></script>
+    <script src="../../../block-navigation.js"></script>
+  </body>
+</html>

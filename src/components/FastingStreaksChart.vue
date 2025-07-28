@@ -18,12 +18,12 @@
     </div>
 
     <!-- Chart container -->
-    <div class="chart-container" :class="{ 'loading': isLoading }">
+    <div class="chart-container" :class="{ loading: isLoading }">
       <div v-if="isLoading" class="chart-loading">
         <q-spinner-dots size="40px" color="secondary" />
         <div class="text-body2 q-mt-sm text-grey-6">Loading chart data...</div>
       </div>
-      
+
       <div v-else-if="!hasData" class="chart-no-data">
         <q-icon name="timer" size="48px" color="grey-4" />
         <div class="text-body2 q-mt-sm text-grey-6">No fasting data available</div>
@@ -45,12 +45,18 @@
                   :key="index"
                   :class="[
                     'streak-day',
-                    { 'completed': day.completed, 'missed': !day.completed && day.attempted }
+                    { completed: day.completed, missed: !day.completed && day.attempted },
                   ]"
                   :title="day.tooltip"
                 >
-                  <q-icon 
-                    :name="day.completed ? 'check_circle' : (day.attempted ? 'cancel' : 'radio_button_unchecked')"
+                  <q-icon
+                    :name="
+                      day.completed
+                        ? 'check_circle'
+                        : day.attempted
+                          ? 'cancel'
+                          : 'radio_button_unchecked'
+                    "
                     :size="day.completed ? '20px' : '16px'"
                   />
                 </div>
@@ -75,11 +81,7 @@
 
         <!-- Hours Chart -->
         <div v-else-if="selectedChart === 'hours'">
-          <Bar
-            :data="hoursChartData"
-            :options="barChartOptions"
-            :height="chartHeight"
-          />
+          <Bar :data="hoursChartData" :options="barChartOptions" :height="chartHeight" />
         </div>
 
         <!-- Success Rate Chart -->
@@ -104,7 +106,7 @@
             </q-card-section>
           </q-card>
         </div>
-        
+
         <div class="col">
           <q-card flat bordered class="stat-card">
             <q-card-section class="text-center">
@@ -113,7 +115,7 @@
             </q-card-section>
           </q-card>
         </div>
-        
+
         <div class="col">
           <q-card flat bordered class="stat-card">
             <q-card-section class="text-center">
@@ -138,28 +140,20 @@ import {
   ArcElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js'
 import { useFastingStore } from '../stores/fasting.js'
 import { useThemeStore } from '../stores/theme.js'
 
 // Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-)
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend)
 
 // Props
 const props = defineProps({
   height: {
     type: Number,
-    default: 200
-  }
+    default: 200,
+  },
 })
 
 // Stores
@@ -173,7 +167,7 @@ const isLoading = ref(false)
 const chartOptions = [
   { label: 'Streak', value: 'streak' },
   { label: 'Hours', value: 'hours' },
-  { label: 'Success', value: 'success' }
+  { label: 'Success', value: 'success' },
 ]
 
 // Computed properties
@@ -198,26 +192,25 @@ const successRate = computed(() => fastingStore.fastingSuccessRate(30))
 const streakHistory = computed(() => {
   const days = []
   const now = new Date()
-  
+
   for (let i = 29; i >= 0; i--) {
     const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
     const dateString = date.toDateString()
-    
-    const daySession = fastingStore.sessions.find(session => 
-      new Date(session.start_time).toDateString() === dateString
+
+    const daySession = fastingStore.sessions.find(
+      (session) => new Date(session.start_time).toDateString() === dateString,
     )
-    
+
     days.push({
       date: date,
       completed: daySession?.status === 'completed',
       attempted: !!daySession,
       tooltip: `${date.toLocaleDateString()}: ${
-        daySession?.status === 'completed' ? 'Completed' : 
-        daySession ? 'Attempted' : 'No Fast'
-      }`
+        daySession?.status === 'completed' ? 'Completed' : daySession ? 'Attempted' : 'No Fast'
+      }`,
     })
   }
-  
+
   return days
 })
 
@@ -229,19 +222,17 @@ const hoursChartData = computed(() => {
   const isDarkMode = themeStore.isDarkMode
 
   return {
-    labels: data.map(item => item.label),
+    labels: data.map((item) => item.label),
     datasets: [
       {
         label: 'Fasting Hours',
-        data: data.map(item => item.hours),
-        backgroundColor: isDarkMode ? 
-          'rgba(156, 204, 101, 0.7)' : 'rgba(76, 175, 80, 0.7)',
-        borderColor: isDarkMode ? 
-          '#9CCC65' : '#4CAF50',
+        data: data.map((item) => item.hours),
+        backgroundColor: isDarkMode ? 'rgba(156, 204, 101, 0.7)' : 'rgba(76, 175, 80, 0.7)',
+        borderColor: isDarkMode ? '#9CCC65' : '#4CAF50',
         borderWidth: 2,
-        borderRadius: 4
-      }
-    ]
+        borderRadius: 4,
+      },
+    ],
   }
 })
 
@@ -257,17 +248,11 @@ const successChartData = computed(() => {
     datasets: [
       {
         data: [rate, 100 - rate],
-        backgroundColor: [
-          isDarkMode ? '#81C784' : '#4CAF50',
-          isDarkMode ? '#E57373' : '#F44336'
-        ],
-        borderColor: [
-          isDarkMode ? '#66BB6A' : '#388E3C',
-          isDarkMode ? '#EF5350' : '#D32F2F'
-        ],
-        borderWidth: 2
-      }
-    ]
+        backgroundColor: [isDarkMode ? '#81C784' : '#4CAF50', isDarkMode ? '#E57373' : '#F44336'],
+        borderColor: [isDarkMode ? '#66BB6A' : '#388E3C', isDarkMode ? '#EF5350' : '#D32F2F'],
+        borderWidth: 2,
+      },
+    ],
   }
 })
 
@@ -282,7 +267,7 @@ const barChartOptions = computed(() => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
@@ -293,38 +278,38 @@ const barChartOptions = computed(() => {
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return `${context.parsed.y} hours fasted`
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         grid: {
           color: gridColor,
-          borderColor: gridColor
+          borderColor: gridColor,
         },
         ticks: {
           color: textColor,
-          font: { size: 12 }
-        }
+          font: { size: 12 },
+        },
       },
       y: {
         beginAtZero: true,
         grid: {
           color: gridColor,
-          borderColor: gridColor
+          borderColor: gridColor,
         },
         ticks: {
           color: textColor,
           font: { size: 12 },
-          callback: function(value) {
+          callback: function (value) {
             return value + 'h'
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   }
 })
 
@@ -341,8 +326,8 @@ const doughnutChartOptions = computed(() => {
         labels: {
           color: textColor,
           font: { size: 12 },
-          padding: 20
-        }
+          padding: 20,
+        },
       },
       tooltip: {
         backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
@@ -351,23 +336,23 @@ const doughnutChartOptions = computed(() => {
         borderWidth: 1,
         cornerRadius: 8,
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return `${context.label}: ${context.parsed}%`
-          }
-        }
-      }
+          },
+        },
+      },
     },
-    cutout: '60%'
+    cutout: '60%',
   }
 })
 
 // Methods
 const updateChartData = async () => {
   isLoading.value = true
-  
+
   // Simulate loading for smooth UX
-  await new Promise(resolve => setTimeout(resolve, 300))
-  
+  await new Promise((resolve) => setTimeout(resolve, 300))
+
   isLoading.value = false
 }
 
@@ -378,9 +363,12 @@ onMounted(async () => {
 })
 
 // Watchers
-watch(() => themeStore.isDarkMode, () => {
-  // Chart will reactively update due to computed properties
-})
+watch(
+  () => themeStore.isDarkMode,
+  () => {
+    // Chart will reactively update due to computed properties
+  },
+)
 </script>
 
 <style scoped>
@@ -481,14 +469,14 @@ watch(() => themeStore.isDarkMode, () => {
 
 .streak-day.completed {
   background: rgba(76, 175, 80, 0.1);
-  border-color: #4CAF50;
-  color: #4CAF50;
+  border-color: #4caf50;
+  color: #4caf50;
 }
 
 .streak-day.missed {
   background: rgba(244, 67, 54, 0.1);
-  border-color: #F44336;
-  color: #F44336;
+  border-color: #f44336;
+  color: #f44336;
 }
 
 .streak-legend {
@@ -523,37 +511,37 @@ watch(() => themeStore.isDarkMode, () => {
   .chart-header {
     align-items: center;
   }
-  
+
   .chart-selector {
     max-width: 220px;
   }
-  
+
   .chart-container {
     min-height: 200px;
   }
-  
+
   .chart-wrapper {
     padding: 12px;
     height: 200px;
   }
-  
+
   .streak-number {
     font-size: 2.5rem;
   }
-  
+
   .streak-grid {
     grid-template-columns: repeat(8, 1fr);
     max-width: 200px;
   }
-  
+
   .chart-stats .row {
     gap: 8px;
   }
-  
+
   .stat-card .q-card-section {
     padding: 8px;
   }
-  
+
   .stat-card .text-h6 {
     font-size: 1.1rem;
   }
@@ -576,13 +564,13 @@ body.body--dark .streak-day {
 
 body.body--dark .streak-day.completed {
   background: rgba(129, 199, 132, 0.15);
-  border-color: #81C784;
-  color: #81C784;
+  border-color: #81c784;
+  color: #81c784;
 }
 
 body.body--dark .streak-day.missed {
   background: rgba(229, 115, 115, 0.15);
-  border-color: #E57373;
-  color: #E57373;
+  border-color: #e57373;
+  color: #e57373;
 }
-</style> 
+</style>

@@ -66,5 +66,5 @@ export const authService = {
       console.error('Update preferences error:', error)
       throw error
     }
-  }
-} 
+  },
+}

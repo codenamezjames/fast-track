@@ -11,4 +11,4 @@ export default boot(({ store }) => {
     console.error('Failed to initialize theme system:', error)
     // Don't let theme initialization block app startup
   }
-}) 
+})

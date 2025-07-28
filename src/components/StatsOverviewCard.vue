@@ -21,46 +21,46 @@ import { computed } from 'vue'
 const props = defineProps({
   icon: {
     type: String,
-    required: true
+    required: true,
   },
   color: {
     type: String,
-    required: true
+    required: true,
   },
   value: {
     type: [String, Number],
-    required: true
+    required: true,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   showTrend: {
     type: Boolean,
-    default: false
+    default: false,
   },
   trendValue: {
     type: [String, Number],
-    default: ''
+    default: '',
   },
   trendSuffix: {
     type: String,
-    default: ''
+    default: '',
   },
   trendLabel: {
     type: String,
-    default: ''
+    default: '',
   },
   trendType: {
     type: String,
     default: 'neutral',
-    validator: value => ['positive', 'negative', 'neutral', 'primary'].includes(value)
+    validator: (value) => ['positive', 'negative', 'neutral', 'primary'].includes(value),
   },
   trendDirection: {
     type: String,
     default: null,
-    validator: value => !value || ['positive', 'negative', 'neutral'].includes(value)
-  }
+    validator: (value) => !value || ['positive', 'negative', 'neutral'].includes(value),
+  },
 })
 
 const trendClass = computed(() => {
@@ -82,7 +82,9 @@ const trendIcon = computed(() => {
 <style scoped>
 .stat-overview-card {
   border-radius: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .stat-overview-card:hover {
@@ -94,4 +96,4 @@ const trendIcon = computed(() => {
 body.body--dark .stat-overview-card:hover {
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
-</style> 
+</style>

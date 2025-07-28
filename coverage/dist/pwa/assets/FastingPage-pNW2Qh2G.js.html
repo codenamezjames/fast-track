@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/assets/FastingPage-pNW2Qh2G.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1>
+          <a href="../../../index.html">All files</a> /
+          <a href="index.html">dist/pwa/assets</a> FastingPage-pNW2Qh2G.js
+        </h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import{Q as $}from"./QPage-BgbJ14dN.js";import{z as i,b as F,M as S,q as c,i as n,t as d,l as s,x as b,N as x,_ as w,k as f,y as H,a1 as g,e as M,w as P}from"./index-Bfu9UyXH.js";import{u as L}from"./fasting-B_Lb0KE3.js";import{_ as u}from"./_plugin-vue_export-helper-DfXOXxoj.js";const B={class:"fasting-timer-modern"},I={key:0,class:"active-fast"},N={class:"progress-container"},Q={width:"160",height:"160",class:"progress-svg"},T=["stroke-dasharray","stroke-dashoffset"],C=["stroke-dasharray","stroke-dashoffset"],D={class:"center-content"},q={class:"time-remaining"},A={key:1,class:"no-fast"},O={class:"quick-start-buttons"},R={__name:"FastingTimer",setup(p){const a=L(),r=2*Math.PI*70,_=i(()=&gt;`${r*.6666666666666666} ${r}`),m=i(()=&gt;0),h=i(()=&gt;{const e=a.fastingProgress/100,l=16/24;return`${r*l*e} ${r}`}),k=i(()=&gt;0),v=i(()=&gt;{if(!a.isFasting)return"00:00";const e=a.fastingTimeRemaining;if(e&gt;0){const t=Math.floor(e/36e5),o=Math.floor(e%(1e3*60*60)/(1e3*60));return`${t.toString().padStart(2,"0")}:${o.toString().padStart(2,"0")} remaining`}else{const t=Math.abs(e),o=Math.floor(t/(1e3*60*60)),l=Math.floor(t%(1e3*60*60)/(1e3*60));return`${o.toString().padStart(2,"0")}:${l.toString().padStart(2,"0")} overtime`}});F(async()=&gt;{await a.loadFastingData()}),S(()=&gt;{a.stopTimer()});const y=async e=&gt;{try{await a.startFast(e),g.create({type:"positive",message:`Started ${e}h fast!`,position:"top",timeout:2e3})}catch{g.create({type:"negative",message:"Failed to start fast",position:"top"})}};return(e,t)=&gt;(n(),c("div",B,[d(a).isFasting?(n(),c("div",I,[s("div",N,[(n(),c("svg",Q,[t[0]||(t[0]=s("circle",{cx:"80",cy:"80",r:"70",fill:"none",stroke:"#e9ecef","stroke-width":"8"},null,-1)),s("circle",{cx:"80",cy:"80",r:"70",fill:"none",stroke:"#4ade80","stroke-width":"8","stroke-linecap":"round","stroke-dasharray":_.value,"stroke-dashoffset":m.value,transform:"rotate(-90 80 80)"},null,8,T),s("circle",{cx:"80",cy:"80",r:"70",fill:"none",stroke:"#4f7cff","stroke-width":"8","stroke-linecap":"round","stroke-dasharray":h.value,"stroke-dashoffset":k.value,transform:"rotate(-90 80 80)"},null,8,C)])),s("div",D,[t[1]||(t[1]=s("div",{class:"fast-type"},"16:8",-1)),s("div",q,b(v.value),1)])])])):(n(),c("div",A,[t[2]||(t[2]=s("div",{class:"start-message"},"Ready to start fasting?",-1)),s("div",O,[(n(),c(x,null,w([12,16,18,24],o=&gt;f(H,{key:o,label:`${o}h`,outline:"",color:"primary",class:"preset-btn",onClick:l=&gt;y(o),loading:d(a).isLoading},null,8,["label","onClick","loading"])),64))])]))]))}},V=u(R,[["__scopeId","data-v-6a49dc48"]]),z={class:"dashboard-container"},E={class:"dashboard-section"},U={__name:"FastingPage",setup(p){return(a,r)=&gt;(n(),M($,{class:"dashboard-page fit"},{default:P(()=&gt;[s("div",z,[s("div",E,[r[0]||(r[0]=s("h2",{class:"section-title"},"Intermittent Fasting",-1)),f(V)])])]),_:1}))}},X=u(U,[["__scopeId","data-v-9c67cb13"]]);export{X as default};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../../sorter.js"></script>
+    <script src="../../../block-navigation.js"></script>
+  </body>
+</html>

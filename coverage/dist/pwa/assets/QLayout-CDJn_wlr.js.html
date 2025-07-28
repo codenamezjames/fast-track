@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/assets/QLayout-CDJn_wlr.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1>
+          <a href="../../../index.html">All files</a> /
+          <a href="index.html">dist/pwa/assets</a> QLayout-CDJn_wlr.js
+        </h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import{c as L,g as $,A as K,B as P,C as j,z as g,h as m,d as X,p as B,U as _,V as H,D as q,b as T,E,W as N,r as y,L as k,n as F,X as x,M as G,I as J}from"./index-Bfu9UyXH.js";import{s as Y,g as Z,a as ee,b as te,c as R}from"./scroll-DGYQrll_.js";const ae=L({name:"QPageContainer",setup(e,{slots:p}){const{proxy:{$q:n}}=$(),t=K(j,P);if(t===P)return console.error("QPageContainer needs to be child of QLayout"),P;B(_,!0);const r=g(()=&gt;{const a={};return t.header.space===!0&amp;&amp;(a.paddingTop=`${t.header.size}px`),t.right.space===!0&amp;&amp;(a[`padding${n.lang.rtl===!0?"Left":"Right"}`]=`${t.right.size}px`),t.footer.space===!0&amp;&amp;(a.paddingBottom=`${t.footer.size}px`),t.left.space===!0&amp;&amp;(a[`padding${n.lang.rtl===!0?"Right":"Left"}`]=`${t.left.size}px`),a});return()=&gt;m("div",{class:"q-page-container",style:r.value},X(p.default))}}),{passive:M}=H,ne=["both","horizontal","vertical"],oe=L({name:"QScrollObserver",props:{axis:{type:String,validator:e=&gt;ne.includes(e),default:"vertical"},debounce:[String,Number],scrollTarget:Y},emits:["scroll"],setup(e,{emit:p}){const n={position:{top:0,left:0},direction:"down",directionChanged:!1,delta:{top:0,left:0},inflectionPoint:{top:0,left:0}};let t=null,r,a;q(()=&gt;e.scrollTarget,()=&gt;{l(),v()});function s(){t?.();const c=Math.max(0,ee(r)),z=te(r),d={top:c-n.position.top,left:z-n.position.left};if(e.axis==="vertical"&amp;&amp;d.top===0||e.axis==="horizontal"&amp;&amp;d.left===0)return;const w=Math.abs(d.top)&gt;=Math.abs(d.left)?d.top&lt;0?"up":"down":d.left&lt;0?"left":"right";n.position={top:c,left:z},n.directionChanged=n.direction!==w,n.delta=d,n.directionChanged===!0&amp;&amp;(n.direction=w,n.inflectionPoint=n.position),p("scroll",{...n})}function v(){r=Z(a,e.scrollTarget),r.addEventListener("scroll",i,M),i(!0)}function l(){r!==void 0&amp;&amp;(r.removeEventListener("scroll",i,M),r=void 0)}function i(c){if(c===!0||e.debounce===0||e.debounce==="0")s();else if(t===null){const[z,d]=e.debounce?[setTimeout(s,e.debounce),clearTimeout]:[requestAnimationFrame(s),cancelAnimationFrame];t=()=&gt;{d(z),t=null}}}const{proxy:h}=$();return q(()=&gt;h.$q.lang.rtl,s),T(()=&gt;{a=h.$el.parentNode,v()}),E(()=&gt;{t?.(),l()}),Object.assign(h,{trigger:i,getPosition:()=&gt;n}),N}});function ie(){const e=y(!k.value);return e.value===!1&amp;&amp;T(()=&gt;{e.value=!0}),{isHydrated:e}}const A=typeof ResizeObserver&lt;"u",D=A===!0?{}:{style:"display:block;position:absolute;top:0;left:0;right:0;bottom:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:-1;",url:"about:blank"},V=L({name:"QResizeObserver",props:{debounce:{type:[String,Number],default:100}},emits:["resize"],setup(e,{emit:p}){let n=null,t,r={width:-1,height:-1};function a(l){l===!0||e.debounce===0||e.debounce==="0"?s():n===null&amp;&amp;(n=setTimeout(s,e.debounce))}function s(){if(n!==null&amp;&amp;(clearTimeout(n),n=null),t){const{offsetWidth:l,offsetHeight:i}=t;(l!==r.width||i!==r.height)&amp;&amp;(r={width:l,height:i},p("resize",r))}}const{proxy:v}=$();if(v.trigger=a,A===!0){let l;const i=h=&gt;{t=v.$el.parentNode,t?(l=new ResizeObserver(a),l.observe(t),s()):h!==!0&amp;&amp;F(()=&gt;{i(!0)})};return T(()=&gt;{i()}),E(()=&gt;{n!==null&amp;&amp;clearTimeout(n),l!==void 0&amp;&amp;(l.disconnect!==void 0?l.disconnect():t&amp;&amp;l.unobserve(t))}),N}else{let l=function(){n!==null&amp;&amp;(clearTimeout(n),n=null),c!==void 0&amp;&amp;(c.removeEventListener!==void 0&amp;&amp;c.removeEventListener("resize",a,H.passive),c=void 0)},i=function(){l(),t?.contentDocument&amp;&amp;(c=t.contentDocument.defaultView,c.addEventListener("resize",a,H.passive),s())};const{isHydrated:h}=ie();let c;return T(()=&gt;{F(()=&gt;{t=v.$el,t&amp;&amp;i()})}),E(l),()=&gt;{if(h.value===!0)return m("object",{class:"q--avoid-card-border",style:D.style,tabindex:-1,type:"text/html",data:D.url,"aria-hidden":"true",onLoad:i})}}}}),se=L({name:"QLayout",props:{container:Boolean,view:{type:String,default:"hhh lpr fff",validator:e=&gt;/^(h|l)h(h|r) lpr (f|l)f(f|r)$/.test(e.toLowerCase())},onScroll:Function,onScrollHeight:Function,onResize:Function},setup(e,{slots:p,emit:n}){const{proxy:{$q:t}}=$(),r=y(null),a=y(t.screen.height),s=y(e.container===!0?0:t.screen.width),v=y({position:0,direction:"down",inflectionPoint:0}),l=y(0),i=y(k.value===!0?0:R()),h=g(()=&gt;"q-layout q-layout--"+(e.container===!0?"containerized":"standard")),c=g(()=&gt;e.container===!1?{minHeight:t.screen.height+"px"}:null),z=g(()=&gt;i.value!==0?{[t.lang.rtl===!0?"left":"right"]:`${i.value}px`}:null),d=g(()=&gt;i.value!==0?{[t.lang.rtl===!0?"right":"left"]:0,[t.lang.rtl===!0?"left":"right"]:`-${i.value}px`,width:`calc(100% + ${i.value}px)`}:null);function w(o){if(e.container===!0||document.qScrollPrevented!==!0){const u={position:o.position.top,direction:o.direction,directionChanged:o.directionChanged,inflectionPoint:o.inflectionPoint.top,delta:o.delta.top};v.value=u,e.onScroll!==void 0&amp;&amp;n("scroll",u)}}function U(o){const{height:u,width:b}=o;let f=!1;a.value!==u&amp;&amp;(f=!0,a.value=u,e.onScrollHeight!==void 0&amp;&amp;n("scrollHeight",u),Q()),s.value!==b&amp;&amp;(f=!0,s.value=b),f===!0&amp;&amp;e.onResize!==void 0&amp;&amp;n("resize",o)}function I({height:o}){l.value!==o&amp;&amp;(l.value=o,Q())}function Q(){if(e.container===!0){const o=a.value&gt;l.value?R():0;i.value!==o&amp;&amp;(i.value=o)}}let S=null;const O={instances:{},view:g(()=&gt;e.view),isContainer:g(()=&gt;e.container),rootRef:r,height:a,containerHeight:l,scrollbarWidth:i,totalWidth:g(()=&gt;s.value+i.value),rows:g(()=&gt;{const o=e.view.toLowerCase().split(" ");return{top:o[0].split(""),middle:o[1].split(""),bottom:o[2].split("")}}),header:x({size:0,offset:0,space:!1}),right:x({size:300,offset:0,space:!1}),footer:x({size:0,offset:0,space:!1}),left:x({size:300,offset:0,space:!1}),scroll:v,animate(){S!==null?clearTimeout(S):document.body.classList.add("q-body--layout-animate"),S=setTimeout(()=&gt;{S=null,document.body.classList.remove("q-body--layout-animate")},155)},update(o,u,b){O[o][u]=b}};if(B(j,O),R()&gt;0){let o=function(){f=null,C.classList.remove("hide-scrollbar")},u=function(){if(f===null){if(C.scrollHeight&gt;t.screen.height)return;C.classList.add("hide-scrollbar")}else clearTimeout(f);f=setTimeout(o,300)},b=function(W){f!==null&amp;&amp;W==="remove"&amp;&amp;(clearTimeout(f),o()),window[`${W}EventListener`]("resize",u)},f=null;const C=document.body;q(()=&gt;e.container!==!0?"add":"remove",b),e.container!==!0&amp;&amp;b("add"),G(()=&gt;{b("remove")})}return()=&gt;{const o=J(p.default,[m(oe,{onScroll:w}),m(V,{onResize:U})]),u=m("div",{class:h.value,style:c.value,ref:e.container===!0?void 0:r,tabindex:-1},o);return e.container===!0?m("div",{class:"q-layout-container overflow-hidden",ref:r},[m(V,{onResize:I}),m("div",{class:"absolute-full",style:z.value},[m("div",{class:"scroll",style:d.value},[u])])]):u}}});export{se as Q,ae as a,V as b};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../../sorter.js"></script>
+    <script src="../../../block-navigation.js"></script>
+  </body>
+</html>

@@ -2,16 +2,11 @@
   <q-card class="notification-scheduler">
     <q-card-section>
       <div class="text-h6 q-mb-md">Custom Notification Scheduler</div>
-      
+
       <!-- Base Event -->
       <div class="text-subtitle2 q-mb-sm">Event Details</div>
-      <q-input
-        v-model="eventTitle"
-        outlined
-        label="Event Title"
-        class="q-mb-md"
-      />
-      
+      <q-input v-model="eventTitle" outlined label="Event Title" class="q-mb-md" />
+
       <q-input
         v-model="eventDateTime"
         outlined
@@ -19,7 +14,7 @@
         label="Event Date & Time"
         class="q-mb-md"
       />
-      
+
       <!-- Reminders -->
       <div class="text-subtitle2 q-mb-sm">Reminders</div>
       <div class="reminders-list">
@@ -40,7 +35,7 @@
                 dense
                 style="width: 80px"
               />
-              
+
               <q-select
                 v-model="reminder.offsetUnit"
                 :options="timeUnits"
@@ -48,11 +43,11 @@
                 dense
                 style="width: 120px"
               />
-              
+
               <span class="text-caption">before event</span>
-              
+
               <q-space />
-              
+
               <q-btn
                 flat
                 round
@@ -62,7 +57,7 @@
                 color="negative"
               />
             </div>
-            
+
             <q-input
               v-model="reminder.message"
               outlined
@@ -72,16 +67,10 @@
             />
           </q-card-section>
         </q-card>
-        
-        <q-btn
-          flat
-          icon="add"
-          label="Add Reminder"
-          @click="addReminder"
-          class="q-mb-md"
-        />
+
+        <q-btn flat icon="add" label="Add Reminder" @click="addReminder" class="q-mb-md" />
       </div>
-      
+
       <!-- Scheduled Time Preview -->
       <div class="text-subtitle2 q-mb-sm">Scheduled Notifications</div>
       <q-list bordered class="scheduled-list">
@@ -97,16 +86,12 @@
             </q-item-label>
           </q-item-section>
           <q-item-section side>
-            <q-chip
-              :color="scheduledTime.isPast ? 'grey' : 'primary'"
-              text-color="white"
-              size="sm"
-            >
+            <q-chip :color="scheduledTime.isPast ? 'grey' : 'primary'" text-color="white" size="sm">
               {{ scheduledTime.relativeTime }}
             </q-chip>
           </q-item-section>
         </q-item>
-        
+
         <q-item v-if="scheduledTimes.length === 0">
           <q-item-section>
             <q-item-label caption>No reminders scheduled</q-item-label>
@@ -114,7 +99,7 @@
         </q-item>
       </q-list>
     </q-card-section>
-    
+
     <q-card-actions align="right">
       <q-btn flat label="Cancel" @click="$emit('cancel')" />
       <q-btn
@@ -141,50 +126,52 @@ const eventTitle = ref('')
 const eventDateTime = ref('')
 
 // Reminders
-const reminders = ref([
-  { offsetValue: 5, offsetUnit: 'minutes', message: '' }
-])
+const reminders = ref([{ offsetValue: 5, offsetUnit: 'minutes', message: '' }])
 
 const timeUnits = [
   { label: 'Minutes', value: 'minutes' },
   { label: 'Hours', value: 'hours' },
-  { label: 'Days', value: 'days' }
+  { label: 'Days', value: 'days' },
 ]
 
 const isScheduling = ref(false)
 
 // Computed
 const canSchedule = computed(() => {
-  return eventTitle.value.trim() && 
-         eventDateTime.value && 
-         reminders.value.length > 0 &&
-         reminders.value.every(r => r.offsetValue > 0)
+  return (
+    eventTitle.value.trim() &&
+    eventDateTime.value &&
+    reminders.value.length > 0 &&
+    reminders.value.every((r) => r.offsetValue > 0)
+  )
 })
 
 const scheduledTimes = computed(() => {
   if (!eventDateTime.value) return []
-  
+
   const eventTime = new Date(eventDateTime.value)
   const now = new Date()
-  
-  return reminders.value.map((reminder, index) => {
-    const multiplier = {
-      minutes: 60 * 1000,
-      hours: 60 * 60 * 1000,
-      days: 24 * 60 * 60 * 1000
-    }[reminder.offsetUnit]
-    
-    const reminderTime = new Date(eventTime.getTime() - (reminder.offsetValue * multiplier))
-    const isPast = reminderTime < now
-    
-    return {
-      title: reminder.message || `${eventTitle.value} reminder`,
-      time: reminderTime,
-      isPast,
-      relativeTime: `${reminder.offsetValue} ${reminder.offsetUnit} before`,
-      index
-    }
-  }).sort((a, b) => a.time - b.time)
+
+  return reminders.value
+    .map((reminder, index) => {
+      const multiplier = {
+        minutes: 60 * 1000,
+        hours: 60 * 60 * 1000,
+        days: 24 * 60 * 60 * 1000,
+      }[reminder.offsetUnit]
+
+      const reminderTime = new Date(eventTime.getTime() - reminder.offsetValue * multiplier)
+      const isPast = reminderTime < now
+
+      return {
+        title: reminder.message || `${eventTitle.value} reminder`,
+        time: reminderTime,
+        isPast,
+        relativeTime: `${reminder.offsetValue} ${reminder.offsetUnit} before`,
+        index,
+      }
+    })
+    .sort((a, b) => a.time - b.time)
 })
 
 // Methods
@@ -192,7 +179,7 @@ const addReminder = () => {
   reminders.value.push({
     offsetValue: 1,
     offsetUnit: 'hours',
-    message: ''
+    message: '',
   })
 }
 
@@ -202,17 +189,17 @@ const removeReminder = (index) => {
 
 const scheduleNotifications = async () => {
   if (!canSchedule.value) return
-  
+
   isScheduling.value = true
-  
+
   try {
     const eventTime = new Date(eventDateTime.value)
     let scheduledCount = 0
-    
+
     for (const scheduledTime of scheduledTimes.value) {
       if (!scheduledTime.isPast) {
         const notificationId = `custom-${Date.now()}-${scheduledTime.index}`
-        
+
         await notificationsStore.scheduleCustomNotification(
           notificationId,
           scheduledTime.title,
@@ -221,27 +208,26 @@ const scheduleNotifications = async () => {
           {
             actions: [
               { action: 'view', title: 'View Event' },
-              { action: 'dismiss', title: 'Dismiss' }
-            ]
-          }
+              { action: 'dismiss', title: 'Dismiss' },
+            ],
+          },
         )
-        
+
         scheduledCount++
       }
     }
-    
+
     emit('scheduled', {
       eventTitle: eventTitle.value,
       eventTime,
       scheduledCount,
-      totalReminders: reminders.value.length
+      totalReminders: reminders.value.length,
     })
-    
+
     // Reset form
     eventTitle.value = ''
     eventDateTime.value = ''
     reminders.value = [{ offsetValue: 5, offsetUnit: 'minutes', message: '' }]
-    
   } catch (error) {
     console.error('Failed to schedule notifications:', error)
     throw error
@@ -255,13 +241,13 @@ const setDefaultEventTime = () => {
   const now = new Date()
   now.setHours(now.getHours() + 1)
   now.setMinutes(0, 0, 0) // Round to nearest hour
-  
+
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
   const hours = String(now.getHours()).padStart(2, '0')
   const minutes = String(now.getMinutes()).padStart(2, '0')
-  
+
   eventDateTime.value = `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
@@ -282,7 +268,6 @@ setDefaultEventTime()
   background: #fafafa;
 }
 
-
 .scheduled-list {
   max-height: 200px;
   overflow-y: auto;
@@ -295,4 +280,4 @@ setDefaultEventTime()
 .scheduled-item:last-child {
   border-bottom: none;
 }
-</style> 
+</style>

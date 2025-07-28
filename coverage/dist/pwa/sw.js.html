@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/sw.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">dist/pwa</a> sw.js</h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >if(!self.define){let e,s={};const a=(a,i)=&gt;(a=new URL(a+".js",i).href,s[a]||new Promise(s=&gt;{if("document"in self){const e=document.createElement("script");e.src=a,e.onload=s,document.head.appendChild(e)}else e=a,importScripts(a),s()}).then(()=&gt;{let e=s[a];if(!e)throw new Error(`Module ${a} didn’t register its module`);return e}));self.define=(i,c)=&gt;{const n=e||("document"in self?document.currentScript.src:"")||location.href;if(s[n])return;let r={};const f=e=&gt;a(e,n),d={module:{uri:n},exports:r,require:f};s[n]=Promise.all(i.map(e=&gt;d[e]||f(e))).then(e=&gt;(c(...e),r))}}define(["./workbox-cbf6a0d6"],function(e){"use strict";e.setCacheNameDetails({prefix:"fast-track"}),self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"assets/_plugin-vue_export-helper-DfXOXxoj.js",revision:"debe87bea28a0955e64c2bf72a76305a"},{url:"assets/AnalyticsPage-B3Kgb67Y.js",revision:"a682f650aa3b3e5c7861401d24aab2dc"},{url:"assets/AnalyticsPage-BTkHWO51.css",revision:"4e98db54c4c11f7c58a3e39da05f56fe"},{url:"assets/calories-1_qWFWcb.js",revision:"2aa9adbc959799154a727e5967f1dc11"},{url:"assets/CaloriesPage-3CWN08CB.css",revision:"00cc1dcd8134d2e4df6ac99952835c79"},{url:"assets/CaloriesPage-Be6yJDm5.js",revision:"d4dea6da4907b4bb91ac22bc9efe99e9"},{url:"assets/DialogHeader-C0iGaEuY.css",revision:"853b1942e5966eedca112b7ed279a6d3"},{url:"assets/DialogHeader-CHrGcuDg.js",revision:"23f1412029ba5a3335c29e2422adbcce"},{url:"assets/ErrorNotFound-ommFkHpZ.js",revision:"828a0d62897f90e20c9cc2640a42d8f3"},{url:"assets/fasting-B_Lb0KE3.js",revision:"1df7ed8b565111daa1d36afbbc6e416e"},{url:"assets/FastingPage-CX5WsrZ4.css",revision:"ed1ed01de0259d1f1ce364630ed02984"},{url:"assets/FastingPage-pNW2Qh2G.js",revision:"db15909d6f9b0e1c402d8e854adf0628"},{url:"assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",revision:"3e1afe59fa075c9e04c436606b77f640"},{url:"assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ-D-x-0Q06.woff2",revision:"a4160421d2605545f69a4cd6cd642902"},{url:"assets/index-Bfu9UyXH.js",revision:"620dbe6b15927fb3bfb7262916f48d55"},{url:"assets/index-D0yXebPr.css",revision:"3d668abc6c5cddc6fb9a006038c99da6"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabVmUiAw-CNa4tw4G.woff",revision:"2d29775851b8463053deb35b21b5d5c8"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bVmUiAw-CHKg1YId.woff",revision:"be27354f07345fafe8dfc84117bbafd4"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbFmUiAw-yBxCyPWP.woff",revision:"c8cea161abfb039c97a11c26dff2f546"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbVmUiAw-3fZ6d7DD.woff",revision:"585ad11be98f8f044923a71898ddfde6"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjalmUiAw-BepdiOnY.woff",revision:"2cadc82e8484ccac69caddc849f603be"},{url:"assets/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtalmUiAw-4ZhHFPot.woff",revision:"51c41b1c2668c088c7cce3fa116396e1"},{url:"assets/LoginPage-CvKhVU3y.js",revision:"d231d6f63bb351b410a759d1e251b7ee"},{url:"assets/MainLayout-8hZCDovd.js",revision:"eaaabfb9e05a7711fcc516782edacf2d"},{url:"assets/MainLayout-Bpo-2gBE.css",revision:"05020a80e5073f9cfea779cc4702d2d7"},{url:"assets/QBtnToggle-C3Ohx-Ws.js",revision:"41b85309f6437280fdf509bea250fff5"},{url:"assets/QCard-DsBjwnGc.js",revision:"cccb65ebfe6b8325d53b4d91275c8531"},{url:"assets/QInput-B_QKs5Ci.js",revision:"39f6ad470fc617ba87d4aa2fe8ba5abd"},{url:"assets/QLayout-CDJn_wlr.js",revision:"b8e9e37d062c80c88ba9fbbf60f69750"},{url:"assets/QPage-BgbJ14dN.js",revision:"eb81733637edfa376f572dfe1fbc4728"},{url:"assets/rtl-DFPa-2ov.js",revision:"528db8ee9db59534c84c8fe3314e1c7c"},{url:"assets/scroll-DGYQrll_.js",revision:"75591b03188b0e947d3c8b3289fa26a9"},{url:"assets/SettingsPage-BaFzqpzZ.css",revision:"3ca276873f56ee7064e1bc4aa52c1776"},{url:"assets/SettingsPage-D-N4D2X2.js",revision:"4bc6abc9b959ff916866263ebfba6a68"},{url:"assets/use-dark-Dp6Z-rul.js",revision:"d669f2be6953c18b57da3bf6095e4bee"},{url:"assets/use-quasar-_690ZdW6.js",revision:"27ce52c071d637a1d79350e675ddefba"},{url:"assets/use-timeout-BMi5ausV.js",revision:"30b11dc23037489c6449a3e113fa3b16"},{url:"favicon.ico",revision:"f4facfeaed834544d622544acfbb7722"},{url:"icons/apple-icon-120x120.png",revision:"d082235f6e6d2109e84e397f66fa868d"},{url:"icons/apple-icon-152x152.png",revision:"3c728ce3e709b7395be487becf76283a"},{url:"icons/apple-icon-167x167.png",revision:"3fec89672a18e4b402ede58646917c2d"},{url:"icons/apple-icon-180x180.png",revision:"aa47843bd47f34b7ca4b99f65dd25955"},{url:"icons/favicon-128x128.png",revision:"ab92df0270f054ca388127c9703a4911"},{url:"icons/favicon-16x16.png",revision:"e4b046d41e08e6fa06626d6410ab381d"},{url:"icons/favicon-32x32.png",revision:"410858b01fa6d3d66b7bf21447c5f1fc"},{url:"icons/favicon-96x96.png",revision:"db2bde7f824fb4057ffd1c42f6ed756e"},{url:"icons/icon-128x128.png",revision:"ab92df0270f054ca388127c9703a4911"},{url:"icons/icon-192x192.png",revision:"7659f0d3e9602e71811f8b7cf2ce0e8e"},{url:"icons/icon-256x256.png",revision:"cf5ad3498fb6fda43bdafd3c6ce9b824"},{url:"icons/icon-384x384.png",revision:"fdfc1b3612b6833a27a7b260c9990247"},{url:"icons/icon-512x512.png",revision:"2c2dc987945806196bd18cb6028d8bf4"},{url:"icons/ms-icon-144x144.png",revision:"8de1b0e67a62b881cd22d935f102a0e6"},{url:"icons/safari-pinned-tab.svg",revision:"3e4c3730b00c89591de9505efb73afd3"},{url:"index.html",revision:"66b4a20d1ec5cce6f8ff3b29c9ceefc1"},{url:"manifest.json",revision:"f39bcd40dda388669390af53635defe8"}],{}),e.cleanupOutdatedCaches(),e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/sw\.js$/,/workbox-(.)*\\.js$/]})),e.registerRoute(/^https:\/\/fonts\.googleapis\.com\/.*/i,new e.CacheFirst({cacheName:"google-fonts-cache",plugins:[new e.ExpirationPlugin({maxEntries:10,maxAgeSeconds:31536e3}),new e.CacheableResponsePlugin({statuses:[0,200]})]}),"GET"),e.registerRoute(/\.(?:js|css|html)$/,new e.StaleWhileRevalidate({cacheName:"app-assets-cache",plugins:[new e.CacheableResponsePlugin({statuses:[0,200]})]}),"GET"),e.registerRoute(/\.(?:png|jpg|jpeg|svg|gif|webp)$/,new e.CacheFirst({cacheName:"images-cache",plugins:[new e.ExpirationPlugin({maxEntries:50,maxAgeSeconds:2592e3}),new e.CacheableResponsePlugin({statuses:[0,200]})]}),"GET")});</span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../sorter.js"></script>
+    <script src="../../block-navigation.js"></script>
+  </body>
+</html>

@@ -49,6 +49,7 @@ npx vitest run test/stores/calories.test.js
 ```
 
 **Test Coverage Includes:**
+
 - ✅ Pinia store tests (auth, calories, fasting)
 - ✅ Vue component tests with Vue Test Utils
 - ✅ Service layer tests (auth, offline storage)
@@ -119,6 +120,7 @@ This project follows a comprehensive testing approach:
 4. **AI-Friendly** - CLI-based testing for automation
 
 The testing setup is specifically designed to support AI agent workflows with:
+
 - Fast execution (~2-5 seconds)
 - JSON output for automation
 - Comprehensive coverage reporting

@@ -1,40 +1,31 @@
 <template>
   <div class="calories-chart">
-    <svg
-      :width="chartWidth"
-      :height="chartHeight"
-      viewBox="0 0 320 120"
-      class="chart-svg"
-    >
+    <svg :width="chartWidth" :height="chartHeight" viewBox="0 0 320 120" class="chart-svg">
       <!-- Grid lines -->
       <g class="grid-lines">
         <line
           v-for="i in 5"
           :key="i"
           :x1="0"
-          :y1="(i * 20)"
+          :y1="i * 20"
           :x2="320"
-          :y2="(i * 20)"
+          :y2="i * 20"
           stroke="#f1f3f4"
           stroke-width="1"
         />
       </g>
-      
+
       <!-- Chart area gradient -->
       <defs>
         <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#4f7cff;stop-opacity:0.3" />
-          <stop offset="100%" style="stop-color:#4f7cff;stop-opacity:0.1" />
+          <stop offset="0%" style="stop-color: #4f7cff; stop-opacity: 0.3" />
+          <stop offset="100%" style="stop-color: #4f7cff; stop-opacity: 0.1" />
         </linearGradient>
       </defs>
-      
+
       <!-- Chart area fill -->
-      <path
-        :d="areaPath"
-        fill="url(#chartGradient)"
-        stroke="none"
-      />
-      
+      <path :d="areaPath" fill="url(#chartGradient)" stroke="none" />
+
       <!-- Chart line -->
       <path
         :d="linePath"
@@ -44,7 +35,7 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      
+
       <!-- Data points -->
       <circle
         v-for="(point, index) in chartPoints"
@@ -57,7 +48,7 @@
         stroke-width="2"
       />
     </svg>
-    
+
     <!-- Day labels -->
     <div class="day-labels">
       <div
@@ -80,8 +71,8 @@ const props = defineProps({
   viewMode: {
     type: String,
     default: 'weekly',
-    validator: (value) => ['daily', 'weekly'].includes(value)
-  }
+    validator: (value) => ['daily', 'weekly'].includes(value),
+  },
 })
 
 const caloriesStore = useCaloriesStore()
@@ -127,36 +118,36 @@ const dailyData = computed(() => {
   const data = []
   const today = new Date()
   const todayMeals = caloriesStore.mealsByDate(today)
-  
+
   // Group meals by 4-hour periods
   for (let i = 0; i < 6; i++) {
     const startHour = i * 4
     const endHour = (i + 1) * 4
-    
+
     const periodCalories = todayMeals
-      .filter(meal => {
+      .filter((meal) => {
         const mealHour = new Date(meal.meal_time).getHours()
         return mealHour >= startHour && mealHour < endHour
       })
       .reduce((total, meal) => total + meal.calories, 0)
-    
+
     data.push(periodCalories)
   }
-  
+
   return data
 })
 
 const weeklyData = computed(() => {
   const data = []
   const today = new Date()
-  
+
   for (let i = 6; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(today.getDate() - i)
     const calories = caloriesStore.caloriesByDate(date)
     data.push(calories)
   }
-  
+
   return data
 })
 
@@ -166,35 +157,38 @@ const chartPoints = computed(() => {
   const minCalories = 0
   const range = maxCalories - minCalories
   const pointCount = dataPoints.length
-  
+
   return dataPoints.map((calories, index) => {
     const x = (index * (chartWidth - chartPadding * 2)) / (pointCount - 1) + chartPadding
-    const y = chartHeight - ((calories - minCalories) / range) * (chartHeight - chartPadding * 2) - chartPadding
+    const y =
+      chartHeight -
+      ((calories - minCalories) / range) * (chartHeight - chartPadding * 2) -
+      chartPadding
     return { x, y, calories }
   })
 })
 
 const linePath = computed(() => {
   if (chartPoints.value.length === 0) return ''
-  
+
   let path = `M ${chartPoints.value[0].x} ${chartPoints.value[0].y}`
-  
+
   for (let i = 1; i < chartPoints.value.length; i++) {
     const prevPoint = chartPoints.value[i - 1]
     const currentPoint = chartPoints.value[i]
-    
+
     // Create smooth curves using quadratic bezier curves
     const controlX = (prevPoint.x + currentPoint.x) / 2
     path += ` Q ${controlX} ${prevPoint.y} ${controlX} ${(prevPoint.y + currentPoint.y) / 2}`
     path += ` Q ${controlX} ${currentPoint.y} ${currentPoint.x} ${currentPoint.y}`
   }
-  
+
   return path
 })
 
 const areaPath = computed(() => {
   if (chartPoints.value.length === 0) return ''
-  
+
   let path = linePath.value
   // Close the path at the bottom
   const lastPoint = chartPoints.value[chartPoints.value.length - 1]
@@ -202,7 +196,7 @@ const areaPath = computed(() => {
   path += ` L ${lastPoint.x} ${chartHeight - chartPadding}`
   path += ` L ${firstPoint.x} ${chartHeight - chartPadding}`
   path += ' Z'
-  
+
   return path
 })
 
@@ -246,4 +240,4 @@ onMounted(() => {
 .grid-lines {
   opacity: 0.5;
 }
-</style> 
+</style>

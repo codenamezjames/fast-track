@@ -6,14 +6,14 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     isAuthenticated: false,
     isLoading: false,
-    error: null
+    error: null,
   }),
 
   getters: {
     userId: (state) => state.user?.$id || state.user?.id || 'offline-user',
     userEmail: (state) => state.user?.email,
     userName: (state) => state.user?.name,
-    userPreferences: (state) => state.user?.prefs || {}
+    userPreferences: (state) => state.user?.prefs || {},
   },
 
   actions: {
@@ -57,13 +57,13 @@ export const useAuthStore = defineStore('auth', {
             id: 'offline-' + Date.now(),
             email,
             name,
-            $createdAt: new Date().toISOString()
+            $createdAt: new Date().toISOString(),
           }
-          
+
           // Store in localStorage
           localStorage.setItem('fasttrack-user', JSON.stringify(mockUser))
           localStorage.setItem('fasttrack-password', password) // In real app, this would be hashed
-          
+
           this.user = mockUser
           this.isAuthenticated = true
           return mockUser
@@ -92,7 +92,7 @@ export const useAuthStore = defineStore('auth', {
           console.log('Appwrite unavailable, checking offline credentials')
           const storedUser = localStorage.getItem('fasttrack-user')
           const storedPassword = localStorage.getItem('fasttrack-password')
-          
+
           if (storedUser && storedPassword === password) {
             const user = JSON.parse(storedUser)
             if (user.email === email) {
@@ -101,13 +101,13 @@ export const useAuthStore = defineStore('auth', {
               return user
             }
           }
-          
+
           // Default test credentials for offline development
           if (email === 'test@test.com' && password === 'password') {
             const testUser = {
               $id: 'test-user-id',
               email: 'test@test.com',
-              name: 'Test User'
+              name: 'Test User',
             }
             this.user = testUser
             this.isAuthenticated = true
@@ -115,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem('fasttrack-password', password)
             return testUser
           }
-          
+
           throw new Error('Invalid credentials')
         }
       } catch (error) {
@@ -154,6 +154,6 @@ export const useAuthStore = defineStore('auth', {
 
     clearError() {
       this.error = null
-    }
-  }
-}) 
+    },
+  },
+})

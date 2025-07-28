@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Simple commit message validation
+commit_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\(.+\))?: .{1,50}'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format."
+    echo "Please use: type(scope): description"
+    echo "Examples:"
+    echo "  feat: add new calorie tracking feature"
+    echo "  fix(auth): resolve login issue"
+    echo "  docs: update README"
+    echo "  refactor(components): simplify dialog logic"
+    exit 1
+fi
+
+echo "✅ Commit message format is valid" 

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Code coverage report for dist/pwa/assets/use-quasar-_690ZdW6.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../../../sort-arrow-sprite.png);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1>
+          <a href="../../../index.html">All files</a> /
+          <a href="index.html">dist/pwa/assets</a> use-quasar-_690ZdW6.js
+        </h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">0/1</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">0% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">0/1</span>
+          </div>
+        </div>
+        <p class="quiet">
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>,
+          <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+          <div class="quiet">
+            Filter:
+            <input type="search" id="fileSearch" />
+          </div>
+        </template>
+      </div>
+      <div class="status-line low"></div>
+      <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import{aL as m,aM as u,u as w,A as f,aN as y}from"./index-Bfu9UyXH.js";import{o as g,d as D}from"./_plugin-vue_export-helper-DfXOXxoj.js";const p=m("theme",{state:()=&gt;({mode:"auto",systemPrefersDark:!1,mediaQueryListener:null,isLoading:!1}),getters:{isDark:()=&gt;u.isActive,currentTheme:e=&gt;e.mode==="auto"?e.systemPrefersDark?"dark":"light":e.mode,themeIcon:e=&gt;{switch(e.mode){case"light":return"light_mode";case"dark":return"dark_mode";case"auto":return"brightness_auto";default:return"brightness_auto"}},themeLabel:e=&gt;{switch(e.mode){case"light":return"Light Mode";case"dark":return"Dark Mode";case"auto":return"Auto (System)";default:return"Auto (System)"}},availableThemes:()=&gt;[{value:"auto",label:"Auto (System)",icon:"brightness_auto"},{value:"light",label:"Light Mode",icon:"light_mode"},{value:"dark",label:"Dark Mode",icon:"dark_mode"}]},actions:{init(){if(typeof window&gt;"u"){console.log("Theme init skipped - no window object");return}this.isLoading=!0;try{this.loadPreference(),this.detectSystemPreference(),this.setupSystemPreferenceListener(),this.applyTheme(),console.log("Theme system initialized:",{mode:this.mode,isDark:this.isDark,systemPrefersDark:this.systemPrefersDark})}catch(e){console.error("Failed to initialize theme system:",e)}finally{this.isLoading=!1}},detectSystemPreference(){typeof window&lt;"u"&amp;&amp;window.matchMedia&amp;&amp;(this.systemPrefersDark=window.matchMedia("(prefers-color-scheme: dark)").matches)},setupSystemPreferenceListener(){if(typeof window&lt;"u"&amp;&amp;window.matchMedia){const e=window.matchMedia("(prefers-color-scheme: dark)");this.mediaQueryListener=r=&gt;{this.systemPrefersDark=r.matches,this.mode==="auto"&amp;&amp;this.applyTheme()},e.addEventListener?e.addEventListener("change",this.mediaQueryListener):e.addListener(this.mediaQueryListener)}},removeSystemPreferenceListener(){if(this.mediaQueryListener&amp;&amp;typeof window&lt;"u"&amp;&amp;window.matchMedia){const e=window.matchMedia("(prefers-color-scheme: dark)");e.removeEventListener?e.removeEventListener("change",this.mediaQueryListener):e.removeListener(this.mediaQueryListener),this.mediaQueryListener=null}},setMode(e){if(!["auto","light","dark"].includes(e)){console.warn("Invalid theme mode:",e);return}this.mode=e,this.savePreference(),this.applyTheme()},applyTheme(){let e=!1;this.mode==="auto"?e=this.systemPrefersDark:e=this.mode==="dark",u.set(e),console.log("Theme applied via Quasar Dark:",{mode:this.mode,isDark:u.isActive,systemPrefersDark:this.systemPrefersDark})},toggle(){const e=this.mode==="dark"?"light":"dark";this.setMode(e)},cycle(){const e=["auto","light","dark"],s=(e.indexOf(this.mode)+1)%e.length;this.setMode(e[s])},savePreference(){try{localStorage.setItem("fasttrack-theme-mode",this.mode)}catch(e){console.error("Failed to save theme preference:",e)}},loadPreference(){try{const e=localStorage.getItem("fasttrack-theme-mode");e&amp;&amp;["auto","light","dark"].includes(e)?this.mode=e:this.mode="auto"}catch(e){console.error("Failed to load theme preference:",e),this.mode="auto"}},getThemeInfo(){return{mode:this.mode,isDark:u.isActive,currentTheme:this.currentTheme,systemPrefersDark:this.systemPrefersDark,icon:this.themeIcon,label:this.themeLabel}},destroy(){this.removeSystemPreferenceListener()}}}),L=m("weight",{state:()=&gt;({entries:[],isLoading:!1,error:null}),getters:{latestWeight:e=&gt;e.entries.length===0?null:e.entries.sort((r,s)=&gt;new Date(s.date)-new Date(r.date))[0],weightByDate:e=&gt;r=&gt;{const s=new Date(r).toDateString(),i=e.entries.find(t=&gt;new Date(t.date).toDateString()===s);return i?i.weight:null},weeklyWeightData:e=&gt;(r=4)=&gt;{const s=new Date,i=[];for(let t=r-1;t&gt;=0;t--){const n=new Date(s.getTime()-(t*7+s.getDay())*24*60*60*1e3),a=new Date(n.getTime()+8640*60*1e3),o=e.entries.filter(l=&gt;{const d=new Date(l.date);return d&gt;=n&amp;&amp;d&lt;=a}).sort((l,d)=&gt;new Date(d.date)-new Date(l.date)),h=o.length&gt;0?o[0].weight:null;i.push({week:`Week ${r-t}`,label:`${n.toLocaleDateString("en-US",{month:"short",day:"numeric"})} - ${a.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`,weight:h,date:n.toISOString().split("T")[0]})}return i.filter(t=&gt;t.weight!==null)},monthlyWeightData:e=&gt;(r=6)=&gt;{const s=new Date,i=[];for(let t=r-1;t&gt;=0;t--){const n=new Date(s.getFullYear(),s.getMonth()-t,1),a=new Date(n.getFullYear(),n.getMonth(),1),o=new Date(n.getFullYear(),n.getMonth()+1,0),h=e.entries.filter(d=&gt;{const c=new Date(d.date);return c&gt;=a&amp;&amp;c&lt;=o}).sort((d,c)=&gt;new Date(c.date)-new Date(d.date)),l=h.length&gt;0?h[0].weight:null;i.push({month:n.toLocaleDateString("en-US",{year:"numeric",month:"short"}),label:n.toLocaleDateString("en-US",{year:"numeric",month:"long"}),weight:l,date:a.toISOString().split("T")[0]})}return i.filter(t=&gt;t.weight!==null)},dailyWeightData:e=&gt;(r=30)=&gt;{const s=new Date,i=[];for(let t=r-1;t&gt;=0;t--){const n=new Date(s.getTime()-t*24*60*60*1e3),a=n.toDateString(),o=e.entries.find(h=&gt;new Date(h.date).toDateString()===a);o&amp;&amp;i.push({date:n.toISOString().split("T")[0],label:n.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}),weight:o.weight})}return i},weightTrend:e=&gt;{if(e.entries.length&lt;2)return{direction:"stable",change:0};const r=[...e.entries].sort((a,o)=&gt;new Date(a.date)-new Date(o.date)),s=r[r.length-1],i=r[r.length-2],t=s.weight-i.weight;return{direction:t&gt;0?"up":t&lt;0?"down":"stable",change:Math.abs(t)}},weightChange:e=&gt;(r=30)=&gt;{if(e.entries.length===0)return 0;const s=new Date,i=new Date(s.getTime()-r*24*60*60*1e3),t=e.entries.sort((o,h)=&gt;new Date(h.date)-new Date(o.date))[0];if(!t)return 0;const n=e.entries.filter(o=&gt;new Date(o.date)&lt;=i).sort((o,h)=&gt;new Date(h.date)-new Date(o.date));if(n.length===0)return 0;const a=n[0];return t.weight-a.weight},averageWeight:e=&gt;(r=30)=&gt;{if(e.entries.length===0)return 0;const s=new Date,i=new Date(s.getTime()-r*24*60*60*1e3),t=e.entries.filter(a=&gt;new Date(a.date)&gt;=i);if(t.length===0)return 0;const n=t.reduce((a,o)=&gt;a+o.weight,0);return Math.round(n/t.length*10)/10}},actions:{async loadWeightEntries(){this.isLoading=!0;try{this.entries=await D.weight_entries.toArray()}catch(e){console.error("Error loading weight entries:",e),this.error=e.message,this.entries=[]}finally{this.isLoading=!1}},async addWeightEntry(e,r=null){const s=w(),i=r?new Date(r).toISOString():new Date().toISOString(),t={user_id:s.userId,weight:parseFloat(e),date:i};try{const a={id:await g.addToOffline("weight_entries",t),...t,synced:!1};return this.entries.push(a),a}catch(n){throw console.error("Error adding weight entry:",n),this.error=n.message,n}},async updateWeightEntry(e,r,s=null){const i={weight:parseFloat(r)};s&amp;&amp;(i.date=new Date(s).toISOString());try{await g.updateOffline("weight_entries",e,i);const t=this.entries.findIndex(n=&gt;n.id===e);t!==-1&amp;&amp;(this.entries[t]={...this.entries[t],...i,synced:!1})}catch(t){throw console.error("Error updating weight entry:",t),this.error=t.message,t}},async deleteWeightEntry(e){try{await g.deleteOffline("weight_entries",e),this.entries=this.entries.filter(r=&gt;r.id!==e)}catch(r){throw console.error("Error deleting weight entry:",r),this.error=r.message,r}}}});function v(){return f(y)}export{v as a,p as b,L as u};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at 2025-07-24T18:45:28.265Z
+    </div>
+    <script src="../../../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint()
+      }
+    </script>
+    <script src="../../../sorter.js"></script>
+    <script src="../../../block-navigation.js"></script>
+  </body>
+</html>

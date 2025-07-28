@@ -45,15 +45,87 @@ export default defineConfig((/* ctx */) => {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
-      // analyze: true,
+      // analyze: true, // Uncomment to analyze bundle size
       // env: {},
       // rawDefine: {}
       // ignorePublicFolder: true,
-      // minify: false,
+      minify: true,
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      // Performance optimizations for mobile
+      extendViteConf(viteConf) {
+        // Code splitting optimization
+        viteConf.build = viteConf.build || {}
+        viteConf.build.rollupOptions = viteConf.build.rollupOptions || {}
+        viteConf.build.rollupOptions.output = viteConf.build.rollupOptions.output || {}
+
+        // Enhanced manual chunk splitting for better caching
+        viteConf.build.rollupOptions.output.manualChunks = (id) => {
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('chart.js') || id.includes('vue-chartjs')) {
+              return 'chart-vendor'
+            }
+            if (id.includes('vue') || id.includes('pinia') || id.includes('vue-router')) {
+              return 'vue-vendor'
+            }
+            if (id.includes('quasar')) {
+              return 'quasar-vendor'
+            }
+            if (id.includes('dexie')) {
+              return 'db-vendor'
+            }
+            if (id.includes('appwrite')) {
+              return 'appwrite-vendor'
+            }
+            // Other vendor libraries
+            return 'vendor'
+          }
+
+          // Feature-based chunks
+          if (id.includes('/pages/')) {
+            return 'pages'
+          }
+          if (id.includes('/components/')) {
+            return 'components'
+          }
+          if (id.includes('/stores/')) {
+            return 'stores'
+          }
+          if (id.includes('/services/')) {
+            return 'services'
+          }
+        }
+
+        // Optimize chunk size
+        viteConf.build.chunkSizeWarningLimit = 1000
+
+        // Tree shaking optimization
+        viteConf.optimizeDeps = {
+          include: [
+            'vue',
+            'vue-router',
+            'pinia',
+            'quasar',
+            'chart.js',
+            'vue-chartjs',
+            'dexie',
+            'appwrite',
+          ],
+          exclude: [
+            // Exclude large libraries that should be loaded dynamically
+          ],
+        }
+
+        // Compression optimization
+        viteConf.build.rollupOptions.output.compact = true
+
+        // Source maps for development only
+        if (process.env.NODE_ENV === 'development') {
+          viteConf.build.sourcemap = true
+        }
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
@@ -91,10 +163,7 @@ export default defineConfig((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        'Notify',
-        'Dark',
-      ],
+      plugins: ['Notify', 'Dark'],
     },
 
     // animations: 'all', // --- includes all animations
@@ -144,40 +213,110 @@ export default defineConfig((/* ctx */) => {
       swFilename: 'sw.js',
       manifestFilename: 'manifest.json',
       useCredentialsForManifestTag: false,
-      
+
       // PWA Manifest configuration
-      extendManifestJson (json) {
+      extendManifestJson(json) {
         Object.assign(json, {
           name: 'FastTrack - Calorie & Fasting Tracker',
           short_name: 'FastTrack',
-          description: 'Track your calories and intermittent fasting with reminders',
+          description:
+            'Track your calories and intermittent fasting with offline support and notifications',
           start_url: '/',
+          scope: '/',
           display: 'standalone',
-          orientation: 'portrait',
+          orientation: 'portrait-primary',
           background_color: '#ffffff',
           theme_color: '#4f7cff',
-          categories: ['health', 'lifestyle', 'fitness'],
-          icons: [
+          categories: ['health', 'lifestyle', 'fitness', 'medical'],
+          screenshots: [
             {
               src: 'icons/favicon-128x128.png',
               sizes: '128x128',
-              type: 'image/png'
+              type: 'image/png',
+              form_factor: 'narrow',
+            },
+          ],
+          icons: [
+            {
+              src: 'icons/favicon-16x16.png',
+              sizes: '16x16',
+              type: 'image/png',
+            },
+            {
+              src: 'icons/favicon-32x32.png',
+              sizes: '32x32',
+              type: 'image/png',
             },
             {
               src: 'icons/favicon-96x96.png',
               sizes: '96x96',
-              type: 'image/png'
-            }
-          ]
+              type: 'image/png',
+            },
+            {
+              src: 'icons/icon-128x128.png',
+              sizes: '128x128',
+              type: 'image/png',
+            },
+            {
+              src: 'icons/icon-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any',
+            },
+            {
+              src: 'icons/icon-256x256.png',
+              sizes: '256x256',
+              type: 'image/png',
+            },
+            {
+              src: 'icons/icon-384x384.png',
+              sizes: '384x384',
+              type: 'image/png',
+            },
+            {
+              src: 'icons/icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable',
+            },
+          ],
+          shortcuts: [
+            {
+              name: 'Add Calories',
+              short_name: 'Calories',
+              description: 'Quick calorie logging',
+              url: '/calories',
+              icons: [
+                {
+                  src: 'icons/favicon-96x96.png',
+                  sizes: '96x96',
+                },
+              ],
+            },
+            {
+              name: 'Fasting Timer',
+              short_name: 'Fasting',
+              description: 'Check fasting progress',
+              url: '/fasting',
+              icons: [
+                {
+                  src: 'icons/favicon-96x96.png',
+                  sizes: '96x96',
+                },
+              ],
+            },
+          ],
         })
       },
 
       // Service Worker options
-      extendGenerateSWOptions (cfg) {
+      extendGenerateSWOptions(cfg) {
         Object.assign(cfg, {
           skipWaiting: true,
           clientsClaim: true,
+          cleanupOutdatedCaches: true,
           runtimeCaching: [
+            // Cache Google Fonts
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
               handler: 'CacheFirst',
@@ -185,16 +324,42 @@ export default defineConfig((/* ctx */) => {
                 cacheName: 'google-fonts-cache',
                 expiration: {
                   maxEntries: 10,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                  maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
                 },
                 cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }
-          ]
+                  statuses: [0, 200],
+                },
+              },
+            },
+            // Cache app assets with stale-while-revalidate
+            {
+              urlPattern: /\.(?:js|css|html)$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'app-assets-cache',
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+            // Cache images with cache-first strategy
+            {
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'images-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+          ],
         })
-      }
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova

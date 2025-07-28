@@ -4,17 +4,45 @@
 class NotificationService {
   constructor() {
     this.permission = 'default'
-    this.isSupported = typeof window !== 'undefined' && 'Notification' in window
+    this.isSupported = this._checkNotificationSupport()
     this.swRegistration = null
     this.vapidPublicKey = null // Will be set when we have a push server
     this.scheduledNotifications = new Map()
-    
+
     this.init()
   }
 
+  _checkNotificationSupport() {
+    // More robust check for notification support
+    if (typeof window === 'undefined') {
+      return false
+    }
+
+    // Check if Notification API exists
+    if (!('Notification' in window)) {
+      return false
+    }
+
+    // Check if Notification constructor is available
+    if (typeof Notification !== 'function') {
+      return false
+    }
+
+    // Check if requestPermission method exists
+    if (typeof Notification.requestPermission !== 'function') {
+      return false
+    }
+
+    return true
+  }
+
   async init() {
+    // Re-check support in case it wasn't available during construction
     if (!this.isSupported) {
-      console.warn('Notifications not supported in this browser')
+      this.isSupported = this._checkNotificationSupport()
+    }
+
+    if (!this.isSupported) {
       return
     }
 
@@ -25,7 +53,6 @@ class NotificationService {
     if ('serviceWorker' in navigator) {
       try {
         this.swRegistration = await navigator.serviceWorker.ready
-        console.log('Service Worker ready for notifications')
       } catch (error) {
         console.error('Service Worker registration failed:', error)
       }
@@ -43,7 +70,7 @@ class NotificationService {
 
     const permission = await Notification.requestPermission()
     this.permission = permission
-    
+
     if (permission === 'granted') {
       console.log('Notification permission granted')
       return true
@@ -56,6 +83,18 @@ class NotificationService {
   // Check if notifications are enabled
   isEnabled() {
     return this.permission === 'granted'
+  }
+
+  // Re-check notification support (useful for browsers that load APIs late)
+  recheckSupport() {
+    const wasSupported = this.isSupported
+    this.isSupported = this._checkNotificationSupport()
+    
+    if (!wasSupported && this.isSupported) {
+      this.permission = Notification.permission
+    }
+    
+    return this.isSupported
   }
 
   // Show immediate notification
@@ -72,7 +111,7 @@ class NotificationService {
       tag: 'fasttrack',
       requireInteraction: false,
       silent: false,
-      ...options
+      ...options,
     }
 
     try {
@@ -115,7 +154,7 @@ class NotificationService {
       title,
       options,
       scheduledTime,
-      timeoutId
+      timeoutId,
     })
 
     this.saveScheduledNotifications()
@@ -141,13 +180,13 @@ class NotificationService {
       id,
       title: notification.title,
       scheduledTime: notification.scheduledTime,
-      options: notification.options
+      options: notification.options,
     }))
   }
 
   // Clear all scheduled notifications
   clearAllScheduledNotifications() {
-    this.scheduledNotifications.forEach(notification => {
+    this.scheduledNotifications.forEach((notification) => {
       clearTimeout(notification.timeoutId)
     })
     this.scheduledNotifications.clear()
@@ -160,9 +199,7 @@ class NotificationService {
       body: `Your ${fastDuration}h fast has begun. Good luck!`,
       tag: 'fasting-start',
       icon: '/icons/favicon-96x96.png',
-      actions: [
-        { action: 'view', title: 'View Progress' }
-      ]
+      actions: [{ action: 'view', title: 'View Progress' }],
     })
   }
 
@@ -173,8 +210,8 @@ class NotificationService {
       icon: '/icons/favicon-96x96.png',
       actions: [
         { action: 'log-meal', title: 'Log First Meal' },
-        { action: 'view', title: 'View Stats' }
-      ]
+        { action: 'view', title: 'View Stats' },
+      ],
     })
   }
 
@@ -184,7 +221,7 @@ class NotificationService {
       body: `${this.formatDuration(remainingTime)} remaining`,
       tag: 'fasting-progress',
       icon: '/icons/favicon-96x96.png',
-      requireInteraction: false
+      requireInteraction: false,
     })
   }
 
@@ -196,15 +233,15 @@ class NotificationService {
       icon: '/icons/favicon-96x96.png',
       actions: [
         { action: 'log-meal', title: 'Log Meal' },
-        { action: 'dismiss', title: 'Dismiss' }
-      ]
+        { action: 'dismiss', title: 'Dismiss' },
+      ],
     })
   }
 
   // Schedule fasting reminders
   scheduleFastingReminders(startTime, duration) {
     const start = new Date(startTime).getTime()
-    const end = start + (duration * 60 * 60 * 1000) // duration in hours
+    const end = start + duration * 60 * 60 * 1000 // duration in hours
 
     // Schedule start notification
     this.scheduleNotification(
@@ -212,26 +249,28 @@ class NotificationService {
       '🚀 Fast Starting Soon!',
       {
         body: 'Your fast begins in 5 minutes. Finish any last snacks!',
-        tag: 'fasting-start-warning'
+        tag: 'fasting-start-warning',
       },
-      new Date(start - 5 * 60 * 1000) // 5 minutes before
+      new Date(start - 5 * 60 * 1000), // 5 minutes before
     )
 
-    // Schedule progress notifications (25%, 50%, 75%)
-    [0.25, 0.5, 0.75].forEach(progress => {
-      const notificationTime = start + (duration * 60 * 60 * 1000 * progress)
-      const remaining = duration * (1 - progress)
-      
-      this.scheduleNotification(
-        `fasting-progress-${Math.round(progress * 100)}`,
-        `⏰ Fast ${Math.round(progress * 100)}% Complete`,
-        {
-          body: `${this.formatDuration(remaining)} hours remaining. Keep it up!`,
-          tag: 'fasting-progress'
-        },
-        new Date(notificationTime)
-      )
-    })
+      [
+        // Schedule progress notifications (25%, 50%, 75%)
+        (0.25, 0.5, 0.75)
+      ].forEach((progress) => {
+        const notificationTime = start + duration * 60 * 60 * 1000 * progress
+        const remaining = duration * (1 - progress)
+
+        this.scheduleNotification(
+          `fasting-progress-${Math.round(progress * 100)}`,
+          `⏰ Fast ${Math.round(progress * 100)}% Complete`,
+          {
+            body: `${this.formatDuration(remaining)} hours remaining. Keep it up!`,
+            tag: 'fasting-progress',
+          },
+          new Date(notificationTime),
+        )
+      })
 
     // Schedule end notification
     this.scheduleNotification(
@@ -240,11 +279,9 @@ class NotificationService {
       {
         body: `Congratulations! You completed your ${duration}h fast.`,
         tag: 'fasting-end',
-        actions: [
-          { action: 'log-meal', title: 'Log First Meal' }
-        ]
+        actions: [{ action: 'log-meal', title: 'Log First Meal' }],
       },
-      new Date(end)
+      new Date(end),
     )
   }
 
@@ -253,8 +290,14 @@ class NotificationService {
     reminderTimes.forEach((time, index) => {
       const [hours, minutes] = time.split(':').map(Number)
       const now = new Date()
-      const reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
-      
+      const reminderTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        hours,
+        minutes,
+      )
+
       // If time has passed today, schedule for tomorrow
       if (reminderTime.getTime() <= now.getTime()) {
         reminderTime.setDate(reminderTime.getDate() + 1)
@@ -265,9 +308,9 @@ class NotificationService {
         '🍽️ Meal Reminder',
         {
           body: 'Time to log your meal!',
-          tag: 'meal-reminder'
+          tag: 'meal-reminder',
         },
-        reminderTime
+        reminderTime,
       )
     })
   }
@@ -286,7 +329,7 @@ class NotificationService {
       id,
       title: notification.title,
       options: notification.options,
-      scheduledTime: notification.scheduledTime
+      scheduledTime: notification.scheduledTime,
     }))
     localStorage.setItem('fasttrack-scheduled-notifications', JSON.stringify(data))
   }
@@ -298,7 +341,7 @@ class NotificationService {
         const notifications = JSON.parse(data)
         const now = new Date().getTime()
 
-        notifications.forEach(notification => {
+        notifications.forEach((notification) => {
           const delay = new Date(notification.scheduledTime).getTime() - now
           if (delay > 0) {
             // Re-schedule notifications that haven't expired
@@ -306,7 +349,7 @@ class NotificationService {
               notification.id,
               notification.title,
               notification.options,
-              notification.scheduledTime
+              notification.scheduledTime,
             )
           }
         })
@@ -321,4 +364,4 @@ class NotificationService {
 export const notificationService = new NotificationService()
 
 // Export class for testing
-export { NotificationService } 
+export { NotificationService }

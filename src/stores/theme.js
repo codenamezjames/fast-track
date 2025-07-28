@@ -5,51 +5,59 @@ export const useThemeStore = defineStore('theme', {
   state: () => ({
     // Theme mode: 'auto', 'light', 'dark'
     mode: 'auto',
-    
+
     // System preference detection
     systemPrefersDark: false,
-    
+
     // Media query listener
     mediaQueryListener: null,
-    
+
     // Loading state
-    isLoading: false
+    isLoading: false,
   }),
 
   getters: {
     // Use Quasar's Dark.isActive instead of our own state
     isDark: () => Dark.isActive,
-    
+
     currentTheme: (state) => {
       if (state.mode === 'auto') {
         return state.systemPrefersDark ? 'dark' : 'light'
       }
       return state.mode
     },
-    
+
     themeIcon: (state) => {
       switch (state.mode) {
-        case 'light': return 'light_mode'
-        case 'dark': return 'dark_mode'
-        case 'auto': return 'brightness_auto'
-        default: return 'brightness_auto'
+        case 'light':
+          return 'light_mode'
+        case 'dark':
+          return 'dark_mode'
+        case 'auto':
+          return 'brightness_auto'
+        default:
+          return 'brightness_auto'
       }
     },
-    
+
     themeLabel: (state) => {
       switch (state.mode) {
-        case 'light': return 'Light Mode'
-        case 'dark': return 'Dark Mode'
-        case 'auto': return 'Auto (System)'
-        default: return 'Auto (System)'
+        case 'light':
+          return 'Light Mode'
+        case 'dark':
+          return 'Dark Mode'
+        case 'auto':
+          return 'Auto (System)'
+        default:
+          return 'Auto (System)'
       }
     },
-    
+
     availableThemes: () => [
       { value: 'auto', label: 'Auto (System)', icon: 'brightness_auto' },
       { value: 'light', label: 'Light Mode', icon: 'light_mode' },
-      { value: 'dark', label: 'Dark Mode', icon: 'dark_mode' }
-    ]
+      { value: 'dark', label: 'Dark Mode', icon: 'dark_mode' },
+    ],
   },
 
   actions: {
@@ -59,26 +67,26 @@ export const useThemeStore = defineStore('theme', {
         console.log('Theme init skipped - no window object')
         return
       }
-      
+
       this.isLoading = true
-      
+
       try {
         // Load saved preference
         this.loadPreference()
-        
+
         // Detect system preference
         this.detectSystemPreference()
-        
+
         // Set up system preference listener
         this.setupSystemPreferenceListener()
-        
+
         // Apply theme
         this.applyTheme()
-        
+
         console.log('Theme system initialized:', {
           mode: this.mode,
           isDark: this.isDark,
-          systemPrefersDark: this.systemPrefersDark
+          systemPrefersDark: this.systemPrefersDark,
         })
       } catch (error) {
         console.error('Failed to initialize theme system:', error)
@@ -98,16 +106,16 @@ export const useThemeStore = defineStore('theme', {
     setupSystemPreferenceListener() {
       if (typeof window !== 'undefined' && window.matchMedia) {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-        
+
         this.mediaQueryListener = (e) => {
           this.systemPrefersDark = e.matches
-          
+
           // Apply theme if in auto mode
           if (this.mode === 'auto') {
             this.applyTheme()
           }
         }
-        
+
         // Add listener
         if (mediaQuery.addEventListener) {
           mediaQuery.addEventListener('change', this.mediaQueryListener)
@@ -122,14 +130,14 @@ export const useThemeStore = defineStore('theme', {
     removeSystemPreferenceListener() {
       if (this.mediaQueryListener && typeof window !== 'undefined' && window.matchMedia) {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-        
+
         if (mediaQuery.removeEventListener) {
           mediaQuery.removeEventListener('change', this.mediaQueryListener)
         } else {
           // Fallback for older browsers
           mediaQuery.removeListener(this.mediaQueryListener)
         }
-        
+
         this.mediaQueryListener = null
       }
     },
@@ -140,7 +148,7 @@ export const useThemeStore = defineStore('theme', {
         console.warn('Invalid theme mode:', mode)
         return
       }
-      
+
       this.mode = mode
       this.savePreference()
       this.applyTheme()
@@ -149,20 +157,20 @@ export const useThemeStore = defineStore('theme', {
     // Apply the current theme using Quasar's Dark mode
     applyTheme() {
       let shouldBeDark = false
-      
+
       if (this.mode === 'auto') {
         shouldBeDark = this.systemPrefersDark
       } else {
         shouldBeDark = this.mode === 'dark'
       }
-      
+
       // Use Quasar's Dark.set - it handles everything
       Dark.set(shouldBeDark)
-      
+
       console.log('Theme applied via Quasar Dark:', {
         mode: this.mode,
         isDark: Dark.isActive,
-        systemPrefersDark: this.systemPrefersDark
+        systemPrefersDark: this.systemPrefersDark,
       })
     },
 
@@ -213,13 +221,13 @@ export const useThemeStore = defineStore('theme', {
         currentTheme: this.currentTheme,
         systemPrefersDark: this.systemPrefersDark,
         icon: this.themeIcon,
-        label: this.themeLabel
+        label: this.themeLabel,
       }
     },
 
     // Cleanup (call when app is destroyed)
     destroy() {
       this.removeSystemPreferenceListener()
-    }
-  }
-}) 
+    },
+  },
+})

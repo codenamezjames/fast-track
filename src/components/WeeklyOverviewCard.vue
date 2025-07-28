@@ -38,8 +38,8 @@ defineProps({
   weeklyData: {
     type: Array,
     required: true,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 </script>
 
@@ -99,12 +99,12 @@ defineProps({
     gap: 8px;
     text-align: center;
   }
-  
+
   .day-stats {
     justify-content: space-around;
     width: 100%;
   }
-  
+
   .day-progress {
     width: 100%;
   }
@@ -115,4 +115,4 @@ body.body--dark .overview-item {
   background: var(--q-dark-page);
   border-color: rgba(255, 255, 255, 0.12);
 }
-</style> 
+</style>

@@ -37,15 +37,15 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   // Authentication guards
   Router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore()
-    
+
     // Initialize auth on first navigation
     if (!authStore.user && !authStore.isLoading) {
       await authStore.initAuth()
     }
-    
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-    const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
-    
+
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+    const requiresGuest = to.matched.some((record) => record.meta.requiresGuest)
+
     if (requiresAuth && !authStore.isAuthenticated) {
       // Redirect to login if authentication is required
       next('/login')

@@ -14,12 +14,12 @@
 defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   showSeparator: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 })
 
 defineEmits(['close'])
@@ -29,4 +29,4 @@ defineEmits(['close'])
 .dialog-header {
   padding-bottom: 8px;
 }
-</style> 
+</style>

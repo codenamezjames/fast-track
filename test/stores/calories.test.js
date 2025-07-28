@@ -10,14 +10,14 @@ vi.mock('../../src/services/offline.js', () => ({
       toArray: vi.fn(() => Promise.resolve([])),
       add: vi.fn(),
       update: vi.fn(),
-      delete: vi.fn()
-    }
+      delete: vi.fn(),
+    },
   },
   offlineOperations: {
     addToOffline: vi.fn((table, data) => Promise.resolve(Math.floor(Math.random() * 1000))),
     updateOffline: vi.fn(),
-    deleteOffline: vi.fn()
-  }
+    deleteOffline: vi.fn(),
+  },
 }))
 
 describe('Calories Store', () => {
@@ -28,11 +28,11 @@ describe('Calories Store', () => {
     setActivePinia(createPinia())
     caloriesStore = useCaloriesStore()
     authStore = useAuthStore()
-    
+
     // Set up auth store with test user
     authStore.user = createMockUser()
     authStore.isAuthenticated = true
-    
+
     vi.clearAllMocks()
   })
 
@@ -48,39 +48,65 @@ describe('Calories Store', () => {
 
   describe('Getters', () => {
     beforeEach(() => {
-      // Set up test meals
+      // Set up test meals with explicit data
       caloriesStore.meals = [
-        createMockMeal({ 
-          calories: 300, 
-          meal_time: '2024-01-15T08:00:00.000Z' 
-        }),
-        createMockMeal({ 
-          calories: 500, 
-          meal_time: '2024-01-15T12:00:00.000Z' 
-        }),
-        createMockMeal({ 
-          calories: 400, 
-          meal_time: '2024-01-14T19:00:00.000Z' 
-        })
+        {
+          id: 1,
+          user_id: 'test-user-123',
+          calories: 300,
+          meal_time: '2024-01-15T08:00:00.000Z',
+          notes: 'Breakfast',
+          synced: false,
+        },
+        {
+          id: 2,
+          user_id: 'test-user-123',
+          calories: 500,
+          meal_time: '2024-01-15T12:00:00.000Z',
+          notes: 'Lunch',
+          synced: false,
+        },
+        {
+          id: 3,
+          user_id: 'test-user-123',
+          calories: 400,
+          meal_time: '2024-01-14T19:00:00.000Z',
+          notes: 'Dinner',
+          synced: false,
+        },
       ]
     })
 
     it('should get meals by date correctly', () => {
-      const todaysMeals = caloriesStore.mealsByDate('2024-01-15')
-      const yesterdaysMeals = caloriesStore.mealsByDate('2024-01-14')
-      
+      // Verify meals are set correctly
+      expect(caloriesStore.meals).toHaveLength(3)
+
+      // Use the correct date format that matches the meal times in our test data
+      const jan15DateString = new Date('2024-01-15T08:00:00.000Z').toDateString() // "Mon Jan 15 2024"
+      const jan14DateString = new Date('2024-01-14T19:00:00.000Z').toDateString() // "Sun Jan 14 2024"
+
+      const todaysMeals = caloriesStore.mealsByDate(jan15DateString)
+      const yesterdaysMeals = caloriesStore.mealsByDate(jan14DateString)
+
       expect(todaysMeals).toHaveLength(2)
       expect(todaysMeals[0].calories).toBe(300)
       expect(todaysMeals[1].calories).toBe(500)
-      
+
       expect(yesterdaysMeals).toHaveLength(1)
       expect(yesterdaysMeals[0].calories).toBe(400)
     })
 
     it('should calculate calories by date correctly', () => {
-      const todaysCalories = caloriesStore.caloriesByDate('2024-01-15')
-      const yesterdaysCalories = caloriesStore.caloriesByDate('2024-01-14')
-      
+      // Verify meals are set correctly
+      expect(caloriesStore.meals).toHaveLength(3)
+
+      // Use the correct date format that matches the meal times in our test data
+      const jan15DateString = new Date('2024-01-15T08:00:00.000Z').toDateString() // "Mon Jan 15 2024"
+      const jan14DateString = new Date('2024-01-14T19:00:00.000Z').toDateString() // "Sun Jan 14 2024"
+
+      const todaysCalories = caloriesStore.caloriesByDate(jan15DateString)
+      const yesterdaysCalories = caloriesStore.caloriesByDate(jan14DateString)
+
       expect(todaysCalories).toBe(800) // 300 + 500
       expect(yesterdaysCalories).toBe(400)
     })
@@ -128,21 +154,21 @@ describe('Calories Store', () => {
           calories: 500,
           meal_time: expect.any(String),
           notes: 'Test meal',
-          synced: false
+          synced: false,
         })
-        
+
         expect(caloriesStore.meals).toHaveLength(1)
         expect(offlineOperations.addToOffline).toHaveBeenCalledWith('meals', {
           user_id: 'test-user-123',
           calories: 500,
           meal_time: expect.any(String),
-          notes: 'Test meal'
+          notes: 'Test meal',
         })
       })
 
       it('should handle adding meal with no notes', async () => {
         await caloriesStore.addMeal(300)
-        
+
         expect(caloriesStore.meals[0].notes).toBe('')
       })
 
@@ -180,10 +206,7 @@ describe('Calories Store', () => {
 
     describe('deleteMeal', () => {
       beforeEach(() => {
-        caloriesStore.meals = [
-          createMockMeal({ id: 1 }),
-          createMockMeal({ id: 2 })
-        ]
+        caloriesStore.meals = [createMockMeal({ id: 1 }), createMockMeal({ id: 2 })]
       })
 
       it('should delete a meal successfully', async () => {
@@ -205,18 +228,18 @@ describe('Calories Store', () => {
     describe('updateTodaysData', () => {
       it('should update todays meals and calories', () => {
         caloriesStore.meals = [
-          createMockMeal({ 
-            calories: 300, 
-            meal_time: '2024-01-15T08:00:00.000Z' 
+          createMockMeal({
+            calories: 300,
+            meal_time: '2024-01-15T08:00:00.000Z',
           }),
-          createMockMeal({ 
-            calories: 500, 
-            meal_time: '2024-01-15T12:00:00.000Z' 
+          createMockMeal({
+            calories: 500,
+            meal_time: '2024-01-15T12:00:00.000Z',
           }),
-          createMockMeal({ 
-            calories: 400, 
-            meal_time: '2024-01-14T19:00:00.000Z' 
-          })
+          createMockMeal({
+            calories: 400,
+            meal_time: '2024-01-14T19:00:00.000Z',
+          }),
         ]
 
         caloriesStore.updateTodaysData()
@@ -234,4 +257,4 @@ describe('Calories Store', () => {
       })
     })
   })
-}) 
+})
