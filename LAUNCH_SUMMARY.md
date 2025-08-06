@@ -4,9 +4,9 @@
 
 ### **Live Demo URLs:**
 
-- **Local Server**: http://127.0.0.1:3000 ✅
-- **Network Access**: http://192.168.1.152:3000 ✅
-- **Mobile Testing**: http://10.6.64.3:3000 ✅
+- **Local Server**: http://127.0.0.1:5000 ✅
+- **Network Access**: http://192.168.1.152:5000 ✅
+- **Mobile Testing**: http://10.6.64.3:5000 ✅
 
 ---
 

@@ -45,8 +45,8 @@ Object.defineProperty(window, 'localStorage', {
 // Mock window.location
 Object.defineProperty(window, 'location', {
   value: {
-    href: 'http://localhost:3000',
-    origin: 'http://localhost:3000',
+    href: 'http://localhost:5500',
+    origin: 'http://localhost:5500',
   },
   writable: true,
 })

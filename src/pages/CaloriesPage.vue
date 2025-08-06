@@ -561,7 +561,7 @@ const addWeightEntry = async () => {
       throw new Error('Invalid date or time selected')
     }
 
-    await weightStore.addWeightEntry(weight, entryDateTime.toISOString())
+    await weightStore.addWeightEntry(weight, entryDateTime.toISOString(), weightUnit.value)
 
     Notify.create({
       type: 'positive',

@@ -12,7 +12,7 @@ console.log('🌐 FastTrack Backend Setup')
 console.log('==========================')
 
 // Appwrite configuration
-const APPWRITE_ENDPOINT = 'http://localhost/v1'
+const APPWRITE_ENDPOINT = 'http://localhost:5501/v1'
 const PROJECT_ID = process.env.APPWRITE_PROJECT_ID || 'fasttrack-health'
 
 const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(PROJECT_ID)
@@ -61,7 +61,7 @@ async function checkDatabase() {
     } else {
       console.log('❌ Database does not exist or is not accessible')
       console.log('💡 Please create the database manually in the Appwrite console:')
-      console.log('   1. Go to http://localhost/console')
+      console.log('   1. Go to http://localhost:5501/console')
       console.log('   2. Navigate to Databases')
       console.log('   3. Create database with ID: ' + DATABASE_ID)
       console.log('   4. Name it: FastTrack Database')
@@ -77,7 +77,7 @@ function generateSetupInstructions() {
   console.log('\n📋 Manual Setup Instructions')
   console.log('============================')
   console.log('')
-  console.log('1. Open Appwrite Console: http://localhost/console')
+  console.log('1. Open Appwrite Console: http://localhost:5501/console')
   console.log('2. Create Database:')
   console.log('   - Go to Databases')
   console.log('   - Click "Create Database"')
