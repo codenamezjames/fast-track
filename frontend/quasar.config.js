@@ -44,7 +44,7 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: '/energy-track/',
+      publicPath: process.env.PUBLIC_PATH || '/energy-track/',
       // analyze: true, // Uncomment to analyze bundle size
       // env: {},
       // rawDefine: {}
@@ -216,13 +216,14 @@ export default defineConfig((/* ctx */) => {
 
       // PWA Manifest configuration
       extendManifestJson(json) {
+        const publicPath = process.env.PUBLIC_PATH || '/energy-track/'
         Object.assign(json, {
           name: 'FastTrack - Calorie & Fasting Tracker',
           short_name: 'FastTrack',
           description:
             'Track your calories and intermittent fasting with offline support and notifications',
-          start_url: '/energy-track/',
-          scope: '/energy-track/',
+          start_url: publicPath,
+          scope: publicPath,
           display: 'standalone',
           orientation: 'portrait-primary',
           background_color: '#ffffff',
