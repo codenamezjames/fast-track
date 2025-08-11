@@ -12,6 +12,18 @@ jobs:
       contents: read
     env:
       MAKE_PUBLIC: ${{ secrets.MAKE_PUBLIC }}
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      BUCKET: ${{ secrets.GCS_BUCKET }}
+      BUCKET_LOCATION: ${{ secrets.GCS_BUCKET_LOCATION }}
+      - name: Validate configuration
+        run: |
+          if [ -z "${BUCKET}" ]; then
+            echo "::error::Required secret GCS_BUCKET is missing or empty" && exit 1
+          fi
+          if [ -z "${PROJECT_ID}" ]; then
+            echo "::error::Required secret GCP_PROJECT_ID is missing or empty" && exit 1
+          fi
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,22 +61,29 @@ jobs:
       - name: Setup gcloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
+      - name: Create bucket if missing
+        run: |
+          gcloud storage buckets describe gs://${BUCKET} >/dev/null 2>&1 || \
+          gcloud storage buckets create gs://${BUCKET} \
+            --location=${BUCKET_LOCATION:-us-central1} \
+            --uniform-bucket-level-access
+
       - name: Configure bucket website (idempotent)
         run: |
-          gcloud storage buckets update gs://${{ secrets.GCS_BUCKET }} \
+          gcloud storage buckets update gs://${BUCKET} \
             --web-main-page-suffix=index.html \
             --web-error-page=index.html
 
       - name: Upload build to GCS bucket
-        run: gcloud storage rsync -r frontend/dist/pwa gs://${{ secrets.GCS_BUCKET }}
+        run: gcloud storage rsync -r frontend/dist/pwa gs://${BUCKET}
 
       # Optional: make bucket objects publicly readable. Set secret MAKE_PUBLIC to 'true' to enable.
       - name: Make bucket public (optional)
         if: ${{ env.MAKE_PUBLIC == 'true' }}
         run: |
-          gcloud storage buckets add-iam-policy-binding gs://${{ secrets.GCS_BUCKET }} \
+          gcloud storage buckets add-iam-policy-binding gs://${BUCKET} \
             --member=allUsers --role=roles/storage.objectViewer
