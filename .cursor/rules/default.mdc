@@ -1,0 +1,296 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# FastTrack Energy Tracker - Cursor AI Rules
+
+## Project Overview
+FastTrack is a mobile-first calorie tracker with intermittent fasting features built with Vue 3, Quasar Framework, and Appwrite backend. The app works offline-first with sync capabilities.
+
+## Technology Stack & Constraints
+
+### JavaScript Only
+- **CRITICAL**: Use ONLY native JavaScript - NO TypeScript at all
+- All files should use `.js` extension for JavaScript and `.vue` for Vue components
+- ESLint is configured for JavaScript with flat config format
+- ALWAYS prefer quasar's built in components, methods, classes, directives, plugins, helpers, grid/layout, etc when possible.
+
+### Core Technologies
+- **Frontend**: Vue 3 with Composition API only (no Options API)
+- **UI Framework**: Quasar Framework (mobile-first responsive design)
+- **State Management**: Pinia stores
+- **Routing**: Vue Router 4
+- **Backend**: Appwrite (auth, database, real-time)
+- **Offline Storage**: IndexedDB via Dexie.js
+- **Build**: Vite via Quasar CLI
+- **Mobile**: Capacitor via Quasar for native apps
+
+### Dependencies
+- Use only the dependencies already listed in package.json
+- Before suggesting new dependencies, check if existing ones can solve the problem
+- Prefer Quasar components over external UI libraries
+
+## Code Style & Patterns
+
+### Vue Components
+- Always use `<script setup>` syntax with Composition API
+- Import dependencies at the top using ES6 imports with `.js` extensions
+- Use reactive refs and computed properties appropriately
+- Follow this template structure:
+```vue
+<template>
+  <!-- Template content -->
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from '../stores/storeName.js'
+
+// Component logic here
+</script>
+
+<style scoped>
+/* Component styles */
+</style>
+```
+
+### Pinia Stores
+- Use the object syntax for defineStore with state, getters, actions
+- Always include proper error handling in actions
+- Support both online (Appwrite) and offline modes
+- Example pattern:
+```js
+export const useExampleStore = defineStore('example', {
+  state: () => ({
+    // state properties
+  }),
+  
+  getters: {
+    // computed properties
+  },
+  
+  actions: {
+    // async methods with try/catch
+  }
+})
+```
+
+### Services
+- Keep services in `/src/services/` directory
+- Export services as named objects with methods
+- Always include proper error handling and logging
+- Support offline-first architecture
+
+### File Organization
+- Pages in `/src/pages/` - represent full route views
+- Components in `/src/components/` - reusable UI elements
+- Stores in `/src/stores/` - Pinia state management
+- Services in `/src/services/` - API and business logic
+- Utils in `/src/utils/` (if needed) - utility functions
+
+## Mobile-First Design Principles
+
+### Responsive Design
+- Always design for mobile first, then enhance for larger screens
+- Use Quasar's responsive utilities and breakpoints
+- Ensure touch targets are at least 44px for mobile usability
+- Test layouts on small screens (320px width minimum)
+
+### UI/UX Guidelines
+- Follow Quasar's Material Design principles
+- Use consistent spacing with Quasar's spacing classes (`q-pa-*`, `q-ma-*`)
+- Implement proper loading states and error handling
+- Ensure good contrast ratios for accessibility
+- Use Quasar's color system for consistency
+
+### Navigation
+- Bottom tab navigation for main sections (calories, fasting, settings)
+- Keep navigation simple and intuitive for mobile users
+- Use Quasar's navigation components consistently
+
+## Offline-First Architecture
+
+### Data Storage
+- Primary storage: IndexedDB via Dexie.js
+- Always save data locally first, sync to Appwrite when online
+- Handle offline scenarios gracefully
+- Implement proper data validation before storage
+
+### Authentication
+- Support "local auth" using localStorage for offline mode
+- Fall back to Appwrite auth when available
+- Always check authentication state on app initialization
+
+### Error Handling
+- Implement comprehensive error handling for network failures
+- Provide meaningful error messages to users
+- Use Quasar's Notify plugin for user feedback
+- Log errors appropriately for debugging
+
+## Performance Guidelines
+
+### Code Splitting
+- Use dynamic imports for route components
+- Lazy load non-critical components
+- Minimize bundle size for mobile users
+
+### Resource Management
+- Optimize images and assets for mobile
+- Use Quasar's tree-shaking to include only needed components
+- Avoid memory leaks in timers and event listeners
+
+## Feature-Specific Guidelines
+
+### Calorie Tracking
+- Use 25-50-100 calorie increment buttons as primary interface
+- Support optional notes for meals
+- Implement real-time calorie totals
+- Allow meal deletion functionality
+
+### Intermittent Fasting
+- Support flexible 24-hour scheduling
+- Implement preset schedules (16:8, 18:6, 20:4, 24-hour)
+- Real-time fasting timers with progress indicators
+- Visual schedule representation
+
+### Notifications
+- Plan for PWA and native mobile notifications
+- Use Quasar's Notify for in-app notifications
+- Support granular notification preferences
+
+## Code Quality Standards
+
+### Clean Code Principles
+- Write purposeful code - question if code seems unnecessary
+- Be critical about clean, maintainable, and DRY code
+- Use descriptive variable and function names
+- Keep functions small and focused on single responsibilities
+- Avoid code duplication - extract reusable logic
+
+### Error Handling
+- Always handle async operations with try/catch blocks
+- Provide user-friendly error messages
+- Log detailed errors for debugging
+- Implement graceful degradation for offline scenarios
+
+### Testing Considerations
+- Write code that's easily testable
+- Separate business logic from UI components
+- Use dependency injection where appropriate
+- Document complex business logic
+
+## Security Guidelines
+
+### Data Protection
+- Sanitize user inputs before storage
+- Use Appwrite's built-in security features
+- Implement proper session management
+- Protect sensitive data in localStorage
+
+### API Security
+- Use environment variables for sensitive configuration
+- Implement proper CORS handling
+- Validate data on both client and server sides
+
+## Deployment & Build
+
+### Environment Setup
+- Support development, staging, and production environments
+- Use Quasar's build modes (SPA, PWA, Mobile App)
+- Configure proper service worker for offline functionality
+
+### Mobile App Considerations
+- Test on actual devices when possible
+- Ensure proper app icons and splash screens
+- Handle device-specific features (notifications, storage)
+- Follow platform-specific guidelines (iOS/Android)
+
+## Common Anti-Patterns to Avoid
+
+### Vue.js
+- Don't mix Composition API with Options API
+- Don't mutate props directly
+- Avoid deep nesting in template expressions
+- Don't forget to cleanup timers and event listeners
+
+### State Management
+- Don't put everything in global state - use local state when appropriate
+- Avoid directly mutating state outside of store actions
+- Don't create circular dependencies between stores
+
+### Performance
+- Avoid creating reactive objects in render functions
+- Don't overuse watchers - prefer computed properties
+- Minimize DOM manipulations in loops
+
+## Development Workflow
+
+### Code Organization
+- Group related functionality together
+- Use consistent naming conventions across the project
+- Keep imports organized (Vue imports first, then local imports)
+- Comment complex business logic and calculations
+
+### Debugging
+- Use Vue DevTools for component debugging
+- Leverage browser DevTools for network and performance
+- Test offline scenarios regularly
+- Use console.log strategically but remove before production
+
+## When Suggesting Changes
+
+### New Features
+- Always consider mobile usability first
+- Ensure offline functionality where applicable
+- Follow existing patterns in the codebase
+- Consider performance implications for mobile devices
+
+### Refactoring
+- Maintain backwards compatibility with existing data
+- Update related tests and documentation
+- Consider impact on offline/online sync
+- Follow the established architecture patterns
+
+## Self-Updating Rules Protocol
+
+### When Adding New Features or Tooling
+The AI agent MUST update these rules when:
+1. **New Dependencies**: Adding any new npm packages or external libraries
+2. **New Patterns**: Introducing new coding patterns, architectural decisions, or conventions
+3. **New Tools**: Adding build tools, linters, formatters, or development utilities  
+4. **New Features**: Implementing major features that establish new patterns or requirements
+5. **New Configurations**: Adding configuration files, environment setups, or deployment processes
+
+### How to Update Rules
+1. **Add to Appropriate Section**: Place new guidelines in the most relevant existing section
+2. **Create New Sections**: If the addition doesn't fit existing sections, create new ones
+3. **Update Examples**: Add code examples for new patterns or configurations
+4. **Update Anti-Patterns**: Add common mistakes to avoid with new tools/features
+5. **Document Rationale**: Explain WHY certain decisions were made for future reference
+
+### Rule Update Format
+When updating, use this format:
+```markdown
+### [New Tool/Feature Name] - Added [Date]
+- Brief description of what was added
+- Key configuration details
+- Usage patterns and examples
+- Integration points with existing code
+- Performance/mobile considerations
+```
+
+## Project Evolution Log
+
+### Initial Setup - December 2024
+- Vue 3 + Quasar Framework foundation
+- Pinia state management
+- Appwrite backend integration
+- Dexie.js offline storage
+- ESLint flat config setup
+- Mobile-first architecture established
+
+---
+
+Remember: This is a mobile-first health tracking app where user experience, offline functionality, and data reliability are paramount. Every code change should support these core principles. **The AI agent must keep these rules current by updating them whenever new tooling, patterns, or features are introduced.** 
