@@ -31,6 +31,7 @@ quasar build -m pwa
 **Live URL**: https://codenamezjames.github.io/fast-track/
 
 **Features:**
+
 - ✅ Automatic deployment on push
 - ✅ Custom domain support
 - ✅ HTTPS enabled
@@ -192,7 +193,7 @@ gtag('config', 'G-XXXXXXXXXX', {
 Sentry.init({
   dsn: 'YOUR_SENTRY_DSN',
   environment: 'production',
-  release: 'fast-track@1.0.0'
+  release: 'fast-track@1.0.0',
 })
 ```
 

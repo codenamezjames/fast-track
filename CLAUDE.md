@@ -20,6 +20,7 @@ FastTrack is a mobile-first calorie and intermittent fasting tracker built with 
 ## Development Commands
 
 ### Essential Commands
+
 ```bash
 # Development
 npm run dev                    # Start development server
@@ -45,6 +46,7 @@ npm run dev:reset              # Reset development environment
 ```
 
 ### Testing Specific Files
+
 ```bash
 # Run specific test file
 npx vitest run test/stores/calories.test.js
@@ -59,6 +61,7 @@ npx vitest run --inspect-brk
 ## Architecture Overview
 
 ### Project Structure
+
 ```
 frontend/
 ├── src/
@@ -87,18 +90,21 @@ frontend/
 ### Key Patterns
 
 **Component Architecture:**
+
 - Use `<script setup>` syntax with Composition API only
 - Base components for reusable UI elements
 - Optimized components for performance-critical features
 - Feature-specific components for business logic
 
 **Store Architecture:**
+
 - Base store pattern for common functionality (loading, error handling, sync)
 - Data store pattern for CRUD operations
 - Settings store pattern for preferences management
 - Offline-first with IndexedDB persistence
 
 **Service Architecture:**
+
 - Base service for common functionality (retry, interceptors, offline queue)
 - Repository pattern for data access abstraction
 - API service for unified Appwrite handling
@@ -106,23 +112,27 @@ frontend/
 ## Critical Development Rules
 
 ### JavaScript Only
+
 - **CRITICAL**: Use ONLY native JavaScript - NO TypeScript at all
 - All files should use `.js` extension for JavaScript and `.vue` for Vue components
 - Use Composition API only (no Options API)
 
 ### Mobile-First Design
+
 - Always design for mobile first, then enhance for larger screens
 - Use Quasar's responsive utilities and breakpoints
 - Ensure touch targets are at least 44px for mobile usability
 - Test layouts on small screens (320px width minimum)
 
 ### Offline-First Architecture
+
 - Primary storage: IndexedDB via Dexie.js
 - Always save data locally first, sync to Appwrite when online
 - Support "local auth" using localStorage for offline mode
 - Handle offline scenarios gracefully
 
 ### Performance Guidelines
+
 - Use dynamic imports for route components
 - Lazy load non-critical components
 - Implement virtual scrolling for long lists
@@ -132,18 +142,21 @@ frontend/
 ## Testing Philosophy
 
 The testing setup is optimized for AI agent automation:
+
 - Fast execution (~2-5 seconds)
 - JSON output for automation
 - Comprehensive coverage reporting
 - CLI-friendly commands
 
 **Test Coverage:**
+
 - Unit tests for stores, components, and services
 - Integration tests for cross-component interactions
 - Error handling and offline scenarios
 - Visual regression tests for UI consistency
 
 **Mocking Strategy:**
+
 - localStorage fully mocked
 - Appwrite mocked for offline-first testing
 - Date fixed to `2024-01-15T10:00:00.000Z` for consistency
@@ -152,6 +165,7 @@ The testing setup is optimized for AI agent automation:
 ## Build Configuration
 
 ### Performance Optimizations
+
 - Enhanced manual chunk splitting for better caching
 - Tree shaking optimization
 - Compression optimization
@@ -159,6 +173,7 @@ The testing setup is optimized for AI agent automation:
 - PWA with service worker and offline support
 
 ### PWA Configuration
+
 - Workbox service worker with strategic caching
 - Offline support with app-like experience
 - Push notifications support
@@ -167,17 +182,20 @@ The testing setup is optimized for AI agent automation:
 ## Common Anti-Patterns to Avoid
 
 ### Vue.js
+
 - Don't mix Composition API with Options API
 - Don't mutate props directly
 - Avoid deep nesting in template expressions
 - Don't forget to cleanup timers and event listeners
 
 ### State Management
+
 - Don't put everything in global state - use local state when appropriate
 - Avoid directly mutating state outside of store actions
 - Don't create circular dependencies between stores
 
 ### Performance
+
 - Avoid creating reactive objects in render functions
 - Don't overuse watchers - prefer computed properties
 - Minimize DOM manipulations in loops
@@ -185,25 +203,28 @@ The testing setup is optimized for AI agent automation:
 ## Error Handling
 
 Use the established error handling patterns:
+
 ```javascript
-import { ErrorFactory, ErrorUtils } from '../utils/errors.js'
+import { ErrorFactory, ErrorUtils } from "../utils/errors.js";
 
 // Create typed errors
-const error = ErrorFactory.validation('calories', 'Must be positive')
+const error = ErrorFactory.validation("calories", "Must be positive");
 
 // Log errors with context
-ErrorUtils.logError(error, 'CaloriesStore.addMeal')
+ErrorUtils.logError(error, "CaloriesStore.addMeal");
 ```
 
 ## Mobile App Development
 
 ### Capacitor Integration
+
 - Native mobile apps via Quasar Capacitor
 - Platform-specific configurations in `src-capacitor/`
 - Proper app icons and splash screens
 - Device-specific features (notifications, storage)
 
 ### PWA Features
+
 - Service worker with strategic caching
 - Offline functionality
 - App-like experience on mobile
@@ -221,6 +242,7 @@ ErrorUtils.logError(error, 'CaloriesStore.addMeal')
 ## Environment Setup
 
 The project uses Node.js 18+ and supports multiple environments:
+
 - Development: Hot reload with error reporting
 - Production: Optimized build with PWA support
 - Testing: Isolated test environment with comprehensive mocking
@@ -240,6 +262,7 @@ Only use dependencies already listed in package.json. Before suggesting new depe
 ## Mobile-First Considerations
 
 Every code change should support:
+
 - User experience on mobile devices
 - Offline functionality where applicable
 - Performance optimization for mobile networks
