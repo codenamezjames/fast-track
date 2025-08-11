@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      MAKE_PUBLIC: ${{ secrets.MAKE_PUBLIC }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,7 +51,7 @@ jobs:
 
       # Optional: make bucket objects publicly readable. Set secret MAKE_PUBLIC to 'true' to enable.
       - name: Make bucket public (optional)
-        if: ${{ secrets.MAKE_PUBLIC == 'true' }}
+        if: ${{ env.MAKE_PUBLIC == 'true' }}
         run: |
           gcloud storage buckets add-iam-policy-binding gs://${{ secrets.GCS_BUCKET }} \
             --member=allUsers --role=roles/storage.objectViewer
