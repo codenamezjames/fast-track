@@ -1,0 +1,28 @@
+// Minimal global styles - let Quasar handle everything
+
+// Import modern font for better typography
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+// Apply font family globally
+* {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    sans-serif;
+}
+
+// Minimal focus styles for better UX
+.q-field--outlined .q-field__control {
+  &.q-field__control--focused {
+    border-color: #4f7cff;
+    box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.1);
+  }
+}
+
+.q-card {
+  width: 100%;
+  max-width: 500px;
+}

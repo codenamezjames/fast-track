@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run linting
+npm run lint
+
+# Run tests
+npm run test:run
+
+# Check for console.log statements (except in test files)
+if grep -r "console\.log" src/ --exclude-dir=node_modules --exclude-dir=test; then
+  echo "❌ console.log statements found in source code. Please remove them."
+  exit 1
+fi
+
+echo "✅ Pre-commit checks passed" 
