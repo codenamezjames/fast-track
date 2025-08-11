@@ -2,9 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ yolo-ai ]
+    branches: [yolo-ai]
   pull_request:
-    branches: [ yolo-ai ]
+    branches: [yolo-ai]
 
 permissions:
   contents: read
@@ -25,8 +25,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
           cache-dependency-path: fast-track/package-lock.json
 
       - name: Install dependencies
@@ -55,5 +55,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
