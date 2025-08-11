@@ -41,7 +41,7 @@ energy-track/
 │   └── boot/                # Quasar boot files
 ├── public/
 ├── capacitor/               # Native app config
-└── appwrite/               # Appwrite configuration
+└── backend/                # Appwrite configuration
 ```
 
 ## Development Phases

@@ -60,7 +60,7 @@ npx vitest run --inspect-brk
 
 ### Project Structure
 ```
-fast-track/
+frontend/
 ├── src/
 │   ├── components/          # Vue components
 │   │   ├── base/           # Base reusable components
@@ -81,7 +81,7 @@ fast-track/
 │   ├── components/         # Vue component tests
 │   ├── services/           # Service layer tests
 │   └── integration/        # Integration tests
-└── appwrite/               # Appwrite backend configuration
+└── backend/                # Appwrite backend configuration
 ```
 
 ### Key Patterns
@@ -229,9 +229,9 @@ The project uses Node.js 18+ and supports multiple environments:
 
 - `.cursor/rules/default.mdc`: Comprehensive AI development rules
 - `quasar.config.js`: Build configuration with performance optimizations
-- `fast-track/README.md`: Project overview and setup instructions
-- `fast-track/DEVELOPER_GUIDE.md`: Detailed development workflow
-- `fast-track/TEST_GUIDE.md`: Comprehensive testing documentation
+- `frontend/README.md`: Project overview and setup instructions
+- `frontend/DEVELOPER_GUIDE.md`: Detailed development workflow
+- `frontend/TEST_GUIDE.md`: Comprehensive testing documentation
 
 ## Dependencies
 

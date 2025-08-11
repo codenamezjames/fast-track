@@ -19,7 +19,7 @@
 
 ## 🔄 **Port Changes Made:**
 
-### **1. FastTrack Application (fast-track/)**
+### **1. FastTrack Application (frontend/)**
 
 **Files Updated:**
 
@@ -27,7 +27,7 @@
 - `package.json`: PWA serve port changed from 5000 → 5500
 - `test/setup.js`: Test environment port changed from 5000 → 5500
 
-### **2. Appwrite Backend (appwrite/)**
+### **2. Appwrite Backend (backend/)**
 
 **Files Updated:**
 
@@ -45,7 +45,7 @@
 ### **Development Mode:**
 
 ```bash
-cd fast-track
+cd frontend
 npm run dev
 # App runs on http://localhost:9000
 ```
@@ -53,7 +53,7 @@ npm run dev
 ### **Production Mode:**
 
 ```bash
-cd fast-track
+cd frontend
 npm run build
 npm run serve:pwa
 # App runs on http://localhost:5500
@@ -62,7 +62,7 @@ npm run serve:pwa
 ### **Appwrite Backend:**
 
 ```bash
-cd appwrite
+cd backend
 docker-compose up -d
 # API available at http://localhost:5501
 # Console available at http://localhost:5501/console
@@ -71,7 +71,7 @@ docker-compose up -d
 ### **Backend Setup:**
 
 ```bash
-cd fast-track
+cd frontend
 export APPWRITE_PROJECT_ID=your-project-id
 node backend-setup.js
 # Uses http://localhost:5501/v1 endpoint
@@ -84,7 +84,7 @@ node backend-setup.js
 ### **Test Environment:**
 
 ```bash
-cd fast-track
+cd frontend
 npm run test
 # Tests use http://localhost:5500
 ```
@@ -93,13 +93,13 @@ npm run test
 
 ```bash
 # Start Appwrite backend
-cd appwrite && docker-compose up -d
+cd backend && docker-compose up -d
 
 # Start FastTrack app
-cd fast-track && npm run dev
+cd frontend && npm run dev
 
 # Test backend integration
-cd fast-track && node backend-setup.js
+cd frontend && node backend-setup.js
 ```
 
 ---

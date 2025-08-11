@@ -13,7 +13,7 @@
 ```bash
 # Clone and setup
 git clone <repository>
-cd fast-track
+cd frontend
 npm run setup
 
 # Start development
@@ -23,7 +23,7 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-fast-track/
+frontend/
 ├── src/
 │   ├── components/          # Vue components
 │   │   ├── base/           # Base components (reusable)

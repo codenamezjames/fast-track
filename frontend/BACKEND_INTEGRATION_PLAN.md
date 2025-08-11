@@ -113,7 +113,7 @@
    - Create new project: "FastTrack Health"
 
 2. **Option B: Use Local Appwrite (For Development)**
-   - Start local Appwrite: `cd appwrite && docker-compose up -d`
+   - Start local Appwrite: `cd backend && docker-compose up -d`
    - Access console: http://localhost:5501/console
    - Create project: "FastTrack Health"
 
@@ -152,10 +152,10 @@ node backend-setup.js
 
 ```bash
 # Start local Appwrite first
-cd appwrite && docker-compose up -d
+cd backend && docker-compose up -d
 
 # Then run setup
-cd fast-track
+cd frontend
 export APPWRITE_PROJECT_ID=your-project-id
 node backend-setup.js
 ```

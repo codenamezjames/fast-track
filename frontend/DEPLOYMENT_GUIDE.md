@@ -25,7 +25,7 @@ quasar build -m pwa
 
 - **Build Command**: `quasar build -m pwa`
 - **Publish Directory**: `dist/pwa`
-- **Public Path**: `/fast-track/`
+- **Public Path**: `/frontend/`
 - **Trigger**: Push to `yolo-ai` branch
 
 **Live URL**: https://codenamezjames.github.io/fast-track/
