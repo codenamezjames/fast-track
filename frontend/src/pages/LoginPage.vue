@@ -5,7 +5,7 @@
         <q-card class="q-pa-lg" style="min-width: 300px">
           <q-card-section class="text-center">
             <div class="text-h4 text-weight-bold text-primary q-mb-md">FastTrack</div>
-            <div class="text-subtitle1 text-grey-7">Calorie Tracker & Intermittent Fasting</div>
+            <div class="text-subtitle1 text-grey-7">Calorie Tracker and Intermittent Fasting</div>
           </q-card-section>
 
           <q-card-section>
