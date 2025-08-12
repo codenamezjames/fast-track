@@ -22,13 +22,15 @@
     </script>
 
     <!-- Error Monitoring (Sentry) -->
-    <script src="https://browser.sentry-cdn.com/7.64.0/bundle.min.js" integrity="sha384-6K8m5x1V3vHlqP5l2u+6V7+5c5v7e+9t6v4e+5t6f8h8j8k9l9m8n7o6p5q4r3t2y1" crossorigin="anonymous"></script>
+    <script src="https://browser.sentry-cdn.com/7.64.0/bundle.min.js" crossorigin="anonymous"></script>
     <script>
-      Sentry.init({
-        dsn: 'https://your-sentry-dsn@your-sentry-id.ingest.sentry.io/your-project-id',
-        environment: '<%= process.env.NODE_ENV %>',
-        release: 'fast-track@<%= process.env.PACKAGE_VERSION || "1.0.0" %>'
-      });
+      if (window.Sentry) {
+        Sentry.init({
+          dsn: 'https://your-sentry-dsn@your-sentry-id.ingest.sentry.io/your-project-id',
+          environment: '<%= process.env.NODE_ENV %>',
+          release: 'fast-track@<%= process.env.PACKAGE_VERSION || "1.0.0" %>'
+        })
+      }
     </script>
 
     <link rel="icon" type="image/png" sizes="128x128" href="icons/favicon-128x128.png" />

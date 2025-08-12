@@ -286,7 +286,7 @@ export default defineConfig((/* ctx */) => {
               name: 'Add Calories',
               short_name: 'Calories',
               description: 'Quick calorie logging',
-              url: '/calories',
+              url: publicPath.replace(/\/$/, '') + '/calories',
               icons: [
                 {
                   src: 'icons/favicon-96x96.png',
@@ -298,7 +298,7 @@ export default defineConfig((/* ctx */) => {
               name: 'Fasting Timer',
               short_name: 'Fasting',
               description: 'Check fasting progress',
-              url: '/fasting',
+              url: publicPath.replace(/\/$/, '') + '/fasting',
               icons: [
                 {
                   src: 'icons/favicon-96x96.png',
