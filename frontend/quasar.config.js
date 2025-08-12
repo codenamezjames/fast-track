@@ -316,6 +316,7 @@ export default defineConfig((/* ctx */) => {
           skipWaiting: true,
           clientsClaim: true,
           cleanupOutdatedCaches: true,
+          navigateFallback: '/index.html',
           runtimeCaching: [
             // Cache Google Fonts
             {

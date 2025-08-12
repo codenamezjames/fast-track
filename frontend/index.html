@@ -21,14 +21,12 @@
       gtag('config', 'G-XXXXXXXXXX');
     </script>
 
-    <!-- Error Monitoring (Sentry) -->
-    <script src="https://browser.sentry-cdn.com/7.64.0/bundle.min.js" crossorigin="anonymous"></script>
+    <!-- Remove Sentry for now to avoid DSN/init errors in production -->
     <script>
-      if (window.Sentry) {
-        Sentry.init({
-          dsn: 'https://your-sentry-dsn@your-sentry-id.ingest.sentry.io/your-project-id',
-          environment: '<%= process.env.NODE_ENV %>',
-          release: 'fast-track@<%= process.env.PACKAGE_VERSION || "1.0.0" %>'
+      if ('serviceWorker' in navigator) {
+        // Proactively unregister any existing service workers to avoid stale asset caches
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister())
         })
       }
     </script>
