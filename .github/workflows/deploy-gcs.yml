@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
+    steps:
       - name: Validate configuration
         run: |
           if [ -z "${BUCKET}" ]; then
@@ -24,8 +26,6 @@ jobs:
           if [ -z "${PROJECT_ID}" ]; then
             echo "::error::Required secret GCP_PROJECT_ID is missing or empty" && exit 1
           fi
-
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
