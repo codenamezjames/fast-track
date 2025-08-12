@@ -44,7 +44,7 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: process.env.PUBLIC_PATH || '/energy-track/',
+      publicPath: process.env.PUBLIC_PATH || '/',
       // analyze: true, // Uncomment to analyze bundle size
       // env: {},
       // rawDefine: {}
@@ -216,7 +216,7 @@ export default defineConfig((/* ctx */) => {
 
       // PWA Manifest configuration
       extendManifestJson(json) {
-        const publicPath = process.env.PUBLIC_PATH || '/energy-track/'
+        const publicPath = process.env.PUBLIC_PATH || '/'
         Object.assign(json, {
           name: 'FastTrack - Calorie & Fasting Tracker',
           short_name: 'FastTrack',
