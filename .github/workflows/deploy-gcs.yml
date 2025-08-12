@@ -91,8 +91,8 @@ jobs:
             --web-main-page-suffix=index.html \
             --web-error-page=index.html
 
-      - name: Upload build to GCS bucket
-        run: gcloud storage rsync -r frontend/dist/pwa gs://${BUCKET}
+      - name: Upload build to GCS bucket (clean destination)
+        run: gcloud storage rsync -r --delete-unmatched-destination-objects frontend/dist/pwa gs://${BUCKET}
 
       # Optional: make bucket objects publicly readable. Set secret MAKE_PUBLIC to 'true' to enable.
       - name: Make bucket public (optional)
