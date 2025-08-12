@@ -5,16 +5,17 @@ on:
     branches: [master]
   workflow_dispatch:
 
+env:
+  MAKE_PUBLIC: ${{ secrets.MAKE_PUBLIC }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  BUCKET: ${{ secrets.GCS_BUCKET }}
+  BUCKET_LOCATION: ${{ secrets.GCS_BUCKET_LOCATION }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      MAKE_PUBLIC: ${{ secrets.MAKE_PUBLIC }}
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      BUCKET: ${{ secrets.GCS_BUCKET }}
-      BUCKET_LOCATION: ${{ secrets.GCS_BUCKET_LOCATION }}
       - name: Validate configuration
         run: |
           if [ -z "${BUCKET}" ]; then
