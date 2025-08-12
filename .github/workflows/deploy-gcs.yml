@@ -54,10 +54,10 @@ jobs:
             npm install
           fi
 
-      - name: Build PWA (PUBLIC_PATH=/ for bucket root)
+      - name: Build PWA with bucket-prefixed PUBLIC_PATH
         working-directory: frontend
         env:
-          PUBLIC_PATH: /
+          PUBLIC_PATH: /${{ env.BUCKET }}/
         run: npm run build:pwa
 
       - name: Authenticate to Google Cloud
