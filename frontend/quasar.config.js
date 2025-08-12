@@ -160,7 +160,7 @@ export default defineConfig((/* ctx */) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxMode: 'InjectManifest', // allow custom SW logic for update flow
       injectPwaMetaTags: true,
       swFilename: 'sw.js',
       manifestFilename: 'manifest.json',
@@ -262,58 +262,7 @@ export default defineConfig((/* ctx */) => {
         })
       },
 
-      // Service Worker options
-      extendGenerateSWOptions(cfg) {
-        Object.assign(cfg, {
-          skipWaiting: true,
-          clientsClaim: true,
-          cleanupOutdatedCaches: true,
-          navigateFallback: '/index.html',
-          runtimeCaching: [
-            // Cache Google Fonts
-            {
-              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'google-fonts-cache',
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                },
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
-              },
-            },
-            // Cache app assets with stale-while-revalidate
-            {
-              urlPattern: /\.(?:js|css|html)$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'app-assets-cache',
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
-              },
-            },
-            // Cache images with cache-first strategy
-            {
-              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'images-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-                },
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
-              },
-            },
-          ],
-        })
-      },
+      // Use custom service worker at src-pwa/custom-service-worker.js
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova

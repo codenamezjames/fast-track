@@ -1,4 +1,5 @@
 import { register } from 'register-service-worker'
+import { Notify } from 'quasar'
 
 // The ready(), registered(), cached(), updatefound() and updated()
 // events passes a ServiceWorkerRegistration instance in their arguments.
@@ -15,8 +16,13 @@ register(process.env.SERVICE_WORKER_FILE, {
     // console.log('Service worker is active.')
   },
 
-  registered(/* registration */) {
-    // console.log('Service worker has been registered.')
+  registered(registration) {
+    // Periodically check for updates (every 60 minutes)
+    setInterval(() => {
+      try {
+        registration.update()
+      } catch {}
+    }, 60 * 60 * 1000)
   },
 
   cached(/* registration */) {
@@ -24,11 +30,34 @@ register(process.env.SERVICE_WORKER_FILE, {
   },
 
   updatefound(/* registration */) {
-    // console.log('New content is downloading.')
+    // Optional: could show a subtle downloading indicator
   },
 
-  updated(/* registration */) {
-    // console.log('New content is available; please refresh.')
+  updated(registration) {
+    // New content available: prompt the user to refresh
+    const doReload = () => {
+      // If the new SW is waiting, tell it to activate immediately
+      if (registration && registration.waiting) {
+        // Listen for controlling SW change then reload
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          window.location.reload()
+        }, { once: true })
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+      } else {
+        window.location.reload()
+      }
+    }
+
+    Notify.create({
+      type: 'info',
+      message: 'A new version is available.',
+      timeout: 0,
+      position: 'top',
+      actions: [
+        { label: 'Reload', color: 'white', handler: doReload },
+        { label: 'Dismiss', color: 'white' },
+      ],
+    })
   },
 
   offline() {
