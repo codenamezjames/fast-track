@@ -60,66 +60,18 @@ export default defineConfig((/* ctx */) => {
         viteConf.build.rollupOptions = viteConf.build.rollupOptions || {}
         viteConf.build.rollupOptions.output = viteConf.build.rollupOptions.output || {}
 
-        // Enhanced manual chunk splitting for better caching
-        viteConf.build.rollupOptions.output.manualChunks = (id) => {
-          // Vendor chunks
-          if (id.includes('node_modules')) {
-            if (id.includes('chart.js') || id.includes('vue-chartjs')) {
-              return 'chart-vendor'
-            }
-            if (id.includes('vue') || id.includes('pinia') || id.includes('vue-router')) {
-              return 'vue-vendor'
-            }
-            if (id.includes('quasar')) {
-              return 'quasar-vendor'
-            }
-            if (id.includes('dexie')) {
-              return 'db-vendor'
-            }
-            if (id.includes('appwrite')) {
-              return 'appwrite-vendor'
-            }
-            // Other vendor libraries
-            return 'vendor'
-          }
-
-          // Feature-based chunks
-          if (id.includes('/pages/')) {
-            return 'pages'
-          }
-          if (id.includes('/components/')) {
-            return 'components'
-          }
-          if (id.includes('/stores/')) {
-            return 'stores'
-          }
-          if (id.includes('/services/')) {
-            return 'services'
-          }
-        }
+        // Remove aggressive manual chunking to avoid circular-eval issues in production
 
         // Optimize chunk size
         viteConf.build.chunkSizeWarningLimit = 1000
 
-        // Tree shaking optimization
-        viteConf.optimizeDeps = {
-          include: [
-            'vue',
-            'vue-router',
-            'pinia',
-            'quasar',
-            'chart.js',
-            'vue-chartjs',
-            'dexie',
-            'appwrite',
-          ],
-          exclude: [
-            // Exclude large libraries that should be loaded dynamically
-          ],
-        }
+        // Use default optimizeDeps to reduce risk of pre-bundling issues
+        delete viteConf.optimizeDeps
 
-        // Compression optimization
-        viteConf.build.rollupOptions.output.compact = true
+        // Keep default Rollup output settings to avoid minifier edge cases
+        if (viteConf.build?.rollupOptions?.output) {
+          delete viteConf.build.rollupOptions.output.compact
+        }
 
         // Source maps for development only
         if (process.env.NODE_ENV === 'development') {
