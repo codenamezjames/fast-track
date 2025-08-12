@@ -65,17 +65,29 @@
               "
               @click="toggleMode"
             />
+            <q-btn
+              v-if="showInstallButton"
+              outline
+              color="primary"
+              class="q-mt-md full-width"
+              icon="download"
+              label="Install App"
+              @click="requestInstall"
+            />
           </q-card-section>
         </q-card>
       </q-page>
     </q-page-container>
+    <!-- PWA Install prompt controller -->
+    <PwaInstallPrompt ref="pwaRef" />
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
+import PwaInstallPrompt from '../components/PwaInstallPrompt.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -85,6 +97,8 @@ const password = ref('')
 const name = ref('')
 const showPassword = ref(false)
 const isRegistering = ref(false)
+const pwaRef = ref(null)
+const showInstallButton = ref(false)
 
 const toggleMode = () => {
   isRegistering.value = !isRegistering.value
@@ -105,4 +119,38 @@ const onSubmit = async () => {
     console.error('Authentication error:', error)
   }
 }
+
+// PWA install handling
+const updateInstallable = () => {
+  try {
+    const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    const canInstall = pwaRef.value && pwaRef.value.isInstallable && pwaRef.value.isInstallable()
+    showInstallButton.value = Boolean(canInstall && !isStandalone)
+  } catch {
+    showInstallButton.value = false
+  }
+}
+
+const handleBeforeInstallPrompt = () => updateInstallable()
+const handleAppInstalled = () => {
+  showInstallButton.value = false
+}
+
+const requestInstall = () => {
+  if (pwaRef.value && pwaRef.value.showInstallPrompt) {
+    pwaRef.value.showInstallPrompt()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  window.addEventListener('appinstalled', handleAppInstalled)
+  // Initial check after mount
+  setTimeout(updateInstallable, 500)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  window.removeEventListener('appinstalled', handleAppInstalled)
+})
 </script>
