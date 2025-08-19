@@ -1,25 +1,25 @@
 <template>
-  <q-page class="dashboard-page fit">
-    <!-- Top Tab Navigation -->
-    <div class="top-tabs-container">
-      <q-tabs
-        v-model="activeTab"
-        dense
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        @update:model-value="handleTabChange"
-      >
-        <q-tab name="calories" label="Calories" icon="bolt" />
-        <q-tab name="weight" label="Weight" icon="monitor_weight" />
-      </q-tabs>
-    </div>
-
-    <div class="dashboard-container">
+  <q-page class="dashboard-page fit q-pa-md">
+    <div class="q-mx-auto q-gutter-y-md" style="max-width: 560px">
+      <!-- Top Tab Navigation -->
+      <div class="top-tabs-container q-mb-md">
+        <q-tabs
+          v-model="activeTab"
+          dense
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          narrow-indicator
+          @update:model-value="handleTabChange"
+        >
+          <q-tab name="calories" label="Calories" icon="bolt" />
+          <q-tab name="weight" label="Weight" icon="monitor_weight" />
+        </q-tabs>
+      </div>
       <!-- Calories Tab Content -->
-      <div v-if="activeTab === 'calories'">
+      <div v-if="activeTab === 'calories'" class="q-gutter-y-md">
         <!-- Add Calories Section -->
-        <q-card class="dashboard-card q-mb-md">
+        <q-card class="dashboard-card" flat bordered>
           <q-card-section>
             <div class="text-h6 q-mb-md">Add Calories</div>
 
@@ -94,7 +94,7 @@
         </q-card>
 
         <!-- Calories Section -->
-        <q-card class="dashboard-card q-mb-md">
+        <q-card class="dashboard-card" flat bordered>
           <q-card-section>
             <div class="row items-center justify-between q-mb-md">
               <div class="text-h6">Calories</div>
@@ -122,7 +122,7 @@
         </q-card>
 
         <!-- Meals History Section -->
-        <q-card class="dashboard-card">
+        <q-card class="dashboard-card" flat bordered>
           <q-card-section>
             <MealsHistory />
           </q-card-section>
@@ -130,12 +130,12 @@
       </div>
 
       <!-- Weight Tab Content -->
-      <div v-if="activeTab === 'weight'">
+      <div v-if="activeTab === 'weight'" class="q-gutter-y-md">
         <!-- Weight Tracking Section -->
-        <q-card class="dashboard-card q-mb-md">
+        <q-card class="dashboard-card" flat bordered>
           <q-card-section>
             <div class="text-h6 q-mb-md">Weight Tracking</div>
-            
+
             <!-- Current Weight Display -->
             <div v-if="currentWeight" class="current-weight-display q-mb-md">
               <q-card flat bordered>
@@ -154,36 +154,36 @@
             <!-- Weight Entry Form -->
             <div class="weight-entry-section q-pa-md">
               <div class="text-subtitle2 q-mb-sm">Add New Weight Entry</div>
-              
-                          <!-- Weight Input -->
-            <div class="row q-gutter-md q-mb-md">
-              <div class="col">
-                <q-input
-                  v-model="weightForm.weight"
-                  type="number"
-                  step="0.1"
-                  outlined
-                  :placeholder="`Enter weight (${weightUnit})`"
-                  dense
-                  @keyup.enter="addWeightEntry"
-                >
-                  <template v-slot:append>
-                    <span class="text-grey-6">{{ weightUnit }}</span>
-                  </template>
-                </q-input>
+
+              <!-- Weight Input -->
+              <div class="row q-gutter-md q-mb-md">
+                <div class="col">
+                  <q-input
+                    v-model="weightForm.weight"
+                    type="number"
+                    step="0.1"
+                    outlined
+                    :placeholder="`Enter weight (${weightUnit})`"
+                    dense
+                    @keyup.enter="addWeightEntry"
+                  >
+                    <template v-slot:append>
+                      <span class="text-grey-6">{{ weightUnit }}</span>
+                    </template>
+                  </q-input>
+                </div>
+                <div class="col-auto">
+                  <q-btn-toggle
+                    v-model="weightUnit"
+                    no-caps
+                    rounded
+                    unelevated
+                    toggle-color="positive"
+                    :options="unitOptions"
+                    dense
+                  />
+                </div>
               </div>
-              <div class="col-auto">
-                <q-btn-toggle
-                  v-model="weightUnit"
-                  no-caps
-                  rounded
-                  unelevated
-                  toggle-color="positive"
-                  :options="unitOptions"
-                  dense
-                />
-              </div>
-            </div>
 
               <!-- Date and Time Selection -->
               <div class="row q-gutter-md q-mb-md">
@@ -261,7 +261,7 @@
         </q-card>
 
         <!-- Weight Chart Section -->
-        <q-card class="dashboard-card q-mb-md">
+        <q-card class="dashboard-card q-mb-md" flat bordered>
           <q-card-section>
             <div class="text-h6 q-mb-md">Weight Trends</div>
             <WeightTrendsChart :height="200" :weight-unit="weightUnit" />
@@ -269,7 +269,7 @@
         </q-card>
 
         <!-- Weight Stats Section -->
-        <q-card class="dashboard-card" v-if="currentWeight">
+        <q-card class="dashboard-card" flat bordered v-if="currentWeight">
           <q-card-section>
             <div class="text-h6 q-mb-md">Weight Statistics</div>
             <div class="row q-gutter-md">
@@ -691,12 +691,6 @@ const formatNumber = (num) => {
 
 .dashboard-page {
   padding: 0;
-}
-
-.dashboard-container {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .dashboard-card {

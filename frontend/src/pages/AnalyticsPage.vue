@@ -1,6 +1,6 @@
 <template>
-  <q-page class="analytics-page flex flex-center">
-    <div class="analytics-container">
+  <q-page class="analytics-page q-pa-md">
+    <div class="q-mx-auto q-px-md q-gutter-y-md" style="max-width: 560px">
       <!-- Page Header -->
       <div class="page-header q-mb-lg">
         <div class="header-content">
@@ -28,9 +28,9 @@
       </div>
 
       <!-- Quick Stats Overview -->
-      <div class="quick-stats q-mb-lg">
-        <div class="row q-gutter-md justify-center">
-          <div class="col-12 col-sm-6 col-md-3">
+      <div class="quick-stats q-mb-md">
+        <div class="row">
+          <div class="col-12">
             <StatsOverviewCard
               icon="local_fire_department"
               color="primary"
@@ -44,8 +44,7 @@
               :trend-direction="caloriesTrendType"
             />
           </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12">
             <StatsOverviewCard
               icon="timer"
               color="secondary"
@@ -58,8 +57,7 @@
               trend-type="positive"
             />
           </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12">
             <StatsOverviewCard
               icon="trending_up"
               color="positive"
@@ -70,8 +68,7 @@
               trend-label=""
             />
           </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12">
             <StatsOverviewCard
               icon="schedule"
               color="orange"
@@ -88,9 +85,9 @@
       <!-- Charts Section -->
       <div class="charts-section">
         <!-- Main Charts Row -->
-        <div class="row q-gutter-md q-mb-lg">
+        <div class="q-gutter-y-md">
           <!-- Calorie Trends Chart -->
-          <div class="col-12 col-lg-4">
+          <div>
             <q-card flat bordered class="chart-card">
               <q-card-section class="chart-card-section">
                 <CaloriesTrendsChart :height="280" />
@@ -99,7 +96,7 @@
           </div>
 
           <!-- Fasting Analytics Chart -->
-          <div class="col-12 col-lg-4">
+          <div>
             <q-card flat bordered class="chart-card">
               <q-card-section class="chart-card-section">
                 <FastingStreaksChart :height="280" />
@@ -108,7 +105,7 @@
           </div>
 
           <!-- Weight Trends Chart -->
-          <div class="col-12 col-lg-4">
+          <div>
             <q-card flat bordered class="chart-card">
               <q-card-section class="chart-card-section">
                 <WeightTrendsChart :height="280" :weight-unit="weightUnit" />
@@ -118,14 +115,14 @@
         </div>
 
         <!-- Side by Side Charts on Desktop -->
-        <div class="row q-gutter-md q-mb-lg">
+        <div class="q-gutter-y-md q-mb-lg">
           <!-- Weekly Overview -->
-          <div class="col-12 col-md-6">
+          <div>
             <WeeklyOverviewCard :weekly-data="weeklyOverview" />
           </div>
 
           <!-- Goals Progress -->
-          <div class="col-12 col-md-6">
+          <div>
             <GoalsProgressCard :goals="goalsData" />
           </div>
         </div>

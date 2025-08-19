@@ -1,29 +1,29 @@
 <template>
-  <q-page class="dashboard-page fit">
-    <div class="dashboard-container">
-      <div class="row q-gutter-md">
+  <q-page class="fit q-pa-md">
+    <div class="q-mx-auto q-gutter-y-md" style="max-width: 560px">
+      <div class="q-gutter-y-md">
         <!-- Profile Settings -->
-        <div class="col-12">
+        <div>
           <ProfileSettings @logout="handleLogout" />
         </div>
 
         <!-- Notification Settings -->
-        <div class="col-12">
+        <div>
           <NotificationSettings />
         </div>
 
         <!-- Weight Tracking Settings -->
-        <div class="col-12">
+        <div>
           <WeightTrackingSettings />
         </div>
 
         <!-- Data Management Settings -->
-        <div class="col-12">
+        <div>
           <DataManagementSettings />
         </div>
 
         <!-- About Section -->
-        <div class="col-12">
+        <div>
           <AboutSection />
         </div>
       </div>
@@ -50,19 +50,4 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-.dashboard-page {
-  padding: 20px;
-}
-
-.dashboard-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-/* Mobile optimizations */
-@media (max-width: 600px) {
-  .dashboard-page {
-    padding: 16px;
-  }
-}
 </style>

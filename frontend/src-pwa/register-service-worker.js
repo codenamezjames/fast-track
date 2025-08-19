@@ -18,11 +18,17 @@ register(process.env.SERVICE_WORKER_FILE, {
 
   registered(registration) {
     // Periodically check for updates (every 60 minutes)
-    setInterval(() => {
-      try {
-        registration.update()
-      } catch {}
-    }, 60 * 60 * 1000)
+    setInterval(
+      () => {
+        try {
+          registration.update()
+        } catch (err) {
+          // Silently log to console to aid debugging without user disruption
+          console.error('Service worker update check failed:', err)
+        }
+      },
+      60 * 60 * 1000,
+    )
   },
 
   cached(/* registration */) {
@@ -39,9 +45,13 @@ register(process.env.SERVICE_WORKER_FILE, {
       // If the new SW is waiting, tell it to activate immediately
       if (registration && registration.waiting) {
         // Listen for controlling SW change then reload
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          window.location.reload()
-        }, { once: true })
+        navigator.serviceWorker.addEventListener(
+          'controllerchange',
+          () => {
+            window.location.reload()
+          },
+          { once: true },
+        )
         registration.waiting.postMessage({ type: 'SKIP_WAITING' })
       } else {
         window.location.reload()
