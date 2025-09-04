@@ -1,4 +1,58 @@
-// Minimal global styles - let Quasar handle everything
+// Global visual polish to match soft, neumorphic mockups
+
+// Design tokens (CSS variables) – tweak once, reflected everywhere
+:root {
+  /* Colors */
+  --ft-color-primary: var(--q-primary);
+  --ft-color-secondary: var(--q-secondary);
+  --ft-color-surface-light-start: #ffffff;
+  --ft-color-surface-light-end: #fafbff;
+  --ft-color-surface-dark-start: #1b222c;
+  --ft-color-surface-dark-end: #171c25;
+  --ft-color-bg-light-start: #f6f8fc;
+  --ft-color-bg-light-end: #eef2f8;
+  --ft-color-bg-dark-start: #0f1216;
+  --ft-color-bg-dark-end: #141a22;
+  --ft-color-border-light: rgba(17, 24, 39, 0.06);
+  --ft-color-border-dark: rgba(255, 255, 255, 0.06);
+  --ft-color-focus-ring: rgba(79, 124, 255, 0.1);
+  --ft-color-primary-shadow: rgba(79, 124, 255, 0.28);
+
+  /* Radius */
+  --ft-radius-card: 20px;
+  --ft-radius-input: 14px;
+  --ft-radius-btn: 12px;
+  --ft-radius-chip: 10px;
+
+  /* Spacing */
+  --ft-space-2: 2px;
+  --ft-space-4: 4px;
+  --ft-space-6: 6px;
+  --ft-space-8: 8px;
+  --ft-space-10: 10px;
+  --ft-space-12: 12px;
+  --ft-space-14: 14px;
+  --ft-space-16: 16px;
+  --ft-space-20: 20px;
+  --ft-space-24: 24px;
+
+  /* Sizes */
+  --ft-height-display: 48px;
+  --ft-height-key: 48px;
+  --ft-height-btn-primary: 42px;
+
+  /* Shadows */
+  --ft-shadow-card-light: 0 10px 30px rgba(16, 24, 40, 0.08), 0 1px 0 rgba(16, 24, 40, 0.04);
+  --ft-shadow-card-dark: 0 12px 32px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  --ft-shadow-key: 0 6px 16px rgba(16, 24, 40, 0.12);
+  --ft-shadow-key-active: 0 4px 12px rgba(16, 24, 40, 0.12);
+  --ft-shadow-primary: 0 8px 20px var(--ft-color-primary-shadow);
+  --ft-shadow-ring-glow: 0 12px 30px rgba(79, 124, 255, 0.35);
+  --ft-shadow-ring: drop-shadow(0 4px 12px rgba(79, 124, 255, 0.25));
+
+  /* Focus */
+  --ft-focus-ring-size: 3px;
+}
 
 // Import modern font for better typography
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -14,15 +68,116 @@
     sans-serif;
 }
 
+// App background gradients (respect light/dark)
+.body--light {
+  background: linear-gradient(180deg, var(--ft-color-bg-light-start) 0%, var(--ft-color-bg-light-end) 100%);
+}
+
+.body--dark {
+  background: linear-gradient(180deg, var(--ft-color-bg-dark-start) 0%, var(--ft-color-bg-dark-end) 100%);
+}
+
 // Minimal focus styles for better UX
 .q-field--outlined .q-field__control {
   &.q-field__control--focused {
-    border-color: #4f7cff;
-    box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.1);
+    border-color: var(--ft-color-primary);
+    box-shadow: 0 0 0 var(--ft-focus-ring-size) var(--ft-color-focus-ring);
   }
 }
 
+// Softer cards with gentle shadows
 .q-card {
   width: 100%;
   max-width: 500px;
+  border-radius: var(--ft-radius-card);
+}
+
+.body--light .q-card {
+  background: linear-gradient(180deg, var(--ft-color-surface-light-start) 0%, var(--ft-color-surface-light-end) 100%);
+  box-shadow: var(--ft-shadow-card-light);
+  border: 1px solid var(--ft-color-border-light);
+}
+
+.body--dark .q-card {
+  background: linear-gradient(180deg, var(--ft-color-surface-dark-start) 0%, var(--ft-color-surface-dark-end) 100%);
+  box-shadow: var(--ft-shadow-card-dark);
+  border: 1px solid var(--ft-color-border-dark);
+}
+
+// Round inputs and buttons
+.q-field__control {
+  border-radius: var(--ft-radius-input);
+}
+
+.q-btn {
+  border-radius: var(--ft-radius-btn);
+}
+
+.q-btn--outline {
+  border-width: var(--ft-space-2);
+}
+
+// Subtle ring around circular progress
+.q-circular-progress__svg {
+  filter: var(--ft-shadow-ring);
+}
+
+// Tighten page content spacing a bit for compact cards
+.q-page {
+  padding-bottom: var(--ft-space-24);
+}
+
+// Glassmorphic elevated card look
+.glass-card {
+  backdrop-filter: blur(12px);
+}
+
+// Ring wrapper subtle glow
+.ring-glow {
+  filter: drop-shadow(var(--ft-shadow-ring-glow));
+}
+
+// Display input styling
+.display-input :deep(.q-field__control) {
+  height: var(--ft-height-display);
+  border-radius: var(--ft-radius-input);
+}
+
+.display-input :deep(.q-field__native) {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+// Numeric keypad buttons
+.btn-key {
+  height: var(--ft-height-key);
+  border-radius: var(--ft-radius-input);
+  box-shadow: var(--ft-shadow-key);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn-key:active {
+  transform: translateY(1px);
+  box-shadow: var(--ft-shadow-key-active);
+}
+
+// Soft chip-like quick add buttons
+.btn-chip {
+  padding: var(--ft-space-4) var(--ft-space-10);
+  border-radius: var(--ft-radius-chip);
+  background: linear-gradient(180deg, rgba(79, 124, 255, 0.08) 0%, rgba(79, 124, 255, 0.02) 100%);
+  border: 1px solid rgba(79, 124, 255, 0.25);
+}
+
+.body--dark .btn-chip {
+  background: linear-gradient(180deg, rgba(79, 124, 255, 0.15) 0%, rgba(79, 124, 255, 0.06) 100%);
+  border-color: rgba(79, 124, 255, 0.35);
+}
+
+// Prominent primary action
+.btn-primary-lg {
+  height: var(--ft-height-btn-primary);
+  border-radius: var(--ft-radius-btn);
+  padding: 0 var(--ft-space-14);
+  box-shadow: var(--ft-shadow-primary);
 }

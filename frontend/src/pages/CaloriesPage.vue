@@ -1,131 +1,62 @@
 <template>
   <q-page class="dashboard-page fit q-pa-md">
     <div class="q-mx-auto q-gutter-y-md" style="max-width: 560px">
-      <!-- Top Tab Navigation -->
-      <div class="top-tabs-container q-mb-md">
-        <q-tabs
-          v-model="activeTab"
-          dense
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-          @update:model-value="handleTabChange"
-        >
-          <q-tab name="calories" label="Calories" icon="bolt" />
-          <q-tab name="weight" label="Weight" icon="monitor_weight" />
-        </q-tabs>
-      </div>
       <!-- Calories Tab Content -->
       <div v-if="activeTab === 'calories'" class="q-gutter-y-md">
-        <!-- Add Calories Section -->
-        <q-card class="dashboard-card" flat bordered>
-          <q-card-section>
-            <div class="text-h6 q-mb-md">Add Calories</div>
+        <q-card flat bordered class="q-pa-md glass-card">
+          <div class="row justify-center q-mb-md ring-glow">
+            <q-circular-progress
+              show-value
+              :value="progressPercent"
+              size="160px"
+              :thickness="0.18"
+              color="primary"
+              track-color="grey-4"
+            >
+              <div class="column items-center">
+                <div class="text-h3 text-weight-bold">{{ formatNumber(todaysCalories) }}</div>
+                <div class="text-caption">kcal</div>
+              </div>
+            </q-circular-progress>
+          </div>
 
-            <!-- Calorie Buttons -->
-            <div class="row q-gutter-xs q-mb-md justify-between">
-              <q-btn
-                v-for="amount in [25, 50, 100]"
-                :key="amount"
-                :label="`+${amount}`"
-                color="primary"
-                unelevated
-                @click="addToPool(amount)"
-                class="col-auto"
-              />
-              <q-btn
-                icon="add_circle"
-                color="grey-6"
-                unelevated
-                @click="showCustomDialog = true"
-                class="col-auto"
-              >
-                <q-tooltip>Custom amount</q-tooltip>
-              </q-btn>
-              <q-btn
-                icon="history"
-                color="secondary"
-                unelevated
-                @click="showPastMealDialog = true"
-                class="col-auto"
-              >
-                <q-tooltip>Add past meal</q-tooltip>
-              </q-btn>
-            </div>
+          <div class="row justify-around q-mb-xs q-gutter-xs">
+            <q-btn v-for="amt in [100,250,500]" :key="amt" :label="`+${amt}`" color="primary" class="btn-chip" @click="incrementBy(amt)" dense />
+          </div>
 
-            <!-- Calorie Pool Display -->
-            <q-card v-if="caloriePool > 0" flat bordered class="q-mb-md">
-              <q-card-section class="q-py-md q-px-lg">
-                <div class="row items-center justify-between q-mb-md">
-                  <div class="row items-center q-gutter-md">
-                    <q-icon name="bolt" color="primary" size="lg" />
-                    <div class="text-h6 text-weight-bold">{{ formatNumber(caloriePool) }} kcal</div>
-                  </div>
-                  <!-- Optional Notes Input -->
-                  <div class="q-my-sm">
-                    <q-input
-                      v-model="poolNotes"
-                      outlined
-                      placeholder="Add notes (optional)"
-                      maxlength="100"
-                      dense
-                    >
-                      <template v-slot:prepend>
-                        <q-icon name="notes" color="grey-6" />
-                      </template>
-                    </q-input>
-                  </div>
-                  <div class="row q-gutter-md">
-                    <q-btn
-                      color="positive"
-                      label="Add Meal"
-                      @click="addMealFromPool"
-                      :loading="caloriesStore.isLoading"
-                      icon="check"
-                      unelevated
-                    />
-                    <q-btn color="grey-6" label="Clear" @click="clearPool" flat icon="close" />
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-card-section>
-        </q-card>
+          <div class="row items-center q-gutter-sm q-mb-md">
+            <q-input v-model="entryDisplay" outlined readonly class="col display-input" dense input-class="text-h6 text-center" />
+            <q-btn label="Add" color="primary" unelevated class="btn-primary-lg" @click="confirmAdd" :disable="!entryAmount" :loading="caloriesStore.isLoading" dense />
+          </div>
 
-        <!-- Calories Section -->
-        <q-card class="dashboard-card" flat bordered>
-          <q-card-section>
-            <div class="row items-center justify-between q-mb-md">
-              <div class="text-h6">Calories</div>
-              <q-btn-toggle
-                v-model="chartViewMode"
-                toggle-color="primary"
-                :options="[
-                  { label: 'Daily', value: 'daily' },
-                  { label: 'Weekly', value: 'weekly' },
-                ]"
-                unelevated
-                dense
-              />
-            </div>
-
-            <CaloriesChart :view-mode="chartViewMode" />
-
-            <div class="text-center q-mt-md">
-              <div class="text-h4 text-weight-bold">{{ formatNumber(displayTotal) }}</div>
-              <div class="text-caption text-grey-6">
-                {{ chartViewMode === 'daily' ? 'today' : 'this week' }}
+          <div class="q-gutter-y-sm q-mt-none">
+            <div class="row q-col-gutter-xs">
+              <div class="col-4" v-for="n in [1,2,3]" :key="`r1-${n}`">
+                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
               </div>
             </div>
-          </q-card-section>
-        </q-card>
-
-        <!-- Meals History Section -->
-        <q-card class="dashboard-card" flat bordered>
-          <q-card-section>
-            <MealsHistory />
-          </q-card-section>
+            <div class="row q-col-gutter-xs">
+              <div class="col-4" v-for="n in [4,5,6]" :key="`r2-${n}`">
+                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
+              </div>
+            </div>
+            <div class="row q-col-gutter-xs">
+              <div class="col-4" v-for="n in [7,8,9]" :key="`r3-${n}`">
+                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
+              </div>
+            </div>
+            <div class="row q-col-gutter-xs">
+              <div class="col-4">
+                <q-btn class="full-width btn-key" color="grey-6" flat label="Clear" @click="clearEntry" dense />
+              </div>
+              <div class="col-4">
+                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(0)" dense>0</q-btn>
+              </div>
+              <div class="col-4">
+                <q-btn class="full-width btn-key" color="grey-6" flat label="-" @click="backspace" dense />
+              </div>
+            </div>
+          </div>
         </q-card>
       </div>
 
@@ -396,18 +327,15 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { Notify } from 'quasar'
 import { useCaloriesStore } from '../stores/calories.js'
 import { useWeightStore } from '../stores/weight.js'
-import CaloriesChart from '../components/CaloriesChart.vue'
-import MealsHistory from '../components/MealsHistory.vue'
 import WeightTrendsChart from '../components/WeightTrendsChart.vue'
 import DialogHeader from '../components/DialogHeader.vue'
 import MealDialog from '../components/MealDialog.vue'
 import WeightEntryDialog from '../components/WeightEntryDialog.vue'
 
-const router = useRouter()
 const route = useRoute()
 const caloriesStore = useCaloriesStore()
 const weightStore = useWeightStore()
@@ -415,15 +343,11 @@ const weightStore = useWeightStore()
 // Tab management
 const activeTab = ref('calories')
 
-// Watch for route changes to sync tab with URL
+// Track bottom-tab driven navigation to toggle local content
 watch(
   () => route.path,
   (newPath) => {
-    if (newPath.includes('/weight')) {
-      activeTab.value = 'weight'
-    } else {
-      activeTab.value = 'calories'
-    }
+    activeTab.value = newPath.includes('/weight') ? 'weight' : 'calories'
   },
   { immediate: true }
 )
@@ -431,10 +355,16 @@ watch(
 // Calories related refs
 const customAmount = ref('')
 const caloriePool = ref(0)
-const poolNotes = ref('')
 const showCustomDialog = ref(false)
 const showPastMealDialog = ref(false)
-const chartViewMode = ref('daily')
+
+// Numeric pad state
+const entryAmount = ref(0)
+const entryDisplay = computed(() => (entryAmount.value ? String(entryAmount.value) : '0'))
+
+const todaysCalories = computed(() => caloriesStore.todaysCalories)
+const dailyGoal = 2000
+const progressPercent = computed(() => Math.min((todaysCalories.value / dailyGoal) * 100, 100))
 
 // Weight related refs
 const showWeightDialog = ref(false)
@@ -468,10 +398,6 @@ onMounted(async () => {
   setDefaultDateTime()
 })
 
-// Calories methods
-const addToPool = (amount) => {
-  caloriePool.value += amount
-}
 
 const addCustomFromDialog = () => {
   const amount = parseInt(customAmount.value)
@@ -494,36 +420,6 @@ const addCustomFromDialog = () => {
 const closeCustomDialog = () => {
   showCustomDialog.value = false
   customAmount.value = ''
-}
-
-const addMealFromPool = async () => {
-  if (caloriePool.value <= 0) return
-
-  try {
-    await caloriesStore.addMeal(caloriePool.value, poolNotes.value)
-
-    Notify.create({
-      type: 'positive',
-      message: `Meal logged: ${formatNumber(caloriePool.value)} calories`,
-      position: 'top',
-      timeout: 2000,
-    })
-
-    // Clear the pool after successful addition
-    caloriePool.value = 0
-    poolNotes.value = ''
-  } catch {
-    Notify.create({
-      type: 'negative',
-      message: 'Failed to add meal',
-      position: 'top',
-    })
-  }
-}
-
-const clearPool = () => {
-  caloriePool.value = 0
-  poolNotes.value = ''
 }
 
 const onMealSaved = () => {
@@ -629,22 +525,8 @@ const formatDate = (dateString) => {
   })
 }
 
-const handleTabChange = (tab) => {
-  if (tab === 'calories') {
-    router.push('/app/logging/calories')
-  } else if (tab === 'weight') {
-    router.push('/app/logging/weight')
-  }
-}
+// Removed top tab navigation
 
-// Computed properties
-const displayTotal = computed(() => {
-  if (chartViewMode.value === 'daily') {
-    return caloriesStore.todaysCalories
-  } else {
-    return caloriesStore.weeklyCalories
-  }
-})
 
 const currentWeight = computed(() => weightStore.latestWeightForDisplay(weightUnit.value))
 
@@ -679,15 +561,43 @@ const isWeightFormValid = computed(() => {
 const formatNumber = (num) => {
   return new Intl.NumberFormat().format(num)
 }
+
+// Keypad helpers
+const appendDigit = (digit) => {
+  const next = Number(`${entryAmount.value || ''}${digit}`)
+  if (!Number.isNaN(next) && next <= 10000) {
+    entryAmount.value = next
+  }
+}
+
+const clearEntry = () => {
+  entryAmount.value = 0
+}
+
+const backspace = () => {
+  const str = String(entryAmount.value)
+  entryAmount.value = Number(str.slice(0, -1)) || 0
+}
+
+const incrementBy = (amt) => {
+  entryAmount.value = Math.min((entryAmount.value || 0) + amt, 10000)
+}
+
+const confirmAdd = async () => {
+  const amount = entryAmount.value
+  if (!amount || amount <= 0) return
+  try {
+    await caloriesStore.addMeal(amount)
+    entryAmount.value = 0
+    Notify.create({ type: 'positive', message: `Added ${amount} calories`, position: 'top', timeout: 1500 })
+  } catch {
+    Notify.create({ type: 'negative', message: 'Failed to add calories', position: 'top' })
+  }
+}
 </script>
 
 <style scoped>
-.top-tabs-container {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid var(--q-separator-color);
-}
+/* top-tabs removed */
 
 .dashboard-page {
   padding: 0;

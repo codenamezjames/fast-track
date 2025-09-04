@@ -32,9 +32,15 @@
       <q-list separator>
         <q-item clickable v-ripple to="/app/logging/calories" exact>
           <q-item-section avatar>
-            <q-icon name="restaurant" />
+            <q-icon name="bolt" />
           </q-item-section>
-          <q-item-section>Logging</q-item-section>
+          <q-item-section>Calories</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/app/logging/weight" exact>
+          <q-item-section avatar>
+            <q-icon name="monitor_weight" />
+          </q-item-section>
+          <q-item-section>Weight</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/app/fasting" exact>
           <q-item-section avatar>
@@ -68,18 +74,9 @@
     <!-- Bottom Navigation Tabs -->
     <q-footer elevated class="lt-md">
       <q-tabs v-model="currentTab" dense align="justify">
-        <q-tab name="logging" icon="restaurant" label="Logging" @click="navigateTo('/logging')" />
-
-        <q-tab name="fasting" icon="schedule" label="Fasting" @click="navigateTo('/fasting')" />
-
-        <q-tab
-          name="analytics"
-          icon="insights"
-          label="Analytics"
-          @click="navigateTo('/analytics')"
-        />
-
-        <q-tab name="settings" icon="settings" label="Settings" @click="navigateTo('/settings')" />
+        <q-tab name="calories" icon="bolt" label="Calories" @click="navigateTo('calories')" />
+        <q-tab name="weight" icon="monitor_weight" label="Weight" @click="navigateTo('weight')" />
+        <q-tab name="fasting" icon="schedule" label="Fasting" @click="navigateTo('fasting')" />
       </q-tabs>
     </q-footer>
   </q-layout>
