@@ -228,9 +228,6 @@ const scheduleNotifications = async () => {
     eventTitle.value = ''
     eventDateTime.value = ''
     reminders.value = [{ offsetValue: 5, offsetUnit: 'minutes', message: '' }]
-  } catch (error) {
-    console.error('Failed to schedule notifications:', error)
-    throw error
   } finally {
     isScheduling.value = false
   }

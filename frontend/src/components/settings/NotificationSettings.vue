@@ -152,8 +152,8 @@ const sendTestNotification = async () => {
 
   try {
     await notificationsStore.sendTestNotification()
-  } catch (error) {
-    console.error('Error sending test notification:', error)
+  } catch {
+    // Error sending test notification
   } finally {
     sendingTest.value = false
   }

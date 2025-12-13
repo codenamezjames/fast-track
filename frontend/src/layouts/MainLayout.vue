@@ -121,9 +121,8 @@ watch(
 onMounted(() => {
   try {
     themeStore.init()
-    console.log('Theme initialized from MainLayout')
-  } catch (error) {
-    console.error('Theme init error:', error)
+  } catch {
+    // Theme init error
   }
 })
 

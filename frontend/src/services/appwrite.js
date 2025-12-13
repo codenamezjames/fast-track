@@ -4,10 +4,6 @@ import { Client, Account, Databases, ID, Query } from 'appwrite'
 const APPWRITE_ENDPOINT = import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1'
 const APPWRITE_PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID || 'fasttrack-health'
 
-console.log('🌐 Appwrite Configuration:')
-console.log(`📍 Endpoint: ${APPWRITE_ENDPOINT}`)
-console.log(`🏷️  Project: ${APPWRITE_PROJECT_ID}`)
-
 const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID)
 
 export const account = new Account(client)
@@ -38,7 +34,6 @@ export const appwriteHelpers = {
         // User not authenticated but service is online
         return { success: true, online: true, authenticated: false }
       }
-      console.warn('Appwrite connection failed, using offline mode:', error.message)
       return { success: false, online: false, error: error.message }
     }
   },
@@ -47,10 +42,8 @@ export const appwriteHelpers = {
   async createSession(email, password) {
     try {
       const session = await account.createEmailPasswordSession(email, password)
-      console.log('✅ Appwrite session created')
       return { success: true, session }
     } catch (error) {
-      console.error('❌ Appwrite session creation failed:', error.message)
       return { success: false, error: error.message }
     }
   },
@@ -59,7 +52,6 @@ export const appwriteHelpers = {
   async createUser(email, password, name) {
     try {
       const user = await account.create(ID.unique(), email, password, name)
-      console.log('✅ Appwrite user created')
 
       // Automatically create session after registration
       const sessionResult = await this.createSession(email, password)
@@ -70,7 +62,6 @@ export const appwriteHelpers = {
         autoLogin: sessionResult.success,
       }
     } catch (error) {
-      console.error('❌ Appwrite user creation failed:', error.message)
       return { success: false, error: error.message }
     }
   },
@@ -89,10 +80,8 @@ export const appwriteHelpers = {
   async logout() {
     try {
       await account.deleteSession('current')
-      console.log('✅ Appwrite logout successful')
       return { success: true }
     } catch (error) {
-      console.error('❌ Appwrite logout failed:', error.message)
       return { success: false, error: error.message }
     }
   },
@@ -108,7 +97,6 @@ export const appwriteHelpers = {
       )
       return { success: true, document }
     } catch (error) {
-      console.error(`❌ Failed to create document in ${collectionId}:`, error.message)
       return { success: false, error: error.message }
     }
   },
@@ -123,7 +111,6 @@ export const appwriteHelpers = {
       )
       return { success: true, document }
     } catch (error) {
-      console.error(`❌ Failed to update document in ${collectionId}:`, error.message)
       return { success: false, error: error.message }
     }
   },
@@ -133,7 +120,6 @@ export const appwriteHelpers = {
       await databases.deleteDocument(config.databaseId, collectionId, documentId)
       return { success: true }
     } catch (error) {
-      console.error(`❌ Failed to delete document in ${collectionId}:`, error.message)
       return { success: false, error: error.message }
     }
   },
@@ -143,7 +129,6 @@ export const appwriteHelpers = {
       const document = await databases.getDocument(config.databaseId, collectionId, documentId)
       return { success: true, document }
     } catch (error) {
-      console.error(`❌ Failed to get document from ${collectionId}:`, error.message)
       return { success: false, error: error.message }
     }
   },
@@ -153,7 +138,6 @@ export const appwriteHelpers = {
       const documents = await databases.listDocuments(config.databaseId, collectionId, queries)
       return { success: true, documents: documents.documents, total: documents.total }
     } catch (error) {
-      console.error(`❌ Failed to list documents from ${collectionId}:`, error.message)
       return { success: false, error: error.message }
     }
   },

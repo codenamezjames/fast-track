@@ -105,7 +105,6 @@ export const useNotificationsStore = defineStore('notifications', {
         this.scheduledNotifications = notificationService.getScheduledNotifications()
       } catch (error) {
         this.error = error.message
-        console.error('Failed to initialize notifications:', error)
       } finally {
         this.isLoading = false
       }
@@ -209,8 +208,6 @@ export const useNotificationsStore = defineStore('notifications', {
       const reminderTimes = this.preferences.meals.reminderTimes
       if (reminderTimes && Array.isArray(reminderTimes)) {
         notificationService.scheduleDailyMealReminders(reminderTimes)
-      } else {
-        console.warn('No valid reminderTimes found in preferences:', reminderTimes)
       }
 
       // Update scheduled notifications list
@@ -302,16 +299,16 @@ export const useNotificationsStore = defineStore('notifications', {
           // Merge with defaults to handle new preference keys
           this.preferences = { ...this.preferences, ...preferences }
         }
-      } catch (error) {
-        console.error('Failed to load notification preferences:', error)
+      } catch {
+        // Failed to load notification preferences
       }
     },
 
     savePreferences() {
       try {
         localStorage.setItem('fasttrack-notification-preferences', JSON.stringify(this.preferences))
-      } catch (error) {
-        console.error('Failed to save notification preferences:', error)
+      } catch {
+        // Failed to save notification preferences
       }
     },
 

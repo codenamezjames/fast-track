@@ -94,7 +94,6 @@ export function createBaseStore(storeName, initialState = {}, getters = {}, acti
 
       setError(error) {
         this.error = error
-        console.error(`[${storeName}] Error:`, error)
       },
 
       clearError() {
@@ -130,8 +129,8 @@ export function createBaseStore(storeName, initialState = {}, getters = {}, acti
       async saveToStorage(key, data) {
         try {
           localStorage.setItem(`fasttrack-${key}`, JSON.stringify(data))
-        } catch (error) {
-          console.error(`Failed to save ${key} to storage:`, error)
+        } catch {
+          // Failed to save to storage
         }
       },
 
@@ -139,8 +138,7 @@ export function createBaseStore(storeName, initialState = {}, getters = {}, acti
         try {
           const stored = localStorage.getItem(`fasttrack-${key}`)
           return stored ? JSON.parse(stored) : defaultValue
-        } catch (error) {
-          console.error(`Failed to load ${key} from storage:`, error)
+        } catch {
           return defaultValue
         }
       },
@@ -148,13 +146,11 @@ export function createBaseStore(storeName, initialState = {}, getters = {}, acti
       // Sync helpers
       async syncData() {
         if (!this.isOnline) {
-          console.log(`[${storeName}] Skipping sync - offline mode`)
           return
         }
 
         try {
           // Override in child stores
-          console.log(`[${storeName}] Sync not implemented`)
         } catch (error) {
           this.setError(`Sync failed: ${error.message}`)
         }
@@ -165,7 +161,6 @@ export function createBaseStore(storeName, initialState = {}, getters = {}, acti
         this.setLoading(true)
         try {
           // Override in child stores
-          console.log(`[${storeName}] Clear data not implemented`)
         } catch (error) {
           this.setError(`Failed to clear data: ${error.message}`)
         } finally {

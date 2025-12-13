@@ -64,7 +64,6 @@ export const useThemeStore = defineStore('theme', {
     // Initialize theme system
     init() {
       if (typeof window === 'undefined') {
-        console.log('Theme init skipped - no window object')
         return
       }
 
@@ -82,14 +81,8 @@ export const useThemeStore = defineStore('theme', {
 
         // Apply theme
         this.applyTheme()
-
-        console.log('Theme system initialized:', {
-          mode: this.mode,
-          isDark: this.isDark,
-          systemPrefersDark: this.systemPrefersDark,
-        })
-      } catch (error) {
-        console.error('Failed to initialize theme system:', error)
+      } catch {
+        // Failed to initialize theme system
       } finally {
         this.isLoading = false
       }
@@ -145,7 +138,6 @@ export const useThemeStore = defineStore('theme', {
     // Set theme mode
     setMode(mode) {
       if (!['auto', 'light', 'dark'].includes(mode)) {
-        console.warn('Invalid theme mode:', mode)
         return
       }
 
@@ -166,12 +158,6 @@ export const useThemeStore = defineStore('theme', {
 
       // Use Quasar's Dark.set - it handles everything
       Dark.set(shouldBeDark)
-
-      console.log('Theme applied via Quasar Dark:', {
-        mode: this.mode,
-        isDark: Dark.isActive,
-        systemPrefersDark: this.systemPrefersDark,
-      })
     },
 
     // Toggle between light and dark (skips auto)
@@ -192,8 +178,8 @@ export const useThemeStore = defineStore('theme', {
     savePreference() {
       try {
         localStorage.setItem('fasttrack-theme-mode', this.mode)
-      } catch (error) {
-        console.error('Failed to save theme preference:', error)
+      } catch {
+        // Failed to save theme preference
       }
     },
 
@@ -207,8 +193,7 @@ export const useThemeStore = defineStore('theme', {
           // Default to auto mode
           this.mode = 'auto'
         }
-      } catch (error) {
-        console.error('Failed to load theme preference:', error)
+      } catch {
         this.mode = 'auto'
       }
     },

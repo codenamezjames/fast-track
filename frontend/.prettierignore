@@ -1,0 +1,16 @@
+# Build outputs
+dist/
+.quasar/
+
+# Capacitor build artifacts (minified, auto-generated)
+src-capacitor/android/app/src/main/assets/public/
+src-capacitor/ios/App/App/public/
+
+# Dependencies
+node_modules/
+
+# Coverage
+coverage/
+
+# Test outputs
+test-results.json

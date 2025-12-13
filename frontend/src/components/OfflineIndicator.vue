@@ -69,7 +69,6 @@ const pendingDataMessage = computed(() => {
 
 // Event handlers
 const handleOnline = () => {
-  console.log('Network: Back online')
   isOnline.value = true
 
   if (wasOffline.value) {
@@ -89,7 +88,6 @@ const handleOnline = () => {
 }
 
 const handleOffline = () => {
-  console.log('Network: Gone offline')
   isOnline.value = false
   wasOffline.value = true
   showReconnectedBanner.value = false
@@ -109,8 +107,6 @@ onMounted(() => {
 
   // Initial check
   isOnline.value = navigator.onLine
-
-  console.log('OfflineIndicator mounted. Online status:', isOnline.value)
 })
 
 onUnmounted(() => {

@@ -165,8 +165,7 @@ const deleteEntry = async () => {
       handleSuccess(SUCCESS_MESSAGES.WEIGHT_DELETED)
       emit('deleted')
       closeDialog()
-    } catch (error) {
-      console.error('Error deleting weight entry:', error)
+    } catch {
       $q.notify({
         type: 'negative',
         message: 'Failed to delete weight entry',

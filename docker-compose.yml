@@ -36,7 +36,7 @@ services:
     container_name: fasttrack-frontend
     <<: *x-logging
     working_dir: /app
-    command: sh -c "npm ci && npx quasar dev -H 0.0.0.0 -p 9000"
+    command: sh -c "npm ci && npx quasar dev -H 0.0.0.0 -p 9001"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
@@ -45,9 +45,11 @@ services:
       - ./frontend:/app
       - fasttrack-frontend-node_modules:/app/node_modules
     ports:
-      - 9000:9000
+      - 9001:9001
     networks:
       - gateway
+    profiles:
+      - with-frontend  # Only start if explicitly requested
 
   appwrite:
     image: appwrite/appwrite:latest

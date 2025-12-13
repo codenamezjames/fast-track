@@ -28,6 +28,40 @@ config.global.mocks = {
       get: vi.fn(),
       remove: vi.fn(),
     },
+    platform: {
+      is: {
+        mobile: false,
+        desktop: true,
+        android: false,
+        ios: false,
+        cordova: false,
+        capacitor: false,
+        electron: false,
+        bex: false,
+      },
+      has: {
+        touch: false,
+        webStorage: true,
+      },
+    },
+    dark: {
+      isActive: false,
+      set: vi.fn(),
+      toggle: vi.fn(),
+    },
+    screen: {
+      width: 1024,
+      height: 768,
+      name: 'md',
+      sizes: { sm: 600, md: 1024, lg: 1440, xl: 1920 },
+      lt: { sm: false, md: false, lg: true, xl: true },
+      gt: { xs: true, sm: true, md: false, lg: false },
+      xs: false,
+      sm: false,
+      md: true,
+      lg: false,
+      xl: false,
+    },
   },
 }
 

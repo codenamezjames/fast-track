@@ -15,13 +15,11 @@ class SyncService {
     // Listen for online/offline events
     window.addEventListener('online', () => {
       this.isOnline = true
-      console.log('🌐 Connection restored - initiating sync')
       this.syncAll()
     })
 
     window.addEventListener('offline', () => {
       this.isOnline = false
-      console.log('📱 Offline mode - data will sync when reconnected')
     })
   }
 
@@ -62,7 +60,6 @@ class SyncService {
 
     try {
       this.syncInProgress = true
-      console.log('🔄 Starting full data synchronization...')
 
       const results = {
         meals: await this.syncMeals(),
@@ -75,11 +72,9 @@ class SyncService {
       this.setLastSyncTime()
       this.syncInProgress = false
 
-      console.log('✅ Synchronization complete:', results)
       return { success: true, results }
     } catch (error) {
       this.syncInProgress = false
-      console.error('❌ Synchronization failed:', error)
       return { success: false, error: error.message }
     }
   }
@@ -99,7 +94,6 @@ class SyncService {
 
       // Get local meals that need syncing
       const localMeals = await db.meals.where('synced').equals(false).toArray()
-      console.log(`📤 Uploading ${localMeals.length} local meals...`)
 
       // Upload local meals to Appwrite
       for (const meal of localMeals) {
@@ -132,8 +126,6 @@ class SyncService {
       )
 
       if (remoteMealsResult.success) {
-        console.log(`📥 Downloading ${remoteMealsResult.documents.length} remote meals...`)
-
         for (const remoteMeal of remoteMealsResult.documents) {
           const localMeal = await db.meals.get(remoteMeal.$id)
 
@@ -158,7 +150,6 @@ class SyncService {
         downloaded: remoteMealsResult.documents?.length || 0,
       }
     } catch (error) {
-      console.error('❌ Meal sync failed:', error)
       return { success: false, error: error.message }
     }
   }
@@ -175,7 +166,6 @@ class SyncService {
 
       const userId = userResult.user.$id
       const localSessions = await db.fasting_sessions.where('synced').equals(false).toArray()
-      console.log(`📤 Uploading ${localSessions.length} fasting sessions...`)
 
       // Upload local sessions
       for (const session of localSessions) {
@@ -210,10 +200,6 @@ class SyncService {
       )
 
       if (remoteSessionsResult.success) {
-        console.log(
-          `📥 Downloading ${remoteSessionsResult.documents.length} remote fasting sessions...`,
-        )
-
         for (const remoteSession of remoteSessionsResult.documents) {
           const localSession = await db.fasting_sessions.get(remoteSession.$id)
 
@@ -240,7 +226,6 @@ class SyncService {
         downloaded: remoteSessionsResult.documents?.length || 0,
       }
     } catch (error) {
-      console.error('❌ Fasting sessions sync failed:', error)
       return { success: false, error: error.message }
     }
   }
@@ -257,7 +242,6 @@ class SyncService {
 
       const userId = userResult.user.$id
       const localSchedules = await db.fasting_schedules.where('synced').equals(false).toArray()
-      console.log(`📤 Uploading ${localSchedules.length} fasting schedules...`)
 
       // Upload local schedules
       for (const schedule of localSchedules) {
@@ -289,10 +273,6 @@ class SyncService {
       )
 
       if (remoteSchedulesResult.success) {
-        console.log(
-          `📥 Downloading ${remoteSchedulesResult.documents.length} remote fasting schedules...`,
-        )
-
         for (const remoteSchedule of remoteSchedulesResult.documents) {
           const localSchedule = await db.fasting_schedules.get(remoteSchedule.$id)
 
@@ -316,7 +296,6 @@ class SyncService {
         downloaded: remoteSchedulesResult.documents?.length || 0,
       }
     } catch (error) {
-      console.error('❌ Fasting schedules sync failed:', error)
       return { success: false, error: error.message }
     }
   }
@@ -333,7 +312,6 @@ class SyncService {
 
       const userId = userResult.user.$id
       const localEntries = await db.weight_entries.where('synced').equals(false).toArray()
-      console.log(`📤 Uploading ${localEntries.length} weight entries...`)
 
       // Upload local entries
       for (const entry of localEntries) {
@@ -364,10 +342,6 @@ class SyncService {
       )
 
       if (remoteEntriesResult.success) {
-        console.log(
-          `📥 Downloading ${remoteEntriesResult.documents.length} remote weight entries...`,
-        )
-
         for (const remoteEntry of remoteEntriesResult.documents) {
           const localEntry = await db.weight_entries.get(remoteEntry.$id)
 
@@ -390,7 +364,6 @@ class SyncService {
         downloaded: remoteEntriesResult.documents?.length || 0,
       }
     } catch (error) {
-      console.error('❌ Weight entries sync failed:', error)
       return { success: false, error: error.message }
     }
   }
@@ -426,8 +399,6 @@ class SyncService {
           prefsData,
           userId,
         )
-
-        console.log('📤 User preferences uploaded')
       }
 
       // Download remote preferences
@@ -449,12 +420,10 @@ class SyncService {
         }
 
         localStorage.setItem('fasttrack-preferences', JSON.stringify(mergedPrefs))
-        console.log('📥 User preferences downloaded and merged')
       }
 
       return { success: true }
     } catch (error) {
-      console.error('❌ User preferences sync failed:', error)
       return { success: false, error: error.message }
     }
   }

@@ -3,7 +3,18 @@
     "allow": [
       "Bash(ls:*)",
       "Bash(mkdir:*)",
-      "Bash(npm run quality:check:*)"
+      "Bash(npm run quality:check:*)",
+      "Bash(test:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(npm run test:run:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run format:check:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run quality:fix:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

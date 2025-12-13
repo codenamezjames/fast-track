@@ -187,7 +187,6 @@ const createChart = async () => {
   } catch (err) {
     error.value = err.message
     emit('chart-error', err)
-    console.error('Chart creation failed:', err)
   } finally {
     isLoading.value = false
   }
@@ -205,7 +204,6 @@ const updateChart = debounce(async () => {
   } catch (err) {
     error.value = err.message
     emit('chart-error', err)
-    console.error('Chart update failed:', err)
   }
 }, props.debounceMs)
 

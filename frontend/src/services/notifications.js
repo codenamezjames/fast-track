@@ -58,8 +58,8 @@ class NotificationService {
             this.swRegistration = registrations[0]
           }
         })
-        .catch(error => {
-          console.warn('Service Worker not available, continuing without PWA notifications:', error)
+        .catch(() => {
+          // Service Worker not available, continuing without PWA notifications
         })
     }
 
@@ -103,7 +103,6 @@ class NotificationService {
   // Show immediate notification
   async showNotification(title, options = {}) {
     if (!this.isEnabled()) {
-      console.warn('Notifications not enabled')
       return false
     }
 
@@ -129,8 +128,7 @@ class NotificationService {
         new Notification(title, browserOptions)
       }
       return true
-    } catch (error) {
-      console.error('Failed to show notification:', error)
+    } catch {
       return false
     }
   }
@@ -293,7 +291,6 @@ class NotificationService {
   // Schedule daily meal reminders
   scheduleDailyMealReminders(reminderTimes) {
     if (!reminderTimes || !Array.isArray(reminderTimes)) {
-      console.warn('Invalid reminderTimes provided to scheduleDailyMealReminders:', reminderTimes)
       return
     }
     
@@ -364,8 +361,8 @@ class NotificationService {
           }
         })
       }
-    } catch (error) {
-      console.error('Failed to load scheduled notifications:', error)
+    } catch {
+      // Failed to load scheduled notifications
     }
   }
 }

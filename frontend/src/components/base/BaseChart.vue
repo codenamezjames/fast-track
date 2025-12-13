@@ -157,7 +157,6 @@ const createChart = async () => {
 
     emit('chart-ready', chartInstance.value)
   } catch (error) {
-    console.error('Error creating chart:', error)
     emit('chart-error', error)
   }
 }
@@ -169,7 +168,6 @@ const updateChart = () => {
     chartInstance.value.data = props.data
     chartInstance.value.update('none') // Use 'none' for better performance
   } catch (error) {
-    console.error('Error updating chart:', error)
     emit('chart-error', error)
   }
 }

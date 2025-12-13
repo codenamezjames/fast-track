@@ -61,7 +61,6 @@ const installApp = async () => {
     const { outcome } = await deferredPrompt.value.userChoice
 
     if (outcome === 'accepted') {
-      console.log('PWA install accepted')
       localStorage.setItem('pwa-installed', 'true')
 
       $q.notify({
@@ -70,15 +69,12 @@ const installApp = async () => {
         position: 'top',
         timeout: 3000,
       })
-    } else {
-      console.log('PWA install dismissed')
     }
 
     // Clear the prompt
     deferredPrompt.value = null
     showInstallPrompt.value = false
-  } catch (error) {
-    console.error('PWA install error:', error)
+  } catch {
     $q.notify({
       type: 'negative',
       message: 'Installation failed. Please try again.',
@@ -110,8 +106,6 @@ const canShowAfterDismissal = () => {
 
 // Event handlers
 const handleBeforeInstallPrompt = (e) => {
-  console.log('beforeinstallprompt event fired')
-
   // Prevent the mini-infobar from appearing on mobile
   e.preventDefault()
 
@@ -133,7 +127,6 @@ const handleBeforeInstallPrompt = (e) => {
 }
 
 const handleAppInstalled = () => {
-  console.log('PWA was installed')
   localStorage.setItem('pwa-installed', 'true')
   showInstallPrompt.value = false
   deferredPrompt.value = null

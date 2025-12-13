@@ -65,37 +65,29 @@ class StoreManager {
    * @returns {Promise}
    */
   async _performInitialization() {
-    try {
-      console.log('Initializing stores...')
+    // Initialize stores in dependency order
+    const authStore = this.getStore('auth')
+    await authStore.initAuth()
 
-      // Initialize stores in dependency order
-      const authStore = this.getStore('auth')
-      await authStore.initAuth()
+    const themeStore = this.getStore('theme')
+    await themeStore.init()
 
-      const themeStore = this.getStore('theme')
-      await themeStore.init()
+    const notificationsStore = this.getStore('notifications')
+    await notificationsStore.init()
 
-      const notificationsStore = this.getStore('notifications')
-      await notificationsStore.init()
+    const caloriesStore = this.getStore('calories')
+    await caloriesStore.loadData()
 
-      const caloriesStore = this.getStore('calories')
-      await caloriesStore.loadData()
+    const fastingStore = this.getStore('fasting')
+    await fastingStore.loadFastingData()
 
-      const fastingStore = this.getStore('fasting')
-      await fastingStore.loadFastingData()
+    const weightStore = this.getStore('weight')
+    await weightStore.loadData()
 
-      const weightStore = this.getStore('weight')
-      await weightStore.loadData()
+    // Set up cross-store dependencies
+    this._setupCrossStoreDependencies()
 
-      // Set up cross-store dependencies
-      this._setupCrossStoreDependencies()
-
-      this.initialized = true
-      console.log('All stores initialized successfully')
-    } catch (error) {
-      console.error('Store initialization failed:', error)
-      throw error
-    }
+    this.initialized = true
   }
 
   /**
@@ -206,8 +198,8 @@ class StoreManager {
       if (store.syncData) {
         try {
           await store.syncData()
-        } catch (error) {
-          console.error(`Failed to sync ${storeName}:`, error)
+        } catch {
+          // Failed to sync store
         }
       }
     }
@@ -225,8 +217,8 @@ class StoreManager {
       if (store.clearAllData) {
         try {
           await store.clearAllData()
-        } catch (error) {
-          console.error(`Failed to clear ${storeName}:`, error)
+        } catch {
+          // Failed to clear store
         }
       }
     }

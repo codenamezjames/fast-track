@@ -115,8 +115,8 @@ const onSubmit = async () => {
 
     // Redirect to calories page on successful login/registration
     router.push('/calories')
-  } catch (error) {
-    console.error('Authentication error:', error)
+  } catch {
+    // Authentication error handled by store
   }
 }
 

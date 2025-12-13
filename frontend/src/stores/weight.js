@@ -210,7 +210,6 @@ export const useWeightStore = defineStore('weight', {
       try {
         this.entries = await db.weight_entries.toArray()
       } catch (error) {
-        console.error('Error loading weight entries:', error)
         this.error = error.message
         this.entries = []
       } finally {
@@ -239,7 +238,6 @@ export const useWeightStore = defineStore('weight', {
 
         return newEntry
       } catch (error) {
-        console.error('Error adding weight entry:', error)
         this.error = error.message
         throw error
       }
@@ -274,7 +272,6 @@ export const useWeightStore = defineStore('weight', {
 
         return updatedEntry
       } catch (error) {
-        console.error('Error updating weight entry:', error)
         this.error = error.message
         throw error
       }
@@ -292,7 +289,6 @@ export const useWeightStore = defineStore('weight', {
 
         this.entries = this.entries.filter((entry) => entry.id !== id)
       } catch (error) {
-        console.error('Error deleting weight entry:', error)
         this.error = error.message
         throw error
       }
@@ -314,7 +310,6 @@ export const useWeightStore = defineStore('weight', {
         // Clear any errors
         this.error = null
       } catch (error) {
-        console.error('Error clearing all weight data:', error)
         this.error = error.message
         throw error
       } finally {

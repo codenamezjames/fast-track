@@ -58,16 +58,6 @@ describe('Auth Service', () => {
       ).rejects.toThrow('Email already exists')
     })
 
-    it('should log registration success', async () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-      const mockUser = { $id: 'user-id' }
-      mockAccount.create.mockResolvedValue(mockUser)
-
-      await authService.register('test@example.com', 'password123', 'Test User')
-
-      expect(consoleSpy).toHaveBeenCalledWith('User registered:', mockUser)
-      consoleSpy.mockRestore()
-    })
   })
 
   describe('login', () => {
@@ -97,16 +87,6 @@ describe('Auth Service', () => {
       )
     })
 
-    it('should log login success', async () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-      const mockSession = { $id: 'session-id' }
-      mockAccount.createEmailPasswordSession.mockResolvedValue(mockSession)
-
-      await authService.login('test@example.com', 'password123')
-
-      expect(consoleSpy).toHaveBeenCalledWith('User logged in:', mockSession)
-      consoleSpy.mockRestore()
-    })
   })
 
   describe('logout', () => {
@@ -125,15 +105,6 @@ describe('Auth Service', () => {
       await expect(authService.logout()).rejects.toThrow('Logout failed')
     })
 
-    it('should log logout success', async () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-      mockAccount.deleteSession.mockResolvedValue()
-
-      await authService.logout()
-
-      expect(consoleSpy).toHaveBeenCalledWith('User logged out')
-      consoleSpy.mockRestore()
-    })
   })
 
   describe('getCurrentUser', () => {

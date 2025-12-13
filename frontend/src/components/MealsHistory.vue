@@ -155,8 +155,7 @@ const confirmDelete = async () => {
 
     showDeleteDialog.value = false
     mealToDelete.value = null
-  } catch (error) {
-    console.error('Failed to delete meal:', error)
+  } catch {
     Notify.create({
       type: 'negative',
       message: 'Failed to delete meal',

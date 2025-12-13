@@ -22,75 +22,58 @@ export const db = new FastTrackDB()
 export const offlineOperations = {
   // Add item to offline storage and sync queue
   async addToOffline(tableName, data) {
-    try {
-      const record = { ...data, synced: false }
-      const id = await db[tableName].add(record)
+    const record = { ...data, synced: false }
+    const id = await db[tableName].add(record)
 
-      // Skip sync queue for now (pure offline mode)
-      // TODO: Re-enable when Appwrite sync is implemented
-      // await db.sync_queue.add({
-      //   table_name: tableName,
-      //   record_id: id,
-      //   action: 'create',
-      //   data: record,
-      //   timestamp: new Date().toISOString()
-      // })
+    // Skip sync queue for now (pure offline mode)
+    // TODO: Re-enable when Appwrite sync is implemented
+    // await db.sync_queue.add({
+    //   table_name: tableName,
+    //   record_id: id,
+    //   action: 'create',
+    //   data: record,
+    //   timestamp: new Date().toISOString()
+    // })
 
-      return id
-    } catch (error) {
-      console.error(`Error adding to ${tableName}:`, error)
-      throw error
-    }
+    return id
   },
 
   // Update item in offline storage
   async updateOffline(tableName, id, data) {
-    try {
-      const updatedData = { ...data, synced: false }
-      await db[tableName].update(id, updatedData)
+    const updatedData = { ...data, synced: false }
+    await db[tableName].update(id, updatedData)
 
-      // Skip sync queue for now (pure offline mode)
-      // TODO: Re-enable when Appwrite sync is implemented
-      // await db.sync_queue.add({
-      //   table_name: tableName,
-      //   record_id: id,
-      //   action: 'update',
-      //   data: updatedData,
-      //   timestamp: new Date().toISOString()
-      // })
-    } catch (error) {
-      console.error(`Error updating ${tableName}:`, error)
-      throw error
-    }
+    // Skip sync queue for now (pure offline mode)
+    // TODO: Re-enable when Appwrite sync is implemented
+    // await db.sync_queue.add({
+    //   table_name: tableName,
+    //   record_id: id,
+    //   action: 'update',
+    //   data: updatedData,
+    //   timestamp: new Date().toISOString()
+    // })
   },
 
   // Delete item from offline storage
   async deleteOffline(tableName, id) {
-    try {
-      await db[tableName].delete(id)
+    await db[tableName].delete(id)
 
-      // Skip sync queue for now (pure offline mode)
-      // TODO: Re-enable when Appwrite sync is implemented
-      // await db.sync_queue.add({
-      //   table_name: tableName,
-      //   record_id: id,
-      //   action: 'delete',
-      //   data: null,
-      //   timestamp: new Date().toISOString()
-      // })
-    } catch (error) {
-      console.error(`Error deleting from ${tableName}:`, error)
-      throw error
-    }
+    // Skip sync queue for now (pure offline mode)
+    // TODO: Re-enable when Appwrite sync is implemented
+    // await db.sync_queue.add({
+    //   table_name: tableName,
+    //   record_id: id,
+    //   action: 'delete',
+    //   data: null,
+    //   timestamp: new Date().toISOString()
+    // })
   },
 
   // Get all unsynced items
   async getUnsyncedItems(tableName) {
     try {
       return await db[tableName].where('synced').equals(false).toArray()
-    } catch (error) {
-      console.log(`Table ${tableName} not found or empty, returning empty array`)
-      console.log(error)
+    } catch {
       return []
     }
   },

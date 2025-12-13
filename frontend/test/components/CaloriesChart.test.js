@@ -59,7 +59,8 @@ describe('CaloriesChart Component', () => {
     })
 
     it('should render gradient definition', () => {
-      const gradient = wrapper.find('#chartGradient')
+      // Gradient ID is dynamic: chartGradient-light or chartGradient-dark
+      const gradient = wrapper.find('linearGradient[id^="chartGradient"]')
       expect(gradient.exists()).toBe(true)
     })
   })
@@ -84,7 +85,8 @@ describe('CaloriesChart Component', () => {
 
       // Check for essential SVG elements
       expect(wrapper.find('.grid-lines').exists()).toBe(true)
-      expect(wrapper.find('#chartGradient').exists()).toBe(true)
+      // Gradient ID is dynamic: chartGradient-light or chartGradient-dark
+      expect(wrapper.find('linearGradient[id^="chartGradient"]').exists()).toBe(true)
     })
 
     it('should generate paths when data is provided', async () => {

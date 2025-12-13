@@ -467,8 +467,7 @@ const addWeightEntry = async () => {
     })
 
     clearWeightForm()
-  } catch (error) {
-    console.error('Error adding weight entry:', error)
+  } catch {
     Notify.create({
       type: 'negative',
       message: 'Failed to add weight entry',

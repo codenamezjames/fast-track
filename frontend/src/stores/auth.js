@@ -35,7 +35,6 @@ export const useAuthStore = defineStore('auth', {
         //   this.isAuthenticated = true
         // }
       } catch {
-        console.log('Using offline mode - Appwrite not connected')
         this.isAuthenticated = false
       } finally {
         this.isLoading = false
@@ -52,7 +51,6 @@ export const useAuthStore = defineStore('auth', {
           return await this.login(email, password)
         } catch {
           // Fall back to offline mode
-          console.log('Appwrite unavailable, using offline mode')
           const mockUser = {
             id: 'offline-' + Date.now(),
             email,
@@ -89,7 +87,6 @@ export const useAuthStore = defineStore('auth', {
           return user
         } catch {
           // Fall back to offline mode
-          console.log('Appwrite unavailable, checking offline credentials')
           const storedUser = localStorage.getItem('fasttrack-user')
           const storedPassword = localStorage.getItem('fasttrack-password')
 
@@ -130,12 +127,11 @@ export const useAuthStore = defineStore('auth', {
       this.isLoading = true
       try {
         // Clear offline state (skip Appwrite for now)
-        console.log('Offline logout')
         this.user = null
         this.isAuthenticated = false
         this.error = null
-      } catch (error) {
-        console.error('Logout error:', error)
+      } catch {
+        // Logout error
       } finally {
         this.isLoading = false
       }

@@ -161,7 +161,6 @@ export const useCaloriesStore = defineStore('calories', {
         // Try to sync with server if online
         await this.syncMeals()
       } catch (error) {
-        console.error('Error loading meals:', error)
         this.error = error.message
         // Initialize empty array on error to prevent undefined issues
         this.meals = []
@@ -203,7 +202,6 @@ export const useCaloriesStore = defineStore('calories', {
 
         return newMeal
       } catch (error) {
-        console.error('Error adding meal:', error)
         this.error = error.message
         throw error
       }
@@ -238,7 +236,6 @@ export const useCaloriesStore = defineStore('calories', {
         // Try to sync immediately if online
         await this.syncMeals()
       } catch (error) {
-        console.error('Error updating meal:', error)
         this.error = error.message
         throw error
       }
@@ -256,7 +253,6 @@ export const useCaloriesStore = defineStore('calories', {
         // Try to sync immediately if online
         await this.syncMeals()
       } catch (error) {
-        console.error('Error deleting meal:', error)
         this.error = error.message
         throw error
       }
@@ -273,7 +269,6 @@ export const useCaloriesStore = defineStore('calories', {
     async syncMeals() {
       // Skip sync for now - pure offline mode
       // TODO: Implement Appwrite sync when needed
-      console.log('Running in offline mode - sync disabled')
       return
     },
 
@@ -295,7 +290,6 @@ export const useCaloriesStore = defineStore('calories', {
         // Clear any errors
         this.error = null
       } catch (error) {
-        console.error('Error clearing all data:', error)
         this.error = error.message
         throw error
       } finally {

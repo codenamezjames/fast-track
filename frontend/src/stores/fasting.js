@@ -294,7 +294,6 @@ export const useFastingStore = defineStore('fasting', {
           this.startTimer()
         }
       } catch (error) {
-        console.error('Error loading fasting data:', error)
         this.error = error.message
       } finally {
         this.isLoading = false
@@ -328,7 +327,6 @@ export const useFastingStore = defineStore('fasting', {
 
         return newSchedule
       } catch (error) {
-        console.error('Error creating schedule:', error)
         this.error = error.message
         throw error
       }
@@ -389,7 +387,6 @@ export const useFastingStore = defineStore('fasting', {
 
         return newSession
       } catch (error) {
-        console.error('Error starting fast:', error)
         this.error = error.message
         throw error
       }
@@ -439,28 +436,22 @@ export const useFastingStore = defineStore('fasting', {
 
         return updatedSession
       } catch (error) {
-        console.error('Error ending fast:', error)
         this.error = error.message
         throw error
       }
     },
 
     async deactivateAllSchedules() {
-      try {
-        for (const schedule of this.schedules) {
-          if (schedule.is_active) {
-            await offlineOperations.updateOffline('fasting_schedules', schedule.id, {
-              ...schedule,
-              is_active: false,
-            })
-            schedule.is_active = false
-          }
+      for (const schedule of this.schedules) {
+        if (schedule.is_active) {
+          await offlineOperations.updateOffline('fasting_schedules', schedule.id, {
+            ...schedule,
+            is_active: false,
+          })
+          schedule.is_active = false
         }
-        this.activeSchedule = null
-      } catch (error) {
-        console.error('Error deactivating schedules:', error)
-        throw error
       }
+      this.activeSchedule = null
     },
 
     startTimer() {
@@ -528,7 +519,6 @@ export const useFastingStore = defineStore('fasting', {
         // Clear any errors
         this.error = null
       } catch (error) {
-        console.error('Error clearing all fasting data:', error)
         this.error = error.message
         throw error
       } finally {

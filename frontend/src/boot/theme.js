@@ -6,9 +6,7 @@ export default boot(({ store }) => {
   try {
     const themeStore = useThemeStore(store)
     themeStore.init()
-    console.log('Theme system initialized in boot file')
-  } catch (error) {
-    console.error('Failed to initialize theme system:', error)
+  } catch {
     // Don't let theme initialization block app startup
   }
 })
