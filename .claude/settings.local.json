@@ -14,7 +14,8 @@
       "Bash(curl:*)",
       "Bash(pkill:*)",
       "Bash(npm run quality:fix:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(PUBLIC_PATH=/fast-track/ npm run build:pwa:*)"
     ],
     "deny": []
   }

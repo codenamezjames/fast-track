@@ -2,9 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [yolo-ai]
-  pull_request:
-    branches: [yolo-ai]
+    branches: [master]
+  workflow_dispatch: # Allow manual trigger
 
 permissions:
   contents: read
@@ -35,6 +34,9 @@ jobs:
 
       - name: Build PWA
         working-directory: frontend
+        env:
+          PUBLIC_PATH: /fast-track/
+          VITE_OFFLINE_MODE: "true"
         run: npm run build:pwa
 
       - name: Setup Pages
