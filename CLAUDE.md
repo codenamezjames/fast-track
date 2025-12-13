@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 FastTrack is a mobile-first calorie and intermittent fasting tracker built with Vue 3, Quasar Framework, and Appwrite backend. The application features offline-first architecture with comprehensive testing support.
 
+**Working Directory**: All commands run from `frontend/` directory.
+
 ## Key Technologies
 
 - **Frontend**: Vue 3 with Composition API only (NO TypeScript)
@@ -14,12 +16,12 @@ FastTrack is a mobile-first calorie and intermittent fasting tracker built with 
 - **Backend**: Appwrite (auth, database, real-time) with offline fallback
 - **Offline Storage**: IndexedDB via Dexie.js
 - **Build**: Vite via Quasar CLI
-- **Testing**: Vitest with Vue Test Utils
+- **Testing**: Vitest with Vue Test Utils (happy-dom environment)
 - **Mobile**: Capacitor for native apps
 
 ## Development Commands
 
-### Essential Commands
+All commands run from `frontend/` directory:
 
 ```bash
 # Development
@@ -37,12 +39,8 @@ npm run test:ci                # Run tests for CI/CD (JSON output)
 # Code Quality
 npm run lint                   # Lint code
 npm run format                 # Format code
-npm run quality:check          # Run lint + format check
+npm run quality:check          # Run lint + format check + test:run
 npm run quality:fix            # Fix linting and formatting
-
-# Setup
-npm run setup                  # Initial development setup
-npm run dev:reset              # Reset development environment
 ```
 
 ### Testing Specific Files
@@ -53,9 +51,6 @@ npx vitest run test/stores/calories.test.js
 
 # Run tests matching pattern
 npx vitest run --grep "auth"
-
-# Debug tests
-npx vitest run --inspect-brk
 ```
 
 ## Architecture Overview
@@ -65,27 +60,41 @@ npx vitest run --inspect-brk
 ```
 frontend/
 ├── src/
-│   ├── components/          # Vue components
-│   │   ├── base/           # Base reusable components
-│   │   ├── optimized/      # Performance-optimized components
-│   │   └── settings/       # Settings-specific components
-│   ├── composables/        # Vue composables for reusable logic
-│   ├── stores/             # Pinia stores
-│   │   └── base/          # Base store patterns
-│   ├── services/           # API and business logic
-│   │   ├── base/          # Base service patterns
-│   │   └── api/           # API service layer
-│   ├── repositories/       # Data access layer (Dexie)
-│   ├── pages/              # Route components
-│   ├── layouts/            # Layout components
-│   └── router/             # Vue Router configuration
-├── test/                   # Comprehensive test suite
-│   ├── stores/             # Pinia store tests
-│   ├── components/         # Vue component tests
-│   ├── services/           # Service layer tests
-│   └── integration/        # Integration tests
-└── backend/                # Appwrite backend configuration
+│   ├── components/          # Vue components (base/, optimized/, settings/, meals/, weight/)
+│   ├── composables/         # Reusable logic (useChartDefaults, useDataExport, useErrorHandling)
+│   ├── stores/              # Pinia stores (auth, calories, fasting, weight, theme, notifications)
+│   ├── services/            # API and business logic (appwrite, auth, offline, sync, notifications)
+│   ├── repositories/        # Data access layer (BaseRepository, MealsRepository)
+│   ├── pages/               # Route components (Login, Calories, Fasting, Analytics, Settings)
+│   ├── layouts/             # Layout components (MainLayout with navigation drawer)
+│   ├── router/              # Vue Router with auth guards
+│   └── utils/               # Error handling, constants, performance utilities
+└── test/                    # Test suite (stores/, components/, services/, integration/)
 ```
+
+### Stores
+
+- **auth.js** - Authentication state and Appwrite integration
+- **calories.js** - Meal tracking with offline-first storage
+- **fasting.js** - Intermittent fasting timers and schedules
+- **weight.js** - Weight tracking with unit conversion (lb/kg)
+- **theme.js** - Theme preferences management
+- **notifications.js** - Push notification management
+- **StoreManager.js** - Centralized store initialization
+
+### Services
+
+- **appwrite.js** - Appwrite client configuration
+- **auth.js** - Authentication service layer
+- **offline.js** - Dexie.js IndexedDB operations
+- **sync.js** - Online/offline data synchronization
+- **notifications.js** - Notification service
+
+### Composables
+
+- **useChartDefaults** - Chart.js configuration
+- **useDataExport** - Data export functionality
+- **useErrorHandling** - Error management utilities
 
 ### Key Patterns
 
@@ -94,179 +103,114 @@ frontend/
 - Use `<script setup>` syntax with Composition API only
 - Base components for reusable UI elements
 - Optimized components for performance-critical features
-- Feature-specific components for business logic
 
-**Store Architecture:**
+**Store Architecture (Object Syntax):**
 
-- Base store pattern for common functionality (loading, error handling, sync)
-- Data store pattern for CRUD operations
-- Settings store pattern for preferences management
-- Offline-first with IndexedDB persistence
+```js
+export const useExampleStore = defineStore('example', {
+  state: () => ({ /* state */ }),
+  getters: { /* computed */ },
+  actions: { /* async methods with try/catch */ }
+})
+```
 
-**Service Architecture:**
+**Import Path Aliases:**
 
-- Base service for common functionality (retry, interceptors, offline queue)
-- Repository pattern for data access abstraction
-- API service for unified Appwrite handling
+- `@/` or `src/` → `frontend/src/`
+- `components/`, `stores/`, `services/`, `pages/`, `layouts/`, `router/`, `boot/`, `assets/`
 
 ## Critical Development Rules
 
 ### JavaScript Only
 
-- **CRITICAL**: Use ONLY native JavaScript - NO TypeScript at all
-- All files should use `.js` extension for JavaScript and `.vue` for Vue components
-- Use Composition API only (no Options API)
+- **CRITICAL**: Use ONLY native JavaScript - NO TypeScript
+- All files: `.js` for JavaScript, `.vue` for Vue components
+- Composition API only (no Options API)
+- Prefer Quasar's built-in components, methods, classes, and plugins
 
 ### Mobile-First Design
 
-- Always design for mobile first, then enhance for larger screens
-- Use Quasar's responsive utilities and breakpoints
-- Ensure touch targets are at least 44px for mobile usability
-- Test layouts on small screens (320px width minimum)
+- Design for mobile first, then enhance for larger screens
+- Touch targets at least 44px for usability
+- Test layouts on small screens (320px minimum width)
 
 ### Offline-First Architecture
 
 - Primary storage: IndexedDB via Dexie.js
-- Always save data locally first, sync to Appwrite when online
+- Save data locally first, sync to Appwrite when online
 - Support "local auth" using localStorage for offline mode
-- Handle offline scenarios gracefully
 
-### Performance Guidelines
+## Testing
 
-- Use dynamic imports for route components
-- Lazy load non-critical components
-- Implement virtual scrolling for long lists
-- Use `shallowRef` for large objects
-- Debounce chart updates and implement data decimation
+### Test Environment
 
-## Testing Philosophy
+- Framework: Vitest with happy-dom
+- Vue integration: Vue Test Utils + @pinia/testing
+- Date fixed to `2024-01-15T10:00:00.000Z` for consistency
+- localStorage, Quasar plugins, and window.location mocked
 
-The testing setup is optimized for AI agent automation:
+### Global Test Fixtures (from test/setup.js)
 
-- Fast execution (~2-5 seconds)
-- JSON output for automation
-- Comprehensive coverage reporting
-- CLI-friendly commands
+```js
+createMockUser()           // Returns test user object
+createMockMeal(overrides)  // Returns test meal with optional overrides
+createMockFastingSession() // Returns test fasting session
+```
 
-**Test Coverage:**
-
-- Unit tests for stores, components, and services
-- Integration tests for cross-component interactions
-- Error handling and offline scenarios
-- Visual regression tests for UI consistency
-
-**Mocking Strategy:**
+### Mocking Strategy
 
 - localStorage fully mocked
 - Appwrite mocked for offline-first testing
-- Date fixed to `2024-01-15T10:00:00.000Z` for consistency
-- Quasar components and plugins mocked
+- Quasar $q (notify, loading, localStorage) mocked
 
-## Build Configuration
+## Environment Variables
 
-### Performance Optimizations
+```bash
+VITE_APPWRITE_ENDPOINT     # Appwrite API endpoint (https://cloud.appwrite.io/v1)
+VITE_APPWRITE_PROJECT_ID   # Appwrite project ID
+VITE_OFFLINE_MODE          # Force offline mode for testing
+```
 
-- Enhanced manual chunk splitting for better caching
-- Tree shaking optimization
-- Compression optimization
-- Source maps for development only
-- PWA with service worker and offline support
+## Commit Message Format
 
-### PWA Configuration
+Pre-commit hooks enforce conventional commits:
 
-- Workbox service worker with strategic caching
-- Offline support with app-like experience
-- Push notifications support
-- Mobile app shortcuts for quick access
+```
+type(scope): description
 
-## Common Anti-Patterns to Avoid
+# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build
+# Examples:
+feat: add new calorie tracking feature
+fix(auth): resolve login issue
+refactor(components): simplify dialog logic
+```
 
-### Vue.js
-
-- Don't mix Composition API with Options API
-- Don't mutate props directly
-- Avoid deep nesting in template expressions
-- Don't forget to cleanup timers and event listeners
-
-### State Management
-
-- Don't put everything in global state - use local state when appropriate
-- Avoid directly mutating state outside of store actions
-- Don't create circular dependencies between stores
-
-### Performance
-
-- Avoid creating reactive objects in render functions
-- Don't overuse watchers - prefer computed properties
-- Minimize DOM manipulations in loops
+Pre-commit also runs: lint, test:run, and checks for console.log statements.
 
 ## Error Handling
-
-Use the established error handling patterns:
 
 ```javascript
 import { ErrorFactory, ErrorUtils } from "../utils/errors.js";
 
-// Create typed errors
 const error = ErrorFactory.validation("calories", "Must be positive");
-
-// Log errors with context
 ErrorUtils.logError(error, "CaloriesStore.addMeal");
 ```
 
-## Mobile App Development
+## Anti-Patterns to Avoid
 
-### Capacitor Integration
-
-- Native mobile apps via Quasar Capacitor
-- Platform-specific configurations in `src-capacitor/`
-- Proper app icons and splash screens
-- Device-specific features (notifications, storage)
-
-### PWA Features
-
-- Service worker with strategic caching
-- Offline functionality
-- App-like experience on mobile
-- Push notifications support
-
-## Quality Gates
-
-- All tests must pass before committing
-- No ESLint errors
-- Code coverage > 30%
-- Bundle size < 2MB
-- Mobile responsiveness verified
-- Performance benchmarks met
-
-## Environment Setup
-
-The project uses Node.js 18+ and supports multiple environments:
-
-- Development: Hot reload with error reporting
-- Production: Optimized build with PWA support
-- Testing: Isolated test environment with comprehensive mocking
-
-## Important Files
-
-- `.cursor/rules/default.mdc`: Comprehensive AI development rules
-- `quasar.config.js`: Build configuration with performance optimizations
-- `frontend/README.md`: Project overview and setup instructions
-- `frontend/DEVELOPER_GUIDE.md`: Detailed development workflow
-- `frontend/TEST_GUIDE.md`: Comprehensive testing documentation
+- Don't mix Composition API with Options API
+- Don't mutate props directly
+- Don't forget to cleanup timers and event listeners
+- Don't put everything in global state - use local state when appropriate
+- Avoid directly mutating state outside of store actions
+- Prefer computed properties over watchers
 
 ## Dependencies
 
-Only use dependencies already listed in package.json. Before suggesting new dependencies, check if existing ones can solve the problem. Prefer Quasar components over external UI libraries.
+Only use dependencies already listed in package.json. Prefer Quasar components over external UI libraries.
 
-## Mobile-First Considerations
+## Documentation
 
-Every code change should support:
-
-- User experience on mobile devices
-- Offline functionality where applicable
-- Performance optimization for mobile networks
-- Touch-friendly interfaces
-- Responsive design patterns
-
-Remember: This is a mobile-first health tracking app where user experience, offline functionality, and data reliability are paramount.
+- `frontend/DEVELOPER_GUIDE.md` - Detailed development workflow
+- `frontend/TEST_GUIDE.md` - Comprehensive testing documentation
+- `.cursor/rules/default.mdc` - AI development rules with self-updating protocol

@@ -1,0 +1,876 @@
+{
+  "projectId": "68b94dd824c09b251c6b",
+  "endpoint": "http://localhost:5501/v1",
+  "projectName": "My Awesome Project",
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "sites": true,
+      "functions": true,
+      "graphql": true,
+      "messaging": true
+    },
+    "auth": {
+      "methods": {
+        "jwt": true,
+        "phone": true,
+        "invites": true,
+        "anonymous": true,
+        "email-otp": true,
+        "magic-url": true,
+        "email-password": true
+      },
+      "security": {
+        "duration": 31536000,
+        "limit": 0,
+        "sessionsLimit": 10,
+        "passwordHistory": 0,
+        "passwordDictionary": false,
+        "personalDataCheck": false,
+        "sessionAlerts": false,
+        "mockNumbers": []
+      }
+    }
+  },
+  "databases": [
+    {
+      "$id": "fasttrack-db",
+      "name": "FastTrack Database",
+      "enabled": true
+    }
+  ],
+  "tables": [
+    {
+      "$id": "users",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Users",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "email",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "preferences",
+          "type": "json",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "last_login",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "meals",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Meals",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "calories",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "meal_time",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null
+        },
+        {
+          "key": "meal_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "fasting_sessions",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Fasting Sessions",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "start_time",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "end_time",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "planned_end_time",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "planned_duration",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "actual_duration",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": "active"
+        },
+        {
+          "key": "session_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": "regular"
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "fasting_schedules",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Fasting Schedules",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "schedule_data",
+          "type": "json",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "is_active",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": false
+        },
+        {
+          "key": "schedule_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": "custom"
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "weight_entries",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Weight Entries",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "weight",
+          "type": "float",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "unit",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 10,
+          "default": "kg"
+        },
+        {
+          "key": "date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "user_preferences",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "User Preferences",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "notifications",
+          "type": "json",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "display_settings",
+          "type": "json",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "goals",
+          "type": "json",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "timezone",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null
+        },
+        {
+          "key": "weight_unit",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 10,
+          "default": "kg"
+        },
+        {
+          "key": "theme",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 20,
+          "default": "auto"
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "collections": [
+    {
+      "$id": "users",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Users",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "email",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "preferences",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "last_login",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "meals",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Meals",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "calories",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "meal_time",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null
+        },
+        {
+          "key": "meal_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "fasting_sessions",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Fasting Sessions",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "start_time",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "end_time",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "planned_end_time",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "planned_duration",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "actual_duration",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": "active"
+        },
+        {
+          "key": "session_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": "regular"
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1000,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "fasting_schedules",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Fasting Schedules",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "schedule_data",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 5000,
+          "default": null
+        },
+        {
+          "key": "is_active",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": false
+        },
+        {
+          "key": "schedule_type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": "custom"
+        },
+        {
+          "key": "created_at",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "weight_entries",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "Weight Entries",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "weight",
+          "type": "float",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "unit",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 10,
+          "default": "kg"
+        },
+        {
+          "key": "date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "user_preferences",
+      "$permissions": [
+        "create(\"users\")",
+        "read(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
+      ],
+      "databaseId": "fasttrack-db",
+      "name": "User Preferences",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "user_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "notifications",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null
+        },
+        {
+          "key": "display_settings",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null
+        },
+        {
+          "key": "goals",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 5000,
+          "default": null
+        },
+        {
+          "key": "timezone",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null
+        },
+        {
+          "key": "weight_unit",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 10,
+          "default": "kg"
+        },
+        {
+          "key": "theme",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 20,
+          "default": "auto"
+        }
+      ],
+      "indexes": []
+    }
+  ]
+}
