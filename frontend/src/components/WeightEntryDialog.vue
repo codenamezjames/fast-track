@@ -89,7 +89,7 @@ const isFormValid = computed(() => {
   const hasWeight = formData.value.weight && parseFloat(formData.value.weight) > 0
   const hasDate = !!formData.value.date
   const hasTime = !!formData.value.time
-  
+
   return hasWeight && hasDate && hasTime
 })
 
@@ -136,7 +136,10 @@ const saveWeightEntry = async () => {
 
     if (isEditMode.value) {
       // Update existing entry
-      await weightStore.updateWeightEntry(props.entry.id, { weight, date: entryDateTime.toISOString() })
+      await weightStore.updateWeightEntry(props.entry.id, {
+        weight,
+        date: entryDateTime.toISOString(),
+      })
       handleSuccess(SUCCESS_MESSAGES.WEIGHT_UPDATED)
     } else {
       // Add new entry - pass the input unit for conversion

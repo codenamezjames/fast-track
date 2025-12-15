@@ -19,7 +19,9 @@
             <q-icon name="monitor_weight" color="primary" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Current Weight: {{ currentWeight.weight }} {{ displayUnit }}</q-item-label>
+            <q-item-label
+              >Current Weight: {{ currentWeight.weight }} {{ displayUnit }}</q-item-label
+            >
             <q-item-label caption>{{ formatDate(currentWeight.date) }} • View trends</q-item-label>
           </q-item-section>
         </q-item>

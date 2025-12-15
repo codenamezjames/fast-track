@@ -394,11 +394,7 @@ class SyncService {
           theme: localPrefs.theme || 'auto',
         }
 
-        await appwriteHelpers.createDocument(
-          config.collections.user_preferences,
-          prefsData,
-          userId,
-        )
+        await appwriteHelpers.createDocument(config.collections.user_preferences, prefsData, userId)
       }
 
       // Download remote preferences

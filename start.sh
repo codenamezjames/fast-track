@@ -31,6 +31,16 @@ print_error() {
     echo -e "${RED}[FastTrack]${NC} $1"
 }
 
+# Check if offline mode is enabled
+is_offline_mode() {
+    local env_file="$FRONTEND_DIR/.env.local"
+    if [ -f "$env_file" ]; then
+        grep -q "VITE_OFFLINE_MODE=true" "$env_file" 2>/dev/null
+        return $?
+    fi
+    return 1
+}
+
 # Check if Docker is running
 check_docker() {
     if ! docker info > /dev/null 2>&1; then
@@ -187,9 +197,13 @@ case "${1:-all}" in
         start_frontend
         ;;
     all)
-        check_docker
-        start_backend
-        echo ""
+        if is_offline_mode; then
+            print_status "Offline mode enabled - skipping backend"
+        else
+            check_docker
+            start_backend
+            echo ""
+        fi
         print_status "Starting frontend..."
         start_frontend
         ;;

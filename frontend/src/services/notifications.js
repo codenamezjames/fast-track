@@ -52,8 +52,9 @@ class NotificationService {
     // Register service worker for PWA notifications (optional)
     if ('serviceWorker' in navigator) {
       // Don't block on service worker registration
-      navigator.serviceWorker.getRegistrations()
-        .then(registrations => {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) => {
           if (registrations.length > 0) {
             this.swRegistration = registrations[0]
           }
@@ -92,11 +93,11 @@ class NotificationService {
   recheckSupport() {
     const wasSupported = this.isSupported
     this.isSupported = this._checkNotificationSupport()
-    
+
     if (!wasSupported && this.isSupported) {
       this.permission = Notification.permission
     }
-    
+
     return this.isSupported
   }
 
@@ -124,7 +125,7 @@ class NotificationService {
         // Fallback to browser notification - remove actions as they're not supported
         const browserOptions = { ...defaultOptions }
         delete browserOptions.actions // Remove actions for browser notifications
-        
+
         new Notification(title, browserOptions)
       }
       return true
@@ -259,7 +260,7 @@ class NotificationService {
 
     // Schedule progress notifications (25%, 50%, 75%)
     const progressArray = [0.25, 0.5, 0.75]
-    
+
     progressArray.forEach((progress) => {
       const notificationTime = start + duration * 60 * 60 * 1000 * progress
       const remaining = duration * (1 - progress)
@@ -293,7 +294,7 @@ class NotificationService {
     if (!reminderTimes || !Array.isArray(reminderTimes)) {
       return
     }
-    
+
     reminderTimes.forEach((time, index) => {
       const [hours, minutes] = time.split(':').map(Number)
       const now = new Date()

@@ -11,32 +11,25 @@
           round
           dense
           icon="menu"
-          class="q-mr-sm"
+          class="q-mr-sm gt-sm"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title class="text-left"> FastTrack </q-toolbar-title>
         <q-space />
-        <q-btn flat round icon="logout" @click="logout" size="sm" />
+        <q-btn flat round icon="logout" @click="logout" size="sm" class="gt-sm" />
       </q-toolbar>
-      <q-separator dark inset />
     </q-header>
 
-    <!-- Left Navigation (Desktop) -->
-    <q-drawer
-      v-model="leftDrawerOpen"
-      side="left"
-      :width="220"
-      bordered
-      behavior="mobile"
-    >
+    <!-- Left Navigation (Desktop Only) -->
+    <q-drawer v-model="leftDrawerOpen" side="left" :width="220" bordered class="gt-sm">
       <q-list separator>
-        <q-item clickable v-ripple to="/app/logging/calories" exact>
+        <q-item clickable v-ripple to="/app/calories" exact>
           <q-item-section avatar>
             <q-icon name="bolt" />
           </q-item-section>
           <q-item-section>Calories</q-item-section>
         </q-item>
-        <q-item clickable v-ripple to="/app/logging/weight" exact>
+        <q-item clickable v-ripple to="/app/weight" exact>
           <q-item-section avatar>
             <q-icon name="monitor_weight" />
           </q-item-section>
@@ -71,12 +64,13 @@
     <!-- PWA Install Prompt -->
     <PwaInstallPrompt />
 
-    <!-- Bottom Navigation Tabs -->
+    <!-- Bottom Navigation Tabs (Mobile Only) -->
     <q-footer elevated class="lt-md">
       <q-tabs v-model="currentTab" dense align="justify">
         <q-tab name="calories" icon="bolt" label="Calories" @click="navigateTo('calories')" />
         <q-tab name="weight" icon="monitor_weight" label="Weight" @click="navigateTo('weight')" />
         <q-tab name="fasting" icon="schedule" label="Fasting" @click="navigateTo('fasting')" />
+        <q-tab name="settings" icon="person" label="Profile" @click="navigateTo('settings')" />
       </q-tabs>
     </q-footer>
   </q-layout>
@@ -95,7 +89,7 @@ const route = useRoute()
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
 
-const currentTab = ref('logging')
+const currentTab = ref('calories')
 const leftDrawerOpen = ref(false)
 
 // Update tab based on current route
@@ -104,14 +98,14 @@ watch(
   (newPath) => {
     if (newPath.includes('fasting')) {
       currentTab.value = 'fasting'
-    } else if (newPath.includes('analytics')) {
-      currentTab.value = 'analytics'
+    } else if (newPath.includes('weight')) {
+      currentTab.value = 'weight'
     } else if (newPath.includes('settings')) {
       currentTab.value = 'settings'
-    } else if (newPath.includes('logging') || newPath.includes('calories')) {
-      currentTab.value = 'logging'
+    } else if (newPath.includes('calories')) {
+      currentTab.value = 'calories'
     } else {
-      currentTab.value = 'logging'
+      currentTab.value = 'calories'
     }
   },
   { immediate: true },

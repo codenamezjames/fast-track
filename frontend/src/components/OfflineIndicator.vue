@@ -97,8 +97,6 @@ const hideReconnectedBanner = () => {
   showReconnectedBanner.value = false
 }
 
-
-
 // Lifecycle
 onMounted(() => {
   // Add network event listeners

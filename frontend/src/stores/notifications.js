@@ -358,7 +358,7 @@ export const useNotificationsStore = defineStore('notifications', {
     refreshStateFromService() {
       this.permission = notificationService.permission
       this.isSupported = notificationService.isSupported
-      
+
       // Also load preferences from localStorage
       this.loadPreferences()
     },

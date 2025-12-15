@@ -15,7 +15,12 @@
       "Bash(pkill:*)",
       "Bash(npm run quality:fix:*)",
       "Bash(chmod:*)",
-      "Bash(PUBLIC_PATH=/fast-track/ npm run build:pwa:*)"
+      "Bash(PUBLIC_PATH=/fast-track/ npm run build:pwa:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git check-ignore:*)",
+      "Bash(npx prettier:*)"
     ],
     "deny": []
   }

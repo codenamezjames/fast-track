@@ -281,12 +281,12 @@ export const useCaloriesStore = defineStore('calories', {
       try {
         // Clear from offline storage
         await db.meals.clear()
-        
+
         // Clear local state
         this.meals = []
         this.todaysMeals = []
         this.todaysCalories = 0
-        
+
         // Clear any errors
         this.error = null
       } catch (error) {

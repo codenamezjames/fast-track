@@ -70,11 +70,19 @@
 
 // App background gradients (respect light/dark)
 .body--light {
-  background: linear-gradient(180deg, var(--ft-color-bg-light-start) 0%, var(--ft-color-bg-light-end) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ft-color-bg-light-start) 0%,
+    var(--ft-color-bg-light-end) 100%
+  );
 }
 
 .body--dark {
-  background: linear-gradient(180deg, var(--ft-color-bg-dark-start) 0%, var(--ft-color-bg-dark-end) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ft-color-bg-dark-start) 0%,
+    var(--ft-color-bg-dark-end) 100%
+  );
 }
 
 // Minimal focus styles for better UX
@@ -93,13 +101,21 @@
 }
 
 .body--light .q-card {
-  background: linear-gradient(180deg, var(--ft-color-surface-light-start) 0%, var(--ft-color-surface-light-end) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ft-color-surface-light-start) 0%,
+    var(--ft-color-surface-light-end) 100%
+  );
   box-shadow: var(--ft-shadow-card-light);
   border: 1px solid var(--ft-color-border-light);
 }
 
 .body--dark .q-card {
-  background: linear-gradient(180deg, var(--ft-color-surface-dark-start) 0%, var(--ft-color-surface-dark-end) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ft-color-surface-dark-start) 0%,
+    var(--ft-color-surface-dark-end) 100%
+  );
   box-shadow: var(--ft-shadow-card-dark);
   border: 1px solid var(--ft-color-border-dark);
 }
@@ -153,7 +169,9 @@
   height: var(--ft-height-key);
   border-radius: var(--ft-radius-input);
   box-shadow: var(--ft-shadow-key);
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
 }
 
 .btn-key:active {

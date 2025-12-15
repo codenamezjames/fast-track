@@ -14,13 +14,13 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable @click="exportData">
+        <q-item clickable @click="showExportDialog = true">
           <q-item-section avatar>
             <q-icon name="download" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Export Data</q-item-label>
-            <q-item-label caption>Download your data as CSV</q-item-label>
+            <q-item-label caption>Download your data as CSV or JSON</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -56,6 +56,27 @@
       </div>
     </BaseDialog>
 
+    <!-- Export Dialog -->
+    <BaseDialog
+      v-model="showExportDialog"
+      title="Export Data"
+      confirm-label="Export"
+      @confirm="doExport"
+    >
+      <div class="q-gutter-md">
+        <div class="text-subtitle2 q-mb-sm">What to export</div>
+        <q-option-group v-model="exportType" :options="exportTypeOptions" color="primary" inline />
+
+        <div class="text-subtitle2 q-mb-sm q-mt-md">Format</div>
+        <q-option-group
+          v-model="exportFormat"
+          :options="exportFormatOptions"
+          color="primary"
+          inline
+        />
+      </div>
+    </BaseDialog>
+
     <!-- Clear Data Confirmation -->
     <BaseDialog
       v-model="showClearDataDialog"
@@ -88,6 +109,21 @@ import BaseDialog from '../base/BaseDialog.vue'
 // Reactive refs
 const showDataSummary = ref(false)
 const showClearDataDialog = ref(false)
+const showExportDialog = ref(false)
+const exportType = ref('all')
+const exportFormat = ref('json')
+
+// Export options
+const exportTypeOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'Meals', value: 'meals' },
+  { label: 'Fasting', value: 'fasting' },
+  { label: 'Weight', value: 'weight' },
+]
+const exportFormatOptions = [
+  { label: 'JSON', value: 'json' },
+  { label: 'CSV', value: 'csv' },
+]
 
 // Composables
 // const $q = useQuasar()
@@ -97,7 +133,8 @@ const weightStore = useWeightStore()
 const notificationsStore = useNotificationsStore()
 const themeStore = useThemeStore()
 const { executeWithErrorHandling } = useErrorHandling()
-const { exportAllData } = useDataExport()
+const { exportAllData, exportMealsData, exportFastingData, exportWeightData, exportJSON } =
+  useDataExport()
 
 // Computed
 const averageDailyCalories = computed(() => {
@@ -131,20 +168,44 @@ const longestFast = computed(() => {
 })
 
 // Methods
-const exportData = async () => {
+const doExport = async () => {
+  showExportDialog.value = false
+
   return executeWithErrorHandling(
     async () => {
-      const allData = {
-        meals: caloriesStore.meals,
-        fastingSessions: fastingStore.sessions,
-        weightEntries: weightStore.entries,
-        settings: {
-          notifications: notificationsStore.preferences,
-          theme: themeStore.theme,
-        },
+      if (exportFormat.value === 'json') {
+        // JSON export
+        let data = {}
+        if (exportType.value === 'all') {
+          data = {
+            meals: caloriesStore.meals,
+            fastingSessions: fastingStore.sessions,
+            weightEntries: weightStore.entries,
+            settings: {
+              notifications: notificationsStore.preferences,
+              theme: themeStore.theme,
+            },
+          }
+          await exportAllData(data)
+        } else if (exportType.value === 'meals') {
+          exportJSON(caloriesStore.meals, 'fasttrack-meals.json')
+        } else if (exportType.value === 'fasting') {
+          exportJSON(fastingStore.sessions, 'fasttrack-fasting.json')
+        } else if (exportType.value === 'weight') {
+          exportJSON(weightStore.entries, 'fasttrack-weight.json')
+        }
+      } else {
+        // CSV export
+        if (exportType.value === 'all' || exportType.value === 'meals') {
+          await exportMealsData(caloriesStore.meals)
+        }
+        if (exportType.value === 'all' || exportType.value === 'fasting') {
+          await exportFastingData(fastingStore.sessions)
+        }
+        if (exportType.value === 'all' || exportType.value === 'weight') {
+          await exportWeightData(weightStore.entries)
+        }
       }
-
-      await exportAllData(allData)
     },
     ERROR_MESSAGES.SAVE_FAILED,
     SUCCESS_MESSAGES.DATA_EXPORTED,

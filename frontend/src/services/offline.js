@@ -13,6 +13,32 @@ class FastTrackDB extends Dexie {
       weight_entries: '++id, user_id, weight, date, synced',
       sync_queue: '++id, table_name, record_id, action, data, timestamp',
     })
+
+    // Version 2: Add body measurements and user profile
+    this.version(2).stores({
+      meals: '++id, user_id, calories, meal_time, notes, synced',
+      fasting_sessions:
+        '++id, user_id, start_time, end_time, planned_duration, actual_duration, session_type, synced',
+      fasting_schedules: '++id, user_id, name, schedule_data, is_active, created_at',
+      weight_entries: '++id, user_id, weight, date, synced',
+      body_measurements: '++id, user_id, date, waist, chest, neck, arms, thighs, synced',
+      user_profile: '++id, user_id, height, height_unit, gender',
+      sync_queue: '++id, table_name, record_id, action, data, timestamp',
+    })
+
+    // Version 3: Add user settings for goals and preferences
+    this.version(3).stores({
+      meals: '++id, user_id, calories, meal_time, notes, synced',
+      fasting_sessions:
+        '++id, user_id, start_time, end_time, planned_duration, actual_duration, session_type, synced',
+      fasting_schedules: '++id, user_id, name, schedule_data, is_active, created_at',
+      weight_entries: '++id, user_id, weight, date, synced',
+      body_measurements: '++id, user_id, date, waist, chest, neck, arms, thighs, synced',
+      user_profile: '++id, user_id, height, height_unit, gender',
+      user_settings:
+        '++id, user_id, calorie_goal, weight_goal, weekly_fasting_goal, weight_unit, height_unit',
+      sync_queue: '++id, table_name, record_id, action, data, timestamp',
+    })
   }
 }
 

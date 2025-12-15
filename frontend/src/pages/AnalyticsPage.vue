@@ -156,6 +156,7 @@ import ExportActionsCard from '../components/ExportActionsCard.vue'
 import { useCaloriesStore } from '../stores/calories.js'
 import { useFastingStore } from '../stores/fasting.js'
 import { useWeightStore } from '../stores/weight.js'
+import { useSettingsStore } from '../stores/settings.js'
 
 // Composables
 const $q = useQuasar()
@@ -164,16 +165,17 @@ const $q = useQuasar()
 const caloriesStore = useCaloriesStore()
 const fastingStore = useFastingStore()
 const weightStore = useWeightStore()
+const settingsStore = useSettingsStore()
 
 // Reactive data
 const selectedTimeRange = ref('week')
 const exportingCalories = ref(false)
 const exportingFasting = ref(false)
-const weightUnit = ref('lbs') // or 'kg' based on user preference
 
-// Constants for goals (could be moved to settings store)
-const dailyCalorieGoal = 2000
-const weeklyFastingGoal = 5
+// Dynamic goals from settings
+const dailyCalorieGoal = computed(() => settingsStore.calorieGoal)
+const weeklyFastingGoal = computed(() => settingsStore.weeklyFastingGoal)
+const weightUnit = computed(() => settingsStore.weightUnit)
 const monthlyStreakGoal = 20
 
 const timeRangeOptions = [
@@ -246,7 +248,7 @@ const weeklyOverview = computed(() => {
       dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
       calories: calories,
       fastingHours: fastingData?.hours || 0,
-      calorieProgress: Math.min(calories / dailyCalorieGoal, 1),
+      calorieProgress: Math.min(calories / dailyCalorieGoal.value, 1),
     })
   }
 
@@ -264,8 +266,8 @@ const goalsData = computed(() => [
     id: 'calories',
     title: 'Daily Calorie Target',
     current: todaysCalories.value,
-    target: dailyCalorieGoal,
-    progress: Math.min(todaysCalories.value / dailyCalorieGoal, 1),
+    target: dailyCalorieGoal.value,
+    progress: Math.min(todaysCalories.value / dailyCalorieGoal.value, 1),
     color: 'primary',
     period: 'daily',
   },
@@ -273,8 +275,8 @@ const goalsData = computed(() => [
     id: 'fasting',
     title: 'Weekly Fasting Goal',
     current: weeklyFastingDays.value,
-    target: weeklyFastingGoal,
-    progress: Math.min(weeklyFastingDays.value / weeklyFastingGoal, 1),
+    target: weeklyFastingGoal.value,
+    progress: Math.min(weeklyFastingDays.value / weeklyFastingGoal.value, 1),
     color: 'secondary',
     period: 'weekly',
   },
@@ -430,6 +432,7 @@ onMounted(async () => {
     caloriesStore.loadMeals(),
     fastingStore.loadFastingData(),
     weightStore.loadWeightEntries(),
+    settingsStore.loadSettings(),
   ])
 })
 </script>

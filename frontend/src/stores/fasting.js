@@ -400,9 +400,21 @@ export const useFastingStore = defineStore('fasting', {
       const notificationsStore = useNotificationsStore()
       const endTime = new Date()
       const startTime = new Date(this.currentSession.start_time)
-      const actualDuration = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60) // hours
+      const durationMs = endTime.getTime() - startTime.getTime()
+      const actualDuration = durationMs / (1000 * 60 * 60) // hours
 
       try {
+        // If less than 1 minute, cancel instead of completing
+        if (durationMs < 60 * 1000) {
+          const sessionId = this.currentSession.id
+          await offlineOperations.deleteOffline('fasting_sessions', sessionId)
+          this.sessions = this.sessions.filter((s) => s.id !== sessionId)
+          this.currentSession = null
+          this.stopTimer()
+          notificationsStore.clearFastingNotifications()
+          return { cancelled: true }
+        }
+
         // Update session
         const updatedSession = {
           ...this.currentSession,
@@ -496,6 +508,94 @@ export const useFastingStore = defineStore('fasting', {
       }
     },
 
+    async updateSession(id, updates) {
+      try {
+        const sessionIndex = this.sessions.findIndex((s) => s.id === id)
+        if (sessionIndex === -1) {
+          throw new Error('Session not found')
+        }
+
+        // Remove id from updates to avoid Dexie issues
+        const { id: _, ...sessionData } = updates
+        void _ // Silence unused variable warning
+
+        // Convert dates to ISO strings
+        if (sessionData.start_time && !(typeof sessionData.start_time === 'string')) {
+          sessionData.start_time = new Date(sessionData.start_time).toISOString()
+        }
+        if (sessionData.end_time && !(typeof sessionData.end_time === 'string')) {
+          sessionData.end_time = new Date(sessionData.end_time).toISOString()
+        }
+
+        // Recalculate actual duration if both times are set
+        if (sessionData.start_time && sessionData.end_time) {
+          const start = new Date(sessionData.start_time)
+          const end = new Date(sessionData.end_time)
+          sessionData.actual_duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60)
+        }
+
+        await offlineOperations.updateOffline('fasting_sessions', id, sessionData)
+
+        // Update local state
+        this.sessions[sessionIndex] = {
+          ...this.sessions[sessionIndex],
+          ...sessionData,
+          synced: false,
+        }
+
+        return this.sessions[sessionIndex]
+      } catch (error) {
+        this.error = error.message
+        throw error
+      }
+    },
+
+    async deleteSession(id) {
+      try {
+        const sessionIndex = this.sessions.findIndex((s) => s.id === id)
+        if (sessionIndex === -1) {
+          throw new Error('Session not found')
+        }
+
+        // Can't delete active session
+        if (this.currentSession?.id === id) {
+          throw new Error('Cannot delete active session. End the fast first.')
+        }
+
+        await offlineOperations.deleteOffline('fasting_sessions', id)
+        this.sessions = this.sessions.filter((s) => s.id !== id)
+      } catch (error) {
+        this.error = error.message
+        throw error
+      }
+    },
+
+    async addCompletedSession(sessionData) {
+      const authStore = useAuthStore()
+
+      try {
+        const session = {
+          user_id: authStore.userId,
+          start_time: sessionData.start_time,
+          end_time: sessionData.end_time,
+          planned_end_time: sessionData.end_time,
+          planned_duration: sessionData.planned_duration,
+          actual_duration: sessionData.actual_duration,
+          session_type: 'regular',
+          status: 'completed',
+        }
+
+        const id = await offlineOperations.addToOffline('fasting_sessions', session)
+        const newSession = { id, ...session, synced: false }
+
+        this.sessions.push(newSession)
+        return newSession
+      } catch (error) {
+        this.error = error.message
+        throw error
+      }
+    },
+
     clearError() {
       this.error = null
     },
@@ -506,16 +606,16 @@ export const useFastingStore = defineStore('fasting', {
         // Clear from offline storage
         await db.fasting_sessions.clear()
         await db.fasting_schedules.clear()
-        
+
         // Clear local state
         this.sessions = []
         this.schedules = []
         this.currentSession = null
         this.activeSchedule = null
-        
+
         // Stop timer if running
         this.stopTimer()
-        
+
         // Clear any errors
         this.error = null
       } catch (error) {

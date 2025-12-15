@@ -1,7 +1,12 @@
 import { defineStore } from 'pinia'
 import { db, offlineOperations } from '../services/offline.js'
 import { useAuthStore } from './auth.js'
-import { convertToKg, getWeightForDisplay, formatWeightChange, formatAverageWeight } from '../utils/weightConversions.js'
+import {
+  convertToKg,
+  getWeightForDisplay,
+  formatWeightChange,
+  formatAverageWeight,
+} from '../utils/weightConversions.js'
 
 export const useWeightStore = defineStore('weight', {
   state: () => ({
@@ -23,7 +28,7 @@ export const useWeightStore = defineStore('weight', {
         const latest = state.entries.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
         return {
           ...latest,
-          weight: getWeightForDisplay(latest.weight, displayUnit)
+          weight: getWeightForDisplay(latest.weight, displayUnit),
         }
       }
     },
@@ -303,10 +308,10 @@ export const useWeightStore = defineStore('weight', {
       try {
         // Clear from offline storage
         await db.weight_entries.clear()
-        
+
         // Clear local state
         this.entries = []
-        
+
         // Clear any errors
         this.error = null
       } catch (error) {

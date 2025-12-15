@@ -3,12 +3,12 @@ import { useNotificationsStore } from '../stores/notifications.js'
 
 export default boot(async ({ store }) => {
   // Initialize notifications early in the app lifecycle
-    const notificationsStore = useNotificationsStore(store)
+  const notificationsStore = useNotificationsStore(store)
 
-    await notificationsStore.init()
+  await notificationsStore.init()
 
-    // Schedule meal reminders if enabled
-    if (notificationsStore.isMealNotificationsEnabled) {
-      await notificationsStore.scheduleMealReminders()
-    }
-  })
+  // Schedule meal reminders if enabled
+  if (notificationsStore.isMealNotificationsEnabled) {
+    await notificationsStore.scheduleMealReminders()
+  }
+})

@@ -1,662 +1,647 @@
 <template>
-  <q-page class="dashboard-page fit q-pa-md">
-    <div class="q-mx-auto q-gutter-y-md" style="max-width: 560px">
-      <!-- Calories Tab Content -->
-      <div v-if="activeTab === 'calories'" class="q-gutter-y-md">
-        <q-card flat bordered class="q-pa-md glass-card">
-          <div class="row justify-center q-mb-md ring-glow">
-            <q-circular-progress
-              show-value
-              :value="progressPercent"
-              size="160px"
-              :thickness="0.18"
-              color="primary"
-              track-color="grey-4"
-            >
-              <div class="column items-center">
-                <div class="text-h3 text-weight-bold">{{ formatNumber(todaysCalories) }}</div>
-                <div class="text-caption">kcal</div>
-              </div>
-            </q-circular-progress>
+  <q-page class="calories-page">
+    <q-pull-to-refresh @refresh="onRefresh">
+      <div class="calories-container">
+        <!-- Hero Section (Compact) -->
+        <div class="hero-section">
+          <div class="hero-left">
+            <span class="greeting">{{ greeting }}</span>
+            <span class="date">{{ formattedDate }}</span>
           </div>
-
-          <div class="row justify-around q-mb-xs q-gutter-xs">
-            <q-btn v-for="amt in [100,250,500]" :key="amt" :label="`+${amt}`" color="primary" class="btn-chip" @click="incrementBy(amt)" dense />
-          </div>
-
-          <div class="row items-center q-gutter-sm q-mb-md">
-            <q-input v-model="entryDisplay" outlined readonly class="col display-input" dense input-class="text-h6 text-center" />
-            <q-btn label="Add" color="primary" unelevated class="btn-primary-lg" @click="confirmAdd" :disable="!entryAmount" :loading="caloriesStore.isLoading" dense />
-          </div>
-
-          <div class="q-gutter-y-sm q-mt-none">
-            <div class="row q-col-gutter-xs">
-              <div class="col-4" v-for="n in [1,2,3]" :key="`r1-${n}`">
-                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
-              </div>
-            </div>
-            <div class="row q-col-gutter-xs">
-              <div class="col-4" v-for="n in [4,5,6]" :key="`r2-${n}`">
-                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
-              </div>
-            </div>
-            <div class="row q-col-gutter-xs">
-              <div class="col-4" v-for="n in [7,8,9]" :key="`r3-${n}`">
-                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(n)" dense>{{ n }}</q-btn>
-              </div>
-            </div>
-            <div class="row q-col-gutter-xs">
-              <div class="col-4">
-                <q-btn class="full-width btn-key" color="grey-6" flat label="Clear" @click="clearEntry" dense />
-              </div>
-              <div class="col-4">
-                <q-btn class="full-width btn-key" color="grey-7" text-color="white" unelevated @click="appendDigit(0)" dense>0</q-btn>
-              </div>
-              <div class="col-4">
-                <q-btn class="full-width btn-key" color="grey-6" flat label="-" @click="backspace" dense />
-              </div>
-            </div>
-          </div>
-        </q-card>
-      </div>
-
-      <!-- Weight Tab Content -->
-      <div v-if="activeTab === 'weight'" class="q-gutter-y-md">
-        <!-- Weight Tracking Section -->
-        <q-card class="dashboard-card" flat bordered>
-          <q-card-section>
-            <div class="text-h6 q-mb-md">Weight Tracking</div>
-
-            <!-- Current Weight Display -->
-            <div v-if="currentWeight" class="current-weight-display q-mb-md">
-              <q-card flat bordered>
-                <q-card-section class="text-center">
-                  <div class="row items-center justify-center q-gutter-md">
-                    <q-icon name="monitor_weight" color="primary" size="lg" />
-                    <div>
-                      <div class="text-h4 text-weight-bold text-primary">{{ currentWeight.weight }} {{ weightUnit }}</div>
-                      <div class="text-caption text-grey-6">{{ formatDate(currentWeight.date) }}</div>
-                    </div>
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
-
-            <!-- Weight Entry Form -->
-            <div class="weight-entry-section q-pa-md">
-              <div class="text-subtitle2 q-mb-sm">Add New Weight Entry</div>
-
-              <!-- Weight Input -->
-              <div class="row q-gutter-md q-mb-md">
-                <div class="col">
-                  <q-input
-                    v-model="weightForm.weight"
-                    type="number"
-                    step="0.1"
-                    outlined
-                    :placeholder="`Enter weight (${weightUnit})`"
-                    dense
-                    @keyup.enter="addWeightEntry"
-                  >
-                    <template v-slot:append>
-                      <span class="text-grey-6">{{ weightUnit }}</span>
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-auto">
-                  <q-btn-toggle
-                    v-model="weightUnit"
-                    no-caps
-                    rounded
-                    unelevated
-                    toggle-color="positive"
-                    :options="unitOptions"
-                    dense
-                  />
-                </div>
-              </div>
-
-              <!-- Date and Time Selection -->
-              <div class="row q-gutter-md q-mb-md">
-                <div class="col">
-                  <q-input
-                    v-model="weightForm.date"
-                    outlined
-                    dense
-                    placeholder="Date"
-                    readonly
-                    @click="showDatePicker = true"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="event" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col">
-                  <q-input
-                    v-model="weightForm.time"
-                    outlined
-                    dense
-                    placeholder="Time"
-                    readonly
-                    @click="showTimePicker = true"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="schedule" />
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-
-              <!-- Quick Date Presets -->
-              <div class="date-presets q-mb-md">
-                <div class="text-caption text-grey-6 q-mb-xs">Quick select:</div>
-                <q-btn-toggle
-                  v-model="selectedDatePreset"
-                  no-caps
-                  rounded
-                  unelevated
-                  toggle-color="primary"
-                  :options="datePresets"
-                  dense
-                  @update:model-value="handleDatePresetChange"
-                />
-              </div>
-
-              <!-- Add Button -->
-              <div class="row q-gutter-md">
-                <div class="col">
-                  <q-btn
-                    color="positive"
-                    label="Add Weight Entry"
-                    icon="add"
-                    unelevated
-                    @click="addWeightEntry"
-                    :disable="!isWeightFormValid"
-                    :loading="isAddingWeight"
-                    class="full-width"
-                  />
-                </div>
-                <div class="col-auto">
-                  <q-btn
-                    color="grey-6"
-                    label="Clear"
-                    flat
-                    @click="clearWeightForm"
-                    icon="close"
-                  />
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-
-        <!-- Weight Chart Section -->
-        <q-card class="dashboard-card q-mb-md" flat bordered>
-          <q-card-section>
-            <div class="text-h6 q-mb-md">Weight Trends</div>
-            <WeightTrendsChart :height="200" :weight-unit="weightUnit" />
-          </q-card-section>
-        </q-card>
-
-        <!-- Weight Stats Section -->
-        <q-card class="dashboard-card" flat bordered v-if="currentWeight">
-          <q-card-section>
-            <div class="text-h6 q-mb-md">Weight Statistics</div>
-            <div class="row q-gutter-md">
-              <div class="col">
-                <q-card flat bordered class="stat-card">
-                  <q-card-section class="text-center">
-                    <div class="text-h6 text-positive">{{ currentWeight.weight }}{{ weightUnit }}</div>
-                    <div class="text-caption text-grey-6">Current</div>
-                  </q-card-section>
-                </q-card>
-              </div>
-              <div class="col">
-                <q-card flat bordered class="stat-card">
-                  <q-card-section class="text-center">
-                    <div class="text-h6" :class="weightChangeColor">{{ weightChangeDisplay }}</div>
-                    <div class="text-caption text-grey-6">30 Day Change</div>
-                  </q-card-section>
-                </q-card>
-              </div>
-              <div class="col">
-                <q-card flat bordered class="stat-card">
-                  <q-card-section class="text-center">
-                    <div class="text-h6 text-orange">{{ averageWeightDisplay }}{{ weightUnit }}</div>
-                    <div class="text-caption text-grey-6">30 Day Average</div>
-                  </q-card-section>
-                </q-card>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
-
-    <!-- Custom Calorie Dialog -->
-    <q-dialog v-model="showCustomDialog" persistent>
-      <q-card>
-        <DialogHeader title="Add Custom Calories" @close="closeCustomDialog" />
-
-        <q-card-section class="dialog-content">
-          <div class="custom-input-large">
-            <q-input
-              v-model="customAmount"
-              type="number"
-              outlined
-              placeholder="Enter calories"
-              autofocus
-              @keyup.enter="addCustomFromDialog"
-              class="calorie-input"
-            >
-              <template v-slot:append>
-                <span class="input-suffix">kcal</span>
-              </template>
-            </q-input>
-          </div>
-
-          <!-- Quick presets in dialog -->
-          <div class="dialog-presets">
-            <div class="preset-label">Quick add:</div>
-            <div class="preset-buttons">
-              <q-btn
-                v-for="amount in [200, 300, 500]"
-                :key="amount"
-                :label="`${amount}`"
-                outline
-                class="preset-btn"
-                @click="customAmount = amount.toString()"
+          <div class="hero-ring">
+            <svg class="progress-ring" viewBox="0 0 100 100">
+              <circle class="progress-bg" cx="50" cy="50" r="42" fill="none" stroke-width="6" />
+              <circle
+                class="progress-bar"
+                cx="50"
+                cy="50"
+                r="42"
+                fill="none"
+                stroke-width="6"
+                :stroke-dasharray="circumference"
+                :stroke-dashoffset="progressOffset"
+                stroke-linecap="round"
               />
+            </svg>
+            <div class="ring-content">
+              <div class="ring-value">{{ animatedCalories }}</div>
+              <div class="ring-label">/ {{ dailyGoal }}</div>
             </div>
           </div>
-        </q-card-section>
+        </div>
 
-        <q-card-actions align="right" class="dialog-actions">
-          <q-btn flat label="Cancel" @click="closeCustomDialog" />
-          <q-btn
-            label="Add to Meal"
-            color="primary"
-            unelevated
-            @click="addCustomFromDialog"
-            :disable="!customAmount || customAmount <= 0"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        <!-- Remaining indicator -->
+        <div class="remaining-bar" :class="{ 'over-goal': isOverGoal }">
+          <q-icon :name="isOverGoal ? 'warning' : 'local_fire_department'" size="16px" />
+          <span>{{ remainingText }}</span>
+        </div>
 
-    <!-- Meal Dialog (for adding past meals) -->
-    <MealDialog v-model="showPastMealDialog" @saved="onMealSaved" />
+        <!-- Quick Add Chips -->
+        <div class="quick-chips">
+          <button v-for="amt in quickAmounts" :key="amt" class="quick-chip" @click="quickAdd(amt)">
+            +{{ amt }}
+          </button>
+        </div>
 
-    <!-- Weight Entry Dialog -->
-    <WeightEntryDialog v-model="showWeightDialog" @saved="onWeightSaved" />
+        <!-- Keypad Section -->
+        <div class="keypad-card">
+          <div class="display-row">
+            <span class="display-value" :class="{ 'has-value': entryAmount > 0 }">
+              {{ entryAmount || '0' }}
+            </span>
+            <span class="display-unit">kcal</span>
+          </div>
 
-    <!-- Date Picker -->
-    <q-dialog v-model="showDatePicker">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Select Date</div>
-        </q-card-section>
-        <q-card-section>
-          <q-date v-model="weightForm.date" mask="YYYY/MM/DD" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" @click="showDatePicker = false" />
-          <q-btn color="primary" label="OK" @click="showDatePicker = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <div class="keypad">
+            <button
+              v-for="n in [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+              :key="n"
+              class="key"
+              @click="appendDigit(n)"
+            >
+              {{ n }}
+            </button>
+            <button class="key key-action" @click="clearEntry">C</button>
+            <button class="key" @click="appendDigit(0)">0</button>
+            <button class="key key-action" @click="backspace">
+              <q-icon name="backspace" size="18px" />
+            </button>
+          </div>
 
-    <!-- Time Picker -->
-    <q-dialog v-model="showTimePicker">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Select Time</div>
-        </q-card-section>
-        <q-card-section>
-          <q-time v-model="weightForm.time" mask="HH:mm" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" @click="showTimePicker = false" />
-          <q-btn color="primary" label="OK" @click="showTimePicker = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <button
+            class="add-btn"
+            :class="{ active: entryAmount > 0 }"
+            :disabled="!entryAmount || isAdding"
+            @click="confirmAdd"
+          >
+            <q-icon v-if="isAdding" name="hourglass_empty" class="spinning" size="20px" />
+            <template v-else>Add</template>
+          </button>
+        </div>
+
+        <!-- Today's Meals (scrollable) -->
+        <div class="meals-section" v-if="todaysMeals.length > 0">
+          <div class="meals-header">
+            <span>Today</span>
+            <span class="meal-count">{{ todaysMeals.length }}</span>
+          </div>
+          <div class="meals-scroll">
+            <div
+              v-for="meal in todaysMeals"
+              :key="meal.id"
+              class="meal-item"
+              @click="openEditDialog(meal)"
+            >
+              <span class="meal-time">{{ formatTime(meal.date) }}</span>
+              <span class="meal-cal">{{ meal.calories }}</span>
+              <q-icon name="edit" size="12px" class="edit-icon" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </q-pull-to-refresh>
+
+    <!-- Edit Dialog -->
+    <MealEditDialog
+      v-model="showEditDialog"
+      :meal="selectedMeal"
+      @save="handleSaveMeal"
+      @delete="handleDeleteMeal"
+      @duplicate="handleDuplicateMeal"
+    />
   </q-page>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { Notify } from 'quasar'
+import { useQuasar } from 'quasar'
 import { useCaloriesStore } from '../stores/calories.js'
-import { useWeightStore } from '../stores/weight.js'
-import WeightTrendsChart from '../components/WeightTrendsChart.vue'
-import DialogHeader from '../components/DialogHeader.vue'
-import MealDialog from '../components/MealDialog.vue'
-import WeightEntryDialog from '../components/WeightEntryDialog.vue'
+import { useSettingsStore } from '../stores/settings.js'
+import MealEditDialog from '../components/MealEditDialog.vue'
 
-const route = useRoute()
+const $q = useQuasar()
 const caloriesStore = useCaloriesStore()
-const weightStore = useWeightStore()
+const settingsStore = useSettingsStore()
 
-// Tab management
-const activeTab = ref('calories')
-
-// Track bottom-tab driven navigation to toggle local content
-watch(
-  () => route.path,
-  (newPath) => {
-    activeTab.value = newPath.includes('/weight') ? 'weight' : 'calories'
-  },
-  { immediate: true }
-)
-
-// Calories related refs
-const customAmount = ref('')
-const caloriePool = ref(0)
-const showCustomDialog = ref(false)
-const showPastMealDialog = ref(false)
-
-// Numeric pad state
+// State
 const entryAmount = ref(0)
-const entryDisplay = computed(() => (entryAmount.value ? String(entryAmount.value) : '0'))
+const isAdding = ref(false)
+const animatedCalories = ref(0)
+const quickAmounts = [100, 250, 500]
+const showEditDialog = ref(false)
+const selectedMeal = ref(null)
 
+// Dynamic goal from settings
+const dailyGoal = computed(() => settingsStore.calorieGoal)
+
+// Progress ring (smaller radius = 42)
+const circumference = 2 * Math.PI * 42
+const progressOffset = computed(() => {
+  const progress = Math.min(todaysCalories.value / dailyGoal.value, 1)
+  return circumference * (1 - progress)
+})
+
+// Computed
 const todaysCalories = computed(() => caloriesStore.todaysCalories)
-const dailyGoal = 2000
-const progressPercent = computed(() => Math.min((todaysCalories.value / dailyGoal) * 100, 100))
-
-// Weight related refs
-const showWeightDialog = ref(false)
-const weightUnit = ref('lbs')
-const showDatePicker = ref(false)
-const showTimePicker = ref(false)
-const isAddingWeight = ref(false)
-const selectedDatePreset = ref('')
-
-// Weight form data
-const weightForm = ref({
-  weight: '',
-  date: '',
-  time: '',
+const todaysMeals = computed(() => {
+  const today = new Date().toISOString().slice(0, 10)
+  return caloriesStore.meals
+    .filter((m) => m.date && m.date.startsWith(today))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10)
 })
 
-// Date presets
-const datePresets = [
-  { label: 'Today', value: 'today' },
-  { label: 'Yesterday', value: 'yesterday' }
-]
-
-const unitOptions = [
-  { label: 'lbs', value: 'lbs' },
-  { label: 'kg', value: 'kg' },
-]
-
-onMounted(async () => {
-  await caloriesStore.loadMeals()
-  await weightStore.loadWeightEntries()
-  setDefaultDateTime()
+const isOverGoal = computed(() => todaysCalories.value > dailyGoal.value)
+const remainingCalories = computed(() => dailyGoal.value - todaysCalories.value)
+const remainingText = computed(() => {
+  if (isOverGoal.value) return `${Math.abs(remainingCalories.value)} over`
+  return `${remainingCalories.value} left`
 })
 
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+})
 
-const addCustomFromDialog = () => {
-  const amount = parseInt(customAmount.value)
-  if (amount && amount > 0) {
-    caloriePool.value += amount
-
-    // Add visual feedback
-    Notify.create({
-      type: 'info',
-      message: `+${amount} added to meal`,
-      position: 'top',
-      timeout: 1000,
-      color: 'blue-5',
-    })
-
-    closeCustomDialog()
-  }
-}
-
-const closeCustomDialog = () => {
-  showCustomDialog.value = false
-  customAmount.value = ''
-}
-
-const onMealSaved = () => {
-  // Meal was saved successfully, no additional action needed
-  // The MealDialog component handles the notifications
-}
-
-// Weight methods
-const onWeightSaved = () => {
-  // Weight was saved successfully
-  Notify.create({
-    type: 'positive',
-    message: 'Weight entry saved successfully',
-    position: 'top',
-    timeout: 2000,
-  })
-}
-
-const addWeightEntry = async () => {
-  if (!isWeightFormValid.value) return
-
-  const weight = parseFloat(weightForm.value.weight)
-  if (!weight || weight <= 0) return
-
-  isAddingWeight.value = true
-
-  try {
-    // Convert Quasar date format (YYYY/MM/DD) to ISO format (YYYY-MM-DD)
-    const isoDate = weightForm.value.date.replace(/\//g, '-')
-    const dateTimeString = `${isoDate}T${weightForm.value.time}:00`
-    const entryDateTime = new Date(dateTimeString)
-
-    // Validate the date is valid
-    if (isNaN(entryDateTime.getTime())) {
-      throw new Error('Invalid date or time selected')
-    }
-
-    await weightStore.addWeightEntry(weight, entryDateTime.toISOString(), weightUnit.value)
-
-    Notify.create({
-      type: 'positive',
-      message: `Weight logged: ${weight} ${weightUnit.value}`,
-      position: 'top',
-      timeout: 2000,
-    })
-
-    clearWeightForm()
-  } catch {
-    Notify.create({
-      type: 'negative',
-      message: 'Failed to add weight entry',
-      position: 'top',
-    })
-  } finally {
-    isAddingWeight.value = false
-  }
-}
-
-const clearWeightForm = () => {
-  weightForm.value.weight = ''
-  weightForm.value.date = ''
-  weightForm.value.time = ''
-  selectedDatePreset.value = ''
-  setDefaultDateTime()
-}
-
-const setDefaultDateTime = () => {
-  const now = new Date()
-  weightForm.value.date = now.toISOString().slice(0, 10).replace(/-/g, '/')
-  weightForm.value.time = now.toTimeString().slice(0, 5)
-}
-
-const handleDatePresetChange = (preset) => {
-  const now = new Date()
-  
-  switch (preset) {
-    case 'today': {
-      weightForm.value.date = now.toISOString().slice(0, 10).replace(/-/g, '/')
-      break
-    }
-    case 'yesterday': {
-      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-      weightForm.value.date = yesterday.toISOString().slice(0, 10).replace(/-/g, '/')
-      break
-    }
-    case 'thisWeek': {
-      // Set to start of current week (Monday)
-      const dayOfWeek = now.getDay()
-      const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
-      const monday = new Date(now.getTime() - daysToMonday * 24 * 60 * 60 * 1000)
-      weightForm.value.date = monday.toISOString().slice(0, 10).replace(/-/g, '/')
-      break
-    }
-  }
-}
-
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
+const formattedDate = computed(() => {
+  return new Date().toLocaleDateString('en-US', {
+    weekday: 'short',
     month: 'short',
     day: 'numeric',
-    year: 'numeric',
+  })
+})
+
+// Animate calorie counter
+watch(
+  todaysCalories,
+  (newVal) => {
+    animateValue(animatedCalories.value, newVal, 400)
+  },
+  { immediate: true },
+)
+
+function animateValue(start, end, duration) {
+  const startTime = performance.now()
+  const update = (currentTime) => {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    animatedCalories.value = Math.round(start + (end - start) * eased)
+    if (progress < 1) requestAnimationFrame(update)
+  }
+  requestAnimationFrame(update)
+}
+
+function formatTime(dateStr) {
+  return new Date(dateStr).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
   })
 }
 
-// Removed top tab navigation
-
-
-const currentWeight = computed(() => weightStore.latestWeightForDisplay(weightUnit.value))
-
-const weightChange = computed(() => {
-  return weightStore.weightChange(30) // 30 day change in kg
-})
-
-const weightChangeDisplay = computed(() => {
-  return weightStore.weightChangeForDisplay(30, weightUnit.value)
-})
-
-const weightChangeColor = computed(() => {
-  const change = weightChange.value
-  if (change > 0) return 'text-orange'
-  if (change < 0) return 'text-positive'
-  return 'text-grey-7'
-})
-
-const averageWeightDisplay = computed(() => {
-  return weightStore.averageWeightForDisplay(30, weightUnit.value)
-})
-
-const isWeightFormValid = computed(() => {
-  return (
-    weightForm.value.weight &&
-    weightForm.value.weight > 0 &&
-    weightForm.value.date &&
-    weightForm.value.time
-  )
-})
-
-const formatNumber = (num) => {
-  return new Intl.NumberFormat().format(num)
-}
-
-// Keypad helpers
-const appendDigit = (digit) => {
+function appendDigit(digit) {
   const next = Number(`${entryAmount.value || ''}${digit}`)
-  if (!Number.isNaN(next) && next <= 10000) {
-    entryAmount.value = next
-  }
+  if (!Number.isNaN(next) && next <= 9999) entryAmount.value = next
 }
 
-const clearEntry = () => {
+function clearEntry() {
   entryAmount.value = 0
 }
 
-const backspace = () => {
-  const str = String(entryAmount.value)
-  entryAmount.value = Number(str.slice(0, -1)) || 0
+function backspace() {
+  entryAmount.value = Number(String(entryAmount.value).slice(0, -1)) || 0
 }
 
-const incrementBy = (amt) => {
-  entryAmount.value = Math.min((entryAmount.value || 0) + amt, 10000)
+function quickAdd(amount) {
+  addCalories(amount)
 }
 
-const confirmAdd = async () => {
-  const amount = entryAmount.value
-  if (!amount || amount <= 0) return
+async function confirmAdd() {
+  if (!entryAmount.value) return
+  await addCalories(entryAmount.value)
+  entryAmount.value = 0
+}
+
+async function addCalories(amount) {
+  isAdding.value = true
   try {
     await caloriesStore.addMeal(amount)
-    entryAmount.value = 0
-    Notify.create({ type: 'positive', message: `Added ${amount} calories`, position: 'top', timeout: 1500 })
+    $q.notify({ message: `+${amount}`, color: 'positive', position: 'top', timeout: 1000 })
   } catch {
-    Notify.create({ type: 'negative', message: 'Failed to add calories', position: 'top' })
+    $q.notify({ message: 'Failed', color: 'negative', position: 'top' })
+  } finally {
+    isAdding.value = false
   }
 }
+
+function openEditDialog(meal) {
+  selectedMeal.value = {
+    ...meal,
+    meal_time: meal.date || meal.meal_time,
+  }
+  showEditDialog.value = true
+}
+
+async function handleSaveMeal(data) {
+  try {
+    if (data.id) {
+      // Update existing meal
+      await caloriesStore.updateMeal(data.id, data.calories, data.notes, data.dateTime)
+      $q.notify({ message: 'Updated', color: 'positive', position: 'top', timeout: 1500 })
+    } else {
+      // Add new meal
+      await caloriesStore.addMeal(data.calories, data.notes, data.dateTime)
+      $q.notify({ message: `+${data.calories}`, color: 'positive', position: 'top', timeout: 1000 })
+    }
+  } catch {
+    $q.notify({ message: 'Failed to save', color: 'negative', position: 'top' })
+  }
+}
+
+async function handleDeleteMeal(id) {
+  try {
+    await caloriesStore.deleteMeal(id)
+    $q.notify({ message: 'Deleted', color: 'grey-8', position: 'top', timeout: 1500 })
+  } catch {
+    $q.notify({ message: 'Failed to delete', color: 'negative', position: 'top' })
+  }
+}
+
+async function handleDuplicateMeal(data) {
+  try {
+    await caloriesStore.addMeal(data.calories, data.notes)
+    $q.notify({
+      message: `+${data.calories} logged again`,
+      color: 'positive',
+      position: 'top',
+      timeout: 1500,
+    })
+  } catch {
+    $q.notify({ message: 'Failed to log', color: 'negative', position: 'top' })
+  }
+}
+
+async function onRefresh(done) {
+  await Promise.all([caloriesStore.loadMeals(), settingsStore.loadSettings()])
+  done()
+}
+
+onMounted(async () => {
+  await Promise.all([caloriesStore.loadMeals(), settingsStore.loadSettings()])
+})
 </script>
 
 <style scoped>
-/* top-tabs removed */
-
-.dashboard-page {
-  padding: 0;
+.calories-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  min-height: 100%;
 }
 
-.dashboard-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.calories-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: 12px;
+  gap: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.custom-input-large {
-  margin-bottom: 20px;
+/* Hero - centered with large ring */
+.hero-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  min-height: 0;
 }
 
-.calorie-input {
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.greeting {
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.date {
   font-size: 18px;
+  font-weight: 700;
 }
 
-
-
-.dialog-presets {
-  margin-top: 16px;
+.hero-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
 }
 
-.preset-label {
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  stroke: rgba(0, 0, 0, 0.06);
+}
+
+.body--dark .progress-bg {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar {
+  stroke: var(--q-primary);
+  transition: stroke-dashoffset 0.4s ease;
+  filter: drop-shadow(0 0 4px rgba(79, 124, 255, 0.4));
+}
+
+.ring-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.ring-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ring-label {
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+/* Remaining bar */
+.remaining-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 12px;
   font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
+  font-weight: 500;
+  background: rgba(79, 124, 255, 0.1);
+  color: var(--q-primary);
+  flex-shrink: 0;
 }
 
-.preset-buttons {
+.remaining-bar.over-goal {
+  background: rgba(255, 77, 79, 0.1);
+  color: var(--q-negative);
+}
+
+/* Quick chips */
+.quick-chips {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.preset-btn {
+.quick-chip {
   flex: 1;
+  padding: 12px 4px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
 
-.stat-card {
-  border-radius: 8px;
+.body--light .quick-chip {
+  background: rgba(79, 124, 255, 0.08);
+  color: var(--q-primary);
 }
 
-.current-weight-display {
-  margin-bottom: 20px;
+.body--dark .quick-chip {
+  background: rgba(79, 124, 255, 0.15);
+  color: #7da2ff;
 }
 
-.weight-entry-section {
-  border-radius: 8px;
-  background: var(--q-card-color);
+.quick-chip:active {
+  transform: scale(0.95);
 }
 
-.date-presets {
-  margin-top: 12px;
+/* Keypad card */
+.keypad-card {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ft-color-surface-light-start);
+  border-radius: 16px;
+  padding: 14px;
 }
 
-/* Mobile optimizations */
-@media (max-width: 600px) {
-  .dashboard-container {
-    padding: 16px;
+.body--dark .keypad-card {
+  background: var(--ft-color-surface-dark-start);
+}
+
+.display-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  flex-shrink: 0;
+}
+
+.body--dark .display-row {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.display-value {
+  font-size: 32px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.display-value.has-value {
+  color: var(--q-primary);
+}
+
+.display-unit {
+  font-size: 14px;
+  opacity: 0.4;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.key {
+  border: none;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease;
+  min-height: 48px;
+}
+
+.body--light .key {
+  background: rgba(0, 0, 0, 0.04);
+  color: inherit;
+}
+
+.body--dark .key {
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+}
+
+.key:active {
+  transform: scale(0.92);
+}
+
+.key-action {
+  font-size: 14px;
+}
+
+.body--light .key-action {
+  background: rgba(0, 0, 0, 0.02);
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.body--dark .key-action {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.add-btn {
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: rgba(79, 124, 255, 0.12);
+  color: rgba(79, 124, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.add-btn.active {
+  background: var(--q-primary);
+  color: white;
+  box-shadow: 0 4px 16px rgba(79, 124, 255, 0.35);
+}
+
+.add-btn:disabled {
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+/* Meals section */
+.meals-section {
+  flex-shrink: 0;
+  max-height: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.meals-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.5;
+  margin-bottom: 4px;
+}
+
+.meal-count {
+  background: rgba(79, 124, 255, 0.1);
+  color: var(--q-primary);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.meals-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.body--light .meal-item {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.body--dark .meal-item {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.meal-item:active {
+  background: rgba(255, 77, 79, 0.15);
+}
+
+.meal-time {
+  opacity: 0.5;
+}
+
+.meal-cal {
+  font-weight: 600;
+}
+
+.edit-icon {
+  opacity: 0.3;
+  margin-left: 2px;
+}
+
+.meal-item:hover .edit-icon,
+.meal-item:active .edit-icon {
+  opacity: 0.6;
 }
 </style>

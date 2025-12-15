@@ -14,7 +14,7 @@ const LBS_TO_KG = 0.45359237
  */
 export function kgToLbs(kg) {
   if (typeof kg !== 'number' || isNaN(kg)) return 0
-  return Math.round((kg * KG_TO_LBS) * 10) / 10 // Round to 1 decimal place
+  return Math.round(kg * KG_TO_LBS * 10) / 10 // Round to 1 decimal place
 }
 
 /**
@@ -24,7 +24,7 @@ export function kgToLbs(kg) {
  */
 export function lbsToKg(lbs) {
   if (typeof lbs !== 'number' || isNaN(lbs)) return 0
-  return Math.round((lbs * LBS_TO_KG) * 100) / 100 // Round to 2 decimal places for storage
+  return Math.round(lbs * LBS_TO_KG * 100) / 100 // Round to 2 decimal places for storage
 }
 
 /**
@@ -35,7 +35,7 @@ export function lbsToKg(lbs) {
  */
 export function formatWeight(kg, displayUnit = 'kg') {
   if (typeof kg !== 'number' || isNaN(kg)) return '0'
-  
+
   if (displayUnit === 'lbs') {
     const lbs = kgToLbs(kg)
     return lbs.toFixed(1)
@@ -52,7 +52,7 @@ export function formatWeight(kg, displayUnit = 'kg') {
  */
 export function getWeightForDisplay(kg, displayUnit = 'kg') {
   if (typeof kg !== 'number' || isNaN(kg)) return 0
-  
+
   if (displayUnit === 'lbs') {
     return kgToLbs(kg)
   } else {
@@ -68,7 +68,7 @@ export function getWeightForDisplay(kg, displayUnit = 'kg') {
  */
 export function convertToKg(weight, inputUnit = 'kg') {
   if (typeof weight !== 'number' || isNaN(weight)) return 0
-  
+
   if (inputUnit === 'lbs') {
     return lbsToKg(weight)
   } else {
@@ -84,10 +84,10 @@ export function convertToKg(weight, inputUnit = 'kg') {
  */
 export function validateWeight(weight, unit = 'kg') {
   if (typeof weight !== 'number' || isNaN(weight)) return false
-  
+
   const minWeight = unit === 'kg' ? 20 : 44 // 20 kg or 44 lbs minimum
   const maxWeight = unit === 'kg' ? 300 : 661 // 300 kg or 661 lbs maximum
-  
+
   return weight >= minWeight && weight <= maxWeight
 }
 
@@ -99,10 +99,10 @@ export function validateWeight(weight, unit = 'kg') {
  */
 export function formatWeightChange(changeKg, displayUnit = 'kg') {
   if (typeof changeKg !== 'number' || isNaN(changeKg)) return '0'
-  
+
   const change = getWeightForDisplay(changeKg, displayUnit)
   if (change === 0) return '0'
-  
+
   const sign = change > 0 ? '+' : ''
   return `${sign}${change.toFixed(1)}`
 }
@@ -115,7 +115,7 @@ export function formatWeightChange(changeKg, displayUnit = 'kg') {
  */
 export function formatAverageWeight(avgKg, displayUnit = 'kg') {
   if (typeof avgKg !== 'number' || isNaN(avgKg) || avgKg <= 0) return '0'
-  
+
   const avg = getWeightForDisplay(avgKg, displayUnit)
   return avg.toFixed(1)
-} 
+}

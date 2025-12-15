@@ -57,7 +57,6 @@ describe('Auth Service', () => {
         authService.register('test@example.com', 'password123', 'Test User'),
       ).rejects.toThrow('Email already exists')
     })
-
   })
 
   describe('login', () => {
@@ -86,7 +85,6 @@ describe('Auth Service', () => {
         'Invalid credentials',
       )
     })
-
   })
 
   describe('logout', () => {
@@ -104,7 +102,6 @@ describe('Auth Service', () => {
 
       await expect(authService.logout()).rejects.toThrow('Logout failed')
     })
-
   })
 
   describe('getCurrentUser', () => {

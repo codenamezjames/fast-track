@@ -87,7 +87,7 @@ export const APP_CONSTANTS = {
   DEFAULT_WEIGHT_UNIT: 'kg',
   SUPPORTED_WEIGHT_UNITS: ['kg', 'lbs'],
   MAX_WEIGHT_KG: 300, // ~661 lbs
-  MIN_WEIGHT_KG: 20,  // ~44 lbs
+  MIN_WEIGHT_KG: 20, // ~44 lbs
   MAX_WEIGHT_LBS: 661,
   MIN_WEIGHT_LBS: 44,
 

@@ -7,14 +7,24 @@
           <ProfileSettings @logout="handleLogout" />
         </div>
 
+        <!-- Goals Settings -->
+        <div>
+          <GoalsSettings />
+        </div>
+
+        <!-- Theme Settings -->
+        <div>
+          <ThemeSettings />
+        </div>
+
+        <!-- Units Settings -->
+        <div>
+          <UnitsSettings />
+        </div>
+
         <!-- Notification Settings -->
         <div>
           <NotificationSettings />
-        </div>
-
-        <!-- Weight Tracking Settings -->
-        <div>
-          <WeightTrackingSettings />
         </div>
 
         <!-- Data Management Settings -->
@@ -34,8 +44,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import ProfileSettings from '../components/settings/ProfileSettings.vue'
+import GoalsSettings from '../components/settings/GoalsSettings.vue'
+import ThemeSettings from '../components/settings/ThemeSettings.vue'
+import UnitsSettings from '../components/settings/UnitsSettings.vue'
 import NotificationSettings from '../components/settings/NotificationSettings.vue'
-import WeightTrackingSettings from '../components/settings/WeightTrackingSettings.vue'
 import DataManagementSettings from '../components/settings/DataManagementSettings.vue'
 import AboutSection from '../components/settings/AboutSection.vue'
 
@@ -49,5 +61,4 @@ const handleLogout = () => {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

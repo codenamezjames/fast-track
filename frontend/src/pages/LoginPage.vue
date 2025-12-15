@@ -114,7 +114,7 @@ const onSubmit = async () => {
     }
 
     // Redirect to calories page on successful login/registration
-    router.push('/calories')
+    router.push('/app/calories')
   } catch {
     // Authentication error handled by store
   }
@@ -123,7 +123,8 @@ const onSubmit = async () => {
 // PWA install handling
 const updateInstallable = () => {
   try {
-    const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    const isStandalone =
+      window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
     const canInstall = pwaRef.value && pwaRef.value.isInstallable && pwaRef.value.isInstallable()
     showInstallButton.value = Boolean(canInstall && !isStandalone)
   } catch {
@@ -143,6 +144,12 @@ const requestInstall = () => {
 }
 
 onMounted(() => {
+  // Redirect to calories if already logged in
+  if (authStore.isAuthenticated) {
+    router.push('/app/calories')
+    return
+  }
+
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
   window.addEventListener('appinstalled', handleAppInstalled)
   // Initial check after mount
