@@ -16,6 +16,7 @@ import WeeklyCalendar from '../components/streak/WeeklyCalendar'
 import StreakFreezeIndicator from '../components/streak/StreakFreezeIndicator'
 import MilestoneCelebration from '../components/streak/MilestoneCelebration'
 import DailyGoalCelebration from '../components/streak/DailyGoalCelebration'
+import NextActionSuggestion from '../components/dashboard/NextActionSuggestion'
 
 const CALORIE_GOAL = 2200
 const WORKOUT_GOAL = 4
@@ -159,17 +160,23 @@ export default function Dashboard() {
 
       {/* Streak Hero Section */}
       <section className="animate-fade-in-up stagger-1">
-        <div className="flex items-start gap-4">
-          {/* Big Streak Display */}
-          <StreakDisplay
-            count={streakData.currentStreak}
-            intensity={getStreakIntensity()}
-            size="lg"
-            onClick={triggerDailyGoal}
-          />
+        <div className="flex items-stretch gap-4">
+          {/* Streak Display + Freeze */}
+          <div className="flex flex-col items-center gap-2">
+            <StreakDisplay
+              count={streakData.currentStreak}
+              intensity={getStreakIntensity()}
+              size="lg"
+              onClick={triggerDailyGoal}
+            />
+            <StreakFreezeIndicator
+              available={streakData.freezesAvailable}
+              onClick={() => navigate('/profile')}
+            />
+          </div>
 
           {/* Streak Info */}
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 flex flex-col gap-3">
             {/* Today's Progress */}
             <div className="glass rounded-xl p-3">
               <div className="flex items-center justify-between mb-2">
@@ -200,11 +207,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Freeze indicator */}
-            <StreakFreezeIndicator
-              available={streakData.freezesAvailable}
-              onClick={() => navigate('/profile')}
-            />
+            {/* Next action suggestion */}
+            <div className="flex-1">
+              <NextActionSuggestion
+                fastCompleted={todayActivity?.fastCompleted ?? false}
+                mealsLogged={todayActivity?.mealsLogged ?? false}
+                workoutCompleted={todayActivity?.workoutCompleted ?? false}
+                allComplete={todayComplete}
+                onNavigate={navigate}
+              />
+            </div>
           </div>
         </div>
       </section>

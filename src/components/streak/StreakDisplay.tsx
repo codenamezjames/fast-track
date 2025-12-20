@@ -44,7 +44,7 @@ const intensityStyles = {
 const sizes = {
   sm: { icon: 24, text: 'text-lg', container: 'p-3' },
   md: { icon: 40, text: 'text-3xl', container: 'p-4' },
-  lg: { icon: 56, text: 'text-5xl', container: 'p-6' },
+  lg: { icon: 44, text: 'text-4xl', container: 'px-7 py-4' },
 }
 
 export default function StreakDisplay({
