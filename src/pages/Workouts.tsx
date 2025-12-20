@@ -95,7 +95,7 @@ export default function Workouts() {
         <h1 className="text-2xl font-bold">Workouts</h1>
         <button
           onClick={() => setModalOpen(true)}
-          className="bg-primary text-white p-2 rounded-full"
+          className="bg-red-500 text-white p-2 rounded-full"
         >
           <Plus size={24} />
         </button>
@@ -103,10 +103,10 @@ export default function Workouts() {
 
       {/* Active Workout */}
       {activeWorkout && activeRoutine && (
-        <div className="bg-primary/20 border border-primary rounded-xl p-4 mb-6">
+        <div className="bg-red-500/20 border border-red-500 rounded-xl p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-sm text-primary">Active Workout</div>
+              <div className="text-sm text-red-400">Active Workout</div>
               <div className="text-xl font-bold">{activeRoutine.name}</div>
             </div>
             <div className="text-right">
@@ -126,14 +126,14 @@ export default function Workouts() {
                 }
                 className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
                   index < exercisesCompleted
-                    ? 'bg-primary/30 text-primary'
+                    ? 'bg-red-500/30 text-red-400'
                     : 'bg-neutral-800'
                 }`}
               >
                 <div
                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                     index < exercisesCompleted
-                      ? 'border-primary bg-primary'
+                      ? 'border-red-500 bg-red-500'
                       : 'border-neutral-600'
                   }`}
                 >
@@ -159,6 +159,7 @@ export default function Workouts() {
               End Early
             </Button>
             <Button
+              variant="red"
               onClick={() => handleEndWorkout(true)}
               className="flex-1"
               disabled={exercisesCompleted < activeRoutine.exercises.length}
@@ -183,8 +184,8 @@ export default function Workouts() {
                 key={routine.id}
                 className="bg-neutral-800 rounded-xl p-4 flex items-center gap-4"
               >
-                <div className="bg-primary/20 p-3 rounded-xl">
-                  <Dumbbell size={24} className="text-primary" />
+                <div className="bg-red-500/20 p-3 rounded-xl">
+                  <Dumbbell size={24} className="text-red-400" />
                 </div>
                 <div className="flex-1">
                   <div className="font-medium">{routine.name}</div>
@@ -196,14 +197,14 @@ export default function Workouts() {
                   {!activeWorkout && (
                     <button
                       onClick={() => handleStartWorkout(routine.id)}
-                      className="p-2 bg-primary rounded-full"
+                      className="p-2 bg-red-500 rounded-full"
                     >
                       <Play size={18} />
                     </button>
                   )}
                   <button
                     onClick={() => handleEditRoutine(routine)}
-                    className="p-2 text-neutral-400 hover:text-primary hover:bg-primary/10 rounded-full"
+                    className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-full"
                   >
                     <Pencil size={18} />
                   </button>
@@ -255,7 +256,7 @@ export default function Workouts() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => handleEditLog(log)}
-                      className="p-2 text-neutral-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                      className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                     >
                       <Pencil size={16} />
                     </button>

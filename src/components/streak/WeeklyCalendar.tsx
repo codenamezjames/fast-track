@@ -1,4 +1,4 @@
-import { Flame, Check, Snowflake } from 'lucide-react'
+import { Flame, Snowflake } from 'lucide-react'
 import type { DailyActivity } from '../../stores/streakStore'
 
 interface WeeklyCalendarProps {
@@ -98,19 +98,19 @@ export default function WeeklyCalendar({
               <div className="flex gap-0.5">
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${
-                    activity.fastCompleted ? 'bg-primary' : 'bg-neutral-700'
+                    activity.fastCompleted ? 'bg-violet-500' : 'bg-neutral-700'
                   }`}
                   title="Fast"
                 />
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${
-                    activity.mealsLogged ? 'bg-secondary' : 'bg-neutral-700'
+                    activity.mealsLogged ? 'bg-orange-500' : 'bg-neutral-700'
                   }`}
                   title="Meals"
                 />
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${
-                    activity.workoutCompleted ? 'bg-accent' : 'bg-neutral-700'
+                    activity.workoutCompleted ? 'bg-red-500' : 'bg-neutral-700'
                   }`}
                   title="Workout"
                 />
@@ -123,15 +123,15 @@ export default function WeeklyCalendar({
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 mt-4 text-xs text-neutral-500">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-primary" />
+          <div className="w-2 h-2 rounded-full bg-violet-500" />
           <span>Fast</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-secondary" />
+          <div className="w-2 h-2 rounded-full bg-orange-500" />
           <span>Meals</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-accent" />
+          <div className="w-2 h-2 rounded-full bg-red-500" />
           <span>Workout</span>
         </div>
       </div>

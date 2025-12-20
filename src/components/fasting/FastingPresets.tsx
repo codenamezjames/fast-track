@@ -19,7 +19,7 @@ export default function FastingPresets({ selected, onSelect, disabled }: Fasting
             disabled={disabled}
             className={`py-3 px-2 rounded-xl text-center transition-all ${
               isSelected
-                ? 'bg-primary text-white'
+                ? 'bg-violet-500 text-white'
                 : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
             } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           >

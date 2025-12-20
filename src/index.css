@@ -76,6 +76,11 @@
   @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-400;
 }
 
+/* Gradient text - purple (for fasting) */
+.gradient-text-purple {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-violet-300;
+}
+
 html {
   color-scheme: dark;
 }

@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
+import { useStreakStore } from './streakStore'
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
 
@@ -72,6 +73,9 @@ export const useMealsStore = create<MealsState>((set, get) => ({
       })
 
       set({ loading: false })
+
+      // Update streak - meal logged
+      useStreakStore.getState().updateTodayActivity({ mealsLogged: true })
     } catch (error) {
       console.error('Error adding meal:', error)
       set({ loading: false })

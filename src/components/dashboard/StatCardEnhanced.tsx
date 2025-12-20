@@ -12,7 +12,7 @@ interface StatCardEnhancedProps {
   subtext?: string
   trend?: { value: number; direction: 'up' | 'down' | 'neutral' }
   onClick?: () => void
-  variant?: 'primary' | 'secondary' | 'accent'
+  variant?: 'primary' | 'secondary' | 'accent' | 'purple' | 'orange' | 'red' | 'blue'
   className?: string
 }
 
@@ -20,12 +20,20 @@ const iconGradients = {
   primary: 'from-primary/30 to-cyan-400/30',
   secondary: 'from-secondary/30 to-emerald-400/30',
   accent: 'from-accent/30 to-pink-400/30',
+  purple: 'from-violet-500/30 to-violet-400/30',
+  orange: 'from-orange-500/30 to-orange-400/30',
+  red: 'from-red-500/30 to-red-400/30',
+  blue: 'from-blue-500/30 to-blue-400/30',
 }
 
 const iconColors = {
   primary: 'text-primary',
   secondary: 'text-secondary',
   accent: 'text-accent',
+  purple: 'text-violet-400',
+  orange: 'text-orange-400',
+  red: 'text-red-400',
+  blue: 'text-blue-400',
 }
 
 export default function StatCardEnhanced({

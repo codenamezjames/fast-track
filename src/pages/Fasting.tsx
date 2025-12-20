@@ -110,7 +110,7 @@ export default function Fasting() {
           <div className="text-neutral-400 text-xs">Day Streak</div>
         </div>
         <div className="bg-neutral-800 rounded-xl p-3 text-center">
-          <Clock size={20} className="mx-auto mb-1 text-primary" />
+          <Clock size={20} className="mx-auto mb-1 text-violet-400" />
           <div className="text-xl font-semibold">{history.length}</div>
           <div className="text-neutral-400 text-xs">Total Fasts</div>
         </div>
@@ -134,7 +134,7 @@ export default function Fasting() {
               </div>
               <div className="text-neutral-400">
                 {isComplete ? (
-                  <span className="text-green-400">Goal reached!</span>
+                  <span className="text-violet-400">Goal reached!</span>
                 ) : (
                   `${currentFast.goalHours}h goal`
                 )}
@@ -150,7 +150,7 @@ export default function Fasting() {
             {/* End fast button */}
             <Button
               onClick={handleToggleFast}
-              variant={isComplete ? 'primary' : 'danger'}
+              variant={isComplete ? 'purple' : 'danger'}
               className="w-full mt-6 flex items-center justify-center gap-2"
               disabled={loading}
             >
@@ -172,6 +172,7 @@ export default function Fasting() {
             {/* Start fast button */}
             <Button
               onClick={handleToggleFast}
+              variant="purple"
               className="w-full flex items-center justify-center gap-2"
               disabled={loading}
             >

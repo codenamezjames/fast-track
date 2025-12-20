@@ -1,16 +1,12 @@
 import { create } from 'zustand'
 import {
   doc,
-  getDoc,
   setDoc,
   updateDoc,
   collection,
   query,
   where,
-  orderBy,
-  limit,
   onSnapshot,
-  Timestamp,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
@@ -42,6 +38,7 @@ interface StreakState {
   todayActivity: DailyActivity | null
   loading: boolean
   showMilestone: number | null
+  showDailyGoal: boolean
   unsubscribe: (() => void) | null
 
   subscribeToStreak: () => void
@@ -51,6 +48,8 @@ interface StreakState {
   earnStreakFreeze: () => Promise<void>
   checkAndUpdateStreak: () => Promise<void>
   dismissMilestone: () => void
+  dismissDailyGoal: () => void
+  triggerDailyGoal: () => void
   getStreakIntensity: () => 'cold' | 'warm' | 'hot' | 'fire' | 'inferno'
   isTodayComplete: () => boolean
 }
@@ -86,6 +85,7 @@ export const useStreakStore = create<StreakState>((set, get) => ({
   todayActivity: null,
   loading: false,
   showMilestone: null,
+  showDailyGoal: false,
   unsubscribe: null,
 
   subscribeToStreak: () => {
@@ -111,10 +111,10 @@ export const useStreakStore = create<StreakState>((set, get) => ({
     // Subscribe to week's activities
     const weekDates = getWeekDates()
     const activitiesRef = collection(db, 'users', user.uid, 'dailyActivities')
+    // Note: removed orderBy to avoid needing composite index - we sort client-side
     const q = query(
       activitiesRef,
-      where('date', 'in', weekDates),
-      orderBy('date', 'asc')
+      where('date', 'in', weekDates)
     )
 
     const unsubActivities = onSnapshot(q, (snapshot) => {
@@ -122,8 +122,8 @@ export const useStreakStore = create<StreakState>((set, get) => ({
       const today = getDateString()
       let todayAct: DailyActivity | null = null
 
-      snapshot.forEach((doc) => {
-        const data = doc.data() as DailyActivity
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data() as DailyActivity
         activities.push(data)
         if (data.date === today) {
           todayAct = data
@@ -189,8 +189,9 @@ export const useStreakStore = create<StreakState>((set, get) => ({
 
     await setDoc(activityRef, updated)
 
-    // If streak is now maintained, update streak data
+    // If streak is now maintained, update streak data and show celebration
     if (updated.streakMaintained && !current.streakMaintained) {
+      set({ showDailyGoal: true })
       await get().checkAndUpdateStreak()
     }
   },
@@ -299,6 +300,14 @@ export const useStreakStore = create<StreakState>((set, get) => ({
 
   dismissMilestone: () => {
     set({ showMilestone: null })
+  },
+
+  dismissDailyGoal: () => {
+    set({ showDailyGoal: false })
+  },
+
+  triggerDailyGoal: () => {
+    set({ showDailyGoal: true })
   },
 
   getStreakIntensity: () => {

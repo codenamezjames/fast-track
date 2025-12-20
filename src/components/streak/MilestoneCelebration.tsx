@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flame, Trophy, Star, Sparkles, X } from 'lucide-react'
+import { Flame, Star, X } from 'lucide-react'
 
 interface MilestoneCelebrationProps {
   milestone: number

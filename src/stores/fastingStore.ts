@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
+import { useStreakStore } from './streakStore'
 
 export interface FastingSession {
   id: string
@@ -104,6 +105,11 @@ export const useFastingStore = create<FastingState>((set, get) => ({
         completed,
       })
       set({ currentFast: null, loading: false })
+
+      // Update streak if fast was completed
+      if (completed) {
+        useStreakStore.getState().updateTodayActivity({ fastCompleted: true })
+      }
     } catch (error) {
       console.error('Error ending fast:', error)
       set({ loading: false })

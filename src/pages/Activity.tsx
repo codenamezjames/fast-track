@@ -139,7 +139,7 @@ export default function Activity() {
         {isActive ? (
           <>
             <div className="text-center mb-6">
-              <div className="text-sm text-primary mb-2">
+              <div className="text-sm text-blue-400 mb-2">
                 {activeSession.type.charAt(0).toUpperCase() + activeSession.type.slice(1)} in progress
               </div>
               <div className="text-5xl font-bold font-mono">
@@ -149,7 +149,7 @@ export default function Activity() {
 
             <div className="grid grid-cols-2 gap-3 mb-6">
               <div className="bg-neutral-700 rounded-xl p-3 text-center">
-                <Timer size={20} className="mx-auto mb-1 text-primary" />
+                <Timer size={20} className="mx-auto mb-1 text-blue-400" />
                 <div className="text-xl font-semibold">{elapsedMinutes}</div>
                 <div className="text-neutral-400 text-xs">minutes</div>
               </div>
@@ -172,8 +172,8 @@ export default function Activity() {
         ) : (
           <>
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary/20 rounded-full mb-4">
-                <MapPin size={36} className="text-primary" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500/20 rounded-full mb-4">
+                <MapPin size={36} className="text-blue-400" />
               </div>
               <h2 className="text-lg font-semibold">Start Activity</h2>
               <p className="text-neutral-400 text-sm mt-1">
@@ -188,7 +188,7 @@ export default function Activity() {
                   onClick={() => setSelectedType(type)}
                   className={`flex-1 py-3 px-2 rounded-xl text-center transition-colors ${
                     selectedType === type
-                      ? 'bg-primary text-white'
+                      ? 'bg-blue-500 text-white'
                       : 'bg-neutral-700 text-neutral-300'
                   }`}
                 >
@@ -200,6 +200,7 @@ export default function Activity() {
 
             <Button
               onClick={handleStart}
+              variant="blue"
               className="w-full flex items-center justify-center gap-2"
             >
               <Play size={18} />
@@ -239,7 +240,7 @@ export default function Activity() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => handleEditClick(activity)}
-                      className="p-2 text-neutral-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                      className="p-2 text-neutral-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors"
                     >
                       <Pencil size={16} />
                     </button>
@@ -282,7 +283,7 @@ export default function Activity() {
             <Button variant="secondary" onClick={handleCancel} className="flex-1">
               Discard
             </Button>
-            <Button onClick={handleSaveActivity} disabled={loading} className="flex-1">
+            <Button variant="blue" onClick={handleSaveActivity} disabled={loading} className="flex-1">
               Save
             </Button>
           </div>

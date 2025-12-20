@@ -38,7 +38,7 @@ export default function FastingTimeline({ elapsedMs, goalHours }: FastingTimelin
       {/* Current stage indicator */}
       <div className="text-center">
         <div className="text-sm text-neutral-400">Current Stage</div>
-        <div className="text-lg font-semibold text-primary">{currentStage.description}</div>
+        <div className="text-lg font-semibold text-violet-400">{currentStage.description}</div>
       </div>
 
       {/* Timeline bar */}
@@ -47,7 +47,7 @@ export default function FastingTimeline({ elapsedMs, goalHours }: FastingTimelin
         <div className="h-3 bg-neutral-800 rounded-full overflow-hidden">
           {/* Progress fill */}
           <div
-            className="h-full bg-gradient-to-r from-primary via-cyan-400 to-green-400 rounded-full transition-all duration-1000"
+            className="h-full bg-gradient-to-r from-violet-600 via-violet-400 to-violet-300 rounded-full transition-all duration-1000"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -69,14 +69,14 @@ export default function FastingTimeline({ elapsedMs, goalHours }: FastingTimelin
                 <div
                   className={`w-4 h-4 rounded-full border-2 ${
                     isPassed
-                      ? 'bg-primary border-primary'
+                      ? 'bg-violet-500 border-violet-500'
                       : 'bg-neutral-900 border-neutral-600'
-                  } ${isCurrent ? 'ring-2 ring-primary ring-offset-2 ring-offset-neutral-900' : ''}`}
+                  } ${isCurrent ? 'ring-2 ring-violet-400 ring-offset-2 ring-offset-neutral-900' : ''}`}
                 />
                 {/* Label */}
                 <div
                   className={`absolute top-5 left-1/2 transform -translate-x-1/2 text-xs whitespace-nowrap ${
-                    isPassed ? 'text-primary' : 'text-neutral-500'
+                    isPassed ? 'text-violet-400' : 'text-neutral-500'
                   }`}
                 >
                   {stage.label}
@@ -90,7 +90,7 @@ export default function FastingTimeline({ elapsedMs, goalHours }: FastingTimelin
       {/* Goal marker */}
       <div className="flex justify-between text-sm">
         <span className="text-neutral-400">0h</span>
-        <span className="text-primary font-medium">{goalHours}h goal</span>
+        <span className="text-violet-400 font-medium">{goalHours}h goal</span>
       </div>
     </div>
   )

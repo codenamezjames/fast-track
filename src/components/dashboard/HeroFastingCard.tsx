@@ -41,7 +41,7 @@ export default function HeroFastingCard({
         <div className="glass rounded-3xl p-6 hover:bg-white/10 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-primary to-cyan-400 p-4 rounded-2xl">
+              <div className="bg-gradient-to-br from-violet-500 to-violet-400 p-4 rounded-2xl">
                 <Timer size={28} className="text-white" />
               </div>
               <div className="text-left">
@@ -58,8 +58,8 @@ export default function HeroFastingCard({
                 </div>
               </div>
             </div>
-            <div className="bg-primary/20 p-3 rounded-full">
-              <Play size={24} className="text-primary" fill="currentColor" />
+            <div className="bg-violet-500/20 p-3 rounded-full">
+              <Play size={24} className="text-violet-400" fill="currentColor" />
             </div>
           </div>
         </div>
@@ -73,14 +73,14 @@ export default function HeroFastingCard({
       onClick={onNavigate}
       className="w-full animate-fade-in-up stagger-1"
     >
-      <div className="p-[2px] rounded-3xl bg-gradient-to-r from-primary via-cyan-400 to-primary animate-pulse-glow">
+      <div className="p-[2px] rounded-3xl bg-gradient-to-r from-violet-500 via-violet-400 to-violet-500 animate-pulse-glow">
         <div className="bg-neutral-900 rounded-3xl p-6">
           <div className="flex flex-col items-center">
             {/* Circular progress */}
             <CircularProgress
               progress={progress}
               size="xl"
-              variant="primary"
+              variant="purple"
               className="mb-4"
             >
               <div className="text-center">
@@ -94,7 +94,7 @@ export default function HeroFastingCard({
             {/* Goal info */}
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <Timer size={16} className="text-primary" />
+                <Timer size={16} className="text-violet-400" />
                 <span className="text-neutral-400">{goalHours}h goal</span>
               </div>
               {streak > 0 && (
@@ -106,7 +106,7 @@ export default function HeroFastingCard({
             </div>
 
             {/* Progress text */}
-            <div className="mt-3 text-sm font-medium gradient-text">
+            <div className="mt-3 text-sm font-medium gradient-text-purple">
               {progress >= 100
                 ? 'Goal reached! Tap to complete'
                 : `${Math.round(progress)}% complete`}

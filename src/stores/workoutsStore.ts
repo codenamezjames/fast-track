@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
+import { useStreakStore } from './streakStore'
 
 export interface Exercise {
   id: string
@@ -138,6 +139,11 @@ export const useWorkoutsStore = create<WorkoutsState>((set, get) => ({
       })
 
       set({ activeWorkout: null })
+
+      // Update streak - workout completed
+      if (completed) {
+        useStreakStore.getState().updateTodayActivity({ workoutCompleted: true })
+      }
     } catch (error) {
       console.error('Error logging workout:', error)
     }

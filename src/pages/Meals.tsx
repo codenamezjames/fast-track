@@ -89,7 +89,7 @@ export default function Meals() {
         <div className="mt-3 h-2 bg-neutral-700 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all ${
-              todaysCalories > goals.calories ? 'bg-red-500' : 'bg-primary'
+              todaysCalories > goals.calories ? 'bg-red-500' : 'bg-orange-500'
             }`}
             style={{ width: `${Math.min(100, (todaysCalories / goals.calories) * 100)}%` }}
           />
@@ -153,7 +153,7 @@ export default function Meals() {
                 </div>
                 <button
                   onClick={() => handleAddClick(type)}
-                  className="p-2 bg-neutral-700 rounded-full hover:bg-primary transition-colors"
+                  className="p-2 bg-neutral-700 rounded-full hover:bg-orange-500 transition-colors"
                 >
                   <Plus size={18} />
                 </button>
@@ -189,7 +189,7 @@ export default function Meals() {
                       <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-neutral-600">
                         <button
                           onClick={() => handleEditClick(meal)}
-                          className="p-2 text-neutral-400 hover:text-primary hover:bg-neutral-600 rounded-lg transition-colors"
+                          className="p-2 text-neutral-400 hover:text-orange-400 hover:bg-orange-400/10 rounded-lg transition-colors"
                         >
                           <Pencil size={16} />
                         </button>

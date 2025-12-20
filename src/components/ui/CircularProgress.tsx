@@ -2,7 +2,7 @@ interface CircularProgressProps {
   progress: number // 0-100
   size?: 'sm' | 'md' | 'lg' | 'xl'
   strokeWidth?: number
-  variant?: 'primary' | 'secondary' | 'accent' | 'fire'
+  variant?: 'primary' | 'secondary' | 'accent' | 'fire' | 'purple' | 'orange' | 'red' | 'blue'
   showValue?: boolean
   valueLabel?: string
   children?: React.ReactNode
@@ -28,6 +28,11 @@ const gradients = {
   secondary: { from: '#26a69a', to: '#34d399' }, // secondary to emerald-400
   accent: { from: '#9c27b0', to: '#f472b6' }, // accent to pink-400
   fire: { from: '#f97316', to: '#facc15' }, // orange-500 to yellow-400
+  // Page-specific colors
+  purple: { from: '#8b5cf6', to: '#c084fc' }, // violet-500 to violet-400 (Fasting)
+  orange: { from: '#f97316', to: '#fb923c' }, // orange-500 to orange-400 (Meals)
+  red: { from: '#ef4444', to: '#f87171' }, // red-500 to red-400 (Workouts)
+  blue: { from: '#3b82f6', to: '#60a5fa' }, // blue-500 to blue-400 (Activity)
 }
 
 export default function CircularProgress({

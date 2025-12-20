@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'purple' | 'orange' | 'red' | 'blue'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
 }
@@ -18,6 +18,10 @@ export default function Button({
     secondary: 'bg-neutral-800 text-white hover:bg-neutral-700',
     danger: 'bg-red-600 text-white hover:bg-red-700',
     ghost: 'bg-transparent text-neutral-300 hover:bg-neutral-800',
+    purple: 'bg-violet-500 text-white hover:bg-violet-600',
+    orange: 'bg-orange-500 text-white hover:bg-orange-600',
+    red: 'bg-red-500 text-white hover:bg-red-600',
+    blue: 'bg-blue-500 text-white hover:bg-blue-600',
   }
 
   const sizes = {

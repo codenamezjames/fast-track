@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Utensils, Dumbbell, Scale, MapPin, Flame, Target, Plus } from 'lucide-react'
+import { Utensils, Dumbbell, Scale, MapPin, Plus, Check, Timer } from 'lucide-react'
 import { useFastingStore } from '../stores/fastingStore'
 import { useMealsStore } from '../stores/mealsStore'
 import { useWorkoutsStore } from '../stores/workoutsStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
 import { useActivityStore } from '../stores/activityStore'
+import { useStreakStore } from '../stores/streakStore'
 import MotivationalGreeting from '../components/dashboard/MotivationalGreeting'
 import HeroFastingCard from '../components/dashboard/HeroFastingCard'
 import StatCardEnhanced from '../components/dashboard/StatCardEnhanced'
 import QuickActionButton from '../components/dashboard/QuickActionButton'
-import StreakBadge from '../components/ui/StreakBadge'
+import StreakDisplay from '../components/streak/StreakDisplay'
+import WeeklyCalendar from '../components/streak/WeeklyCalendar'
+import StreakFreezeIndicator from '../components/streak/StreakFreezeIndicator'
+import MilestoneCelebration from '../components/streak/MilestoneCelebration'
+import DailyGoalCelebration from '../components/streak/DailyGoalCelebration'
 
 const CALORIE_GOAL = 2200
 const WORKOUT_GOAL = 4
@@ -23,7 +28,7 @@ export default function Dashboard() {
     currentFast,
     subscribeToFasts,
     cleanup: cleanupFasting,
-    getStreak,
+    getStreak: getFastingStreak,
   } = useFastingStore()
 
   // Meals
@@ -54,6 +59,22 @@ export default function Dashboard() {
     getTodaysDistance,
   } = useActivityStore()
 
+  // Streak
+  const {
+    streakData,
+    weekActivities,
+    todayActivity,
+    showMilestone,
+    showDailyGoal,
+    subscribeToStreak,
+    cleanup: cleanupStreak,
+    dismissMilestone,
+    dismissDailyGoal,
+    triggerDailyGoal,
+    getStreakIntensity,
+    isTodayComplete,
+  } = useStreakStore()
+
   const [fastingElapsed, setFastingElapsed] = useState(0)
 
   // Subscribe to all stores
@@ -63,6 +84,7 @@ export default function Dashboard() {
     subscribeToWorkouts()
     subscribeToMeasurements()
     subscribeToActivities()
+    subscribeToStreak()
 
     return () => {
       cleanupFasting()
@@ -70,6 +92,7 @@ export default function Dashboard() {
       cleanupWorkouts()
       cleanupMeasurements()
       cleanupActivities()
+      cleanupStreak()
     }
   }, [])
 
@@ -86,7 +109,7 @@ export default function Dashboard() {
     }
 
     updateElapsed()
-    const interval = setInterval(updateElapsed, 1000) // Update every second for smoother display
+    const interval = setInterval(updateElapsed, 1000)
     return () => clearInterval(interval)
   }, [currentFast])
 
@@ -99,27 +122,99 @@ export default function Dashboard() {
   const weeklyWorkouts = getThisWeeksWorkouts()
   const latestWeight = getLatestWeight()
   const todaysDistance = getTodaysDistance()
-  const fastingStreak = getStreak()
+  const fastingStreak = getFastingStreak()
   const caloriesProgress = (todaysCalories / CALORIE_GOAL) * 100
 
-  // Calculate goals hit today
-  const goalsHit = [
-    todaysCalories >= CALORIE_GOAL * 0.8 && todaysCalories <= CALORIE_GOAL * 1.1, // Within 80-110% of calorie goal
-    weeklyWorkouts >= WORKOUT_GOAL,
+  // Today's activity status
+  const todayComplete = isTodayComplete()
+  const activitiesCompleted = [
+    todayActivity?.fastCompleted,
+    todayActivity?.mealsLogged,
+    todayActivity?.workoutCompleted,
   ].filter(Boolean).length
 
   return (
     <div className="p-4 pb-24 space-y-6">
+      {/* Milestone Celebration Modal */}
+      {showMilestone && (
+        <MilestoneCelebration
+          milestone={showMilestone}
+          onDismiss={dismissMilestone}
+        />
+      )}
+
+      {/* Daily Goal Celebration */}
+      {showDailyGoal && (
+        <DailyGoalCelebration onComplete={dismissDailyGoal} />
+      )}
+
       {/* Motivational Greeting */}
       <MotivationalGreeting
-        streak={fastingStreak}
+        streak={streakData.currentStreak}
         isFasting={isFasting}
         fastingProgress={fastingProgress}
         workoutsThisWeek={weeklyWorkouts}
         caloriesProgress={caloriesProgress}
       />
 
-      {/* Hero Fasting Card */}
+      {/* Streak Hero Section */}
+      <section className="animate-fade-in-up stagger-1">
+        <div className="flex items-start gap-4">
+          {/* Big Streak Display */}
+          <StreakDisplay
+            count={streakData.currentStreak}
+            intensity={getStreakIntensity()}
+            size="lg"
+            onClick={triggerDailyGoal}
+          />
+
+          {/* Streak Info */}
+          <div className="flex-1 space-y-3">
+            {/* Today's Progress */}
+            <div className="glass rounded-xl p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-neutral-400">Today's goal</span>
+                <span className={`text-sm font-medium ${todayComplete ? 'text-green-400' : 'text-neutral-300'}`}>
+                  {activitiesCompleted}/2 activities
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <ActivityPill
+                  icon={<Timer size={14} />}
+                  label="Fast"
+                  completed={todayActivity?.fastCompleted ?? false}
+                  color="purple"
+                />
+                <ActivityPill
+                  icon={<Utensils size={14} />}
+                  label="Meals"
+                  completed={todayActivity?.mealsLogged ?? false}
+                  color="orange"
+                />
+                <ActivityPill
+                  icon={<Dumbbell size={14} />}
+                  label="Workout"
+                  completed={todayActivity?.workoutCompleted ?? false}
+                  color="red"
+                />
+              </div>
+            </div>
+
+            {/* Freeze indicator */}
+            <StreakFreezeIndicator
+              available={streakData.freezesAvailable}
+              onClick={() => navigate('/profile')}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Weekly Calendar */}
+      <section className="animate-fade-in-up stagger-2">
+        <WeeklyCalendar activities={weekActivities} />
+      </section>
+
+      {/* Fasting Card */}
       <HeroFastingCard
         isActive={isFasting}
         elapsedMs={fastingElapsed}
@@ -128,31 +223,6 @@ export default function Dashboard() {
         streak={fastingStreak}
         onNavigate={() => navigate('/fasting')}
       />
-
-      {/* Streak Badges */}
-      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 animate-fade-in-up stagger-2">
-        <StreakBadge
-          icon={<Flame size={16} />}
-          count={fastingStreak}
-          label="day streak"
-          variant="fire"
-          active={fastingStreak > 0}
-        />
-        <StreakBadge
-          icon={<Dumbbell size={16} />}
-          count={weeklyWorkouts}
-          label="workouts"
-          variant="primary"
-          active={weeklyWorkouts > 0}
-        />
-        <StreakBadge
-          icon={<Target size={16} />}
-          count={goalsHit}
-          label="goals hit"
-          variant="secondary"
-          active={goalsHit > 0}
-        />
-      </div>
 
       {/* Today's Progress */}
       <section className="animate-fade-in-up stagger-3">
@@ -166,7 +236,7 @@ export default function Dashboard() {
             current={todaysCalories}
             subtext={`of ${CALORIE_GOAL.toLocaleString()}`}
             onClick={() => navigate('/meals')}
-            variant="primary"
+            variant="orange"
           />
           <StatCardEnhanced
             icon={<Dumbbell size={18} />}
@@ -176,7 +246,7 @@ export default function Dashboard() {
             current={weeklyWorkouts}
             subtext="this week"
             onClick={() => navigate('/workouts')}
-            variant="secondary"
+            variant="red"
           />
           <StatCardEnhanced
             icon={<MapPin size={18} />}
@@ -184,7 +254,7 @@ export default function Dashboard() {
             value={`${todaysDistance.toFixed(1)} km`}
             subtext="today"
             onClick={() => navigate('/activity')}
-            variant="accent"
+            variant="blue"
           />
           <StatCardEnhanced
             icon={<Scale size={18} />}
@@ -205,16 +275,71 @@ export default function Dashboard() {
             icon={<Plus size={18} />}
             label="Log Meal"
             onClick={() => navigate('/meals')}
-            variant="primary"
+            variant="orange"
           />
           <QuickActionButton
             icon={<Dumbbell size={18} />}
             label="Workout"
             onClick={() => navigate('/workouts')}
-            variant="secondary"
+            variant="red"
           />
         </div>
       </section>
+
+      {/* Stats footer */}
+      <section className="animate-fade-in-up stagger-5">
+        <div className="glass rounded-xl p-4 flex items-center justify-around text-center">
+          <div>
+            <div className="text-2xl font-bold gradient-text-fire">{streakData.longestStreak}</div>
+            <div className="text-xs text-neutral-500">Best streak</div>
+          </div>
+          <div className="w-px h-8 bg-neutral-700" />
+          <div>
+            <div className="text-2xl font-bold">{streakData.totalActiveDays}</div>
+            <div className="text-xs text-neutral-500">Active days</div>
+          </div>
+          <div className="w-px h-8 bg-neutral-700" />
+          <div>
+            <div className="text-2xl font-bold">{streakData.milestonesAchieved.length}</div>
+            <div className="text-xs text-neutral-500">Milestones</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+// Helper component for activity pills
+const pillColors = {
+  purple: 'bg-violet-500/20 text-violet-400 border border-violet-500/30',
+  orange: 'bg-orange-500/20 text-orange-400 border border-orange-500/30',
+  red: 'bg-red-500/20 text-red-400 border border-red-500/30',
+}
+
+function ActivityPill({
+  icon,
+  label,
+  completed,
+  color,
+}: {
+  icon: React.ReactNode
+  label: string
+  completed: boolean
+  color: 'purple' | 'orange' | 'red'
+}) {
+  return (
+    <div
+      className={`
+        flex items-center gap-1.5 px-2 py-1 rounded-full text-xs
+        ${
+          completed
+            ? pillColors[color]
+            : 'bg-neutral-800 text-neutral-500 border border-neutral-700'
+        }
+      `}
+    >
+      {completed ? <Check size={12} /> : icon}
+      <span>{label}</span>
     </div>
   )
 }

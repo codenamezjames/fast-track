@@ -47,5 +47,19 @@ service cloud.firestore {
       allow read, write: if isOwner(resource.data.userId);
       allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
     }
+
+    // Streaks collection (document ID is the user's UID)
+    match /streaks/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Users collection with dailyActivities subcollection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /dailyActivities/{date} {
+        allow read, write: if isOwner(userId);
+      }
+    }
   }
 }
