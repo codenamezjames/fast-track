@@ -1,0 +1,243 @@
+import { useEffect, useState } from 'react'
+import { Plus, Trash2, Pencil } from 'lucide-react'
+import { useMealsStore, type MealType, type FoodItem, type Meal } from '../stores/mealsStore'
+import { useSettingsStore } from '../stores/settingsStore'
+import AddMealModal from '../components/meals/AddMealModal'
+import EditMealModal from '../components/meals/EditMealModal'
+import ConfirmDialog from '../components/ui/ConfirmDialog'
+
+const mealTypes: { type: MealType; label: string }[] = [
+  { type: 'breakfast', label: 'Breakfast' },
+  { type: 'lunch', label: 'Lunch' },
+  { type: 'dinner', label: 'Dinner' },
+  { type: 'snack', label: 'Snacks' },
+]
+
+export default function Meals() {
+  const {
+    addMeal,
+    updateMeal,
+    deleteMeal,
+    subscribeToMeals,
+    cleanup,
+    getMealsByType,
+    getTodaysCalories,
+    getTodaysMacros,
+  } = useMealsStore()
+
+  const [addModalOpen, setAddModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [selectedMealType, setSelectedMealType] = useState<MealType>('breakfast')
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
+
+  useEffect(() => {
+    subscribeToMeals()
+    return () => cleanup()
+  }, [])
+
+  const handleAddClick = (type: MealType) => {
+    setSelectedMealType(type)
+    setAddModalOpen(true)
+  }
+
+  const handleEditClick = (meal: Meal) => {
+    setSelectedMeal(meal)
+    setEditModalOpen(true)
+  }
+
+  const handleDeleteClick = (meal: Meal) => {
+    setSelectedMeal(meal)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleSaveMeal = async (foods: FoodItem[]) => {
+    await addMeal(selectedMealType, foods)
+  }
+
+  const handleUpdateMeal = async (id: string, foods: FoodItem[]) => {
+    await updateMeal(id, foods)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (selectedMeal) {
+      await deleteMeal(selectedMeal.id)
+      setSelectedMeal(null)
+    }
+  }
+
+  const { goals } = useSettingsStore()
+  const todaysCalories = getTodaysCalories()
+  const todaysMacros = getTodaysMacros()
+
+  return (
+    <div className="p-4 pb-24">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Meals</h1>
+      </div>
+
+      {/* Daily summary */}
+      <div className="bg-neutral-800 rounded-xl p-4 mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-neutral-400">Today's Calories</span>
+          <span className="text-sm text-neutral-400">{goals.calories} goal</span>
+        </div>
+        <div className="flex items-end gap-2">
+          <span className="text-3xl font-bold">{todaysCalories}</span>
+          <span className="text-neutral-400 mb-1">/ {goals.calories}</span>
+        </div>
+        <div className="mt-3 h-2 bg-neutral-700 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all ${
+              todaysCalories > goals.calories ? 'bg-red-500' : 'bg-primary'
+            }`}
+            style={{ width: `${Math.min(100, (todaysCalories / goals.calories) * 100)}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Macro summary */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-neutral-800 rounded-xl p-3">
+          <div className="text-center mb-2">
+            <div className="text-lg font-semibold text-blue-400">{todaysMacros.protein}g</div>
+            <div className="text-xs text-neutral-400">/ {goals.protein}g Protein</div>
+          </div>
+          <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-400 rounded-full"
+              style={{ width: `${Math.min(100, (todaysMacros.protein / goals.protein) * 100)}%` }}
+            />
+          </div>
+        </div>
+        <div className="bg-neutral-800 rounded-xl p-3">
+          <div className="text-center mb-2">
+            <div className="text-lg font-semibold text-green-400">{todaysMacros.carbs}g</div>
+            <div className="text-xs text-neutral-400">/ {goals.carbs}g Carbs</div>
+          </div>
+          <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-green-400 rounded-full"
+              style={{ width: `${Math.min(100, (todaysMacros.carbs / goals.carbs) * 100)}%` }}
+            />
+          </div>
+        </div>
+        <div className="bg-neutral-800 rounded-xl p-3">
+          <div className="text-center mb-2">
+            <div className="text-lg font-semibold text-yellow-400">{todaysMacros.fat}g</div>
+            <div className="text-xs text-neutral-400">/ {goals.fat}g Fat</div>
+          </div>
+          <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-yellow-400 rounded-full"
+              style={{ width: `${Math.min(100, (todaysMacros.fat / goals.fat) * 100)}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Meal sections */}
+      <div className="space-y-4">
+        {mealTypes.map(({ type, label }) => {
+          const typeMeals = getMealsByType(type)
+          const typeCalories = typeMeals.reduce((sum, m) => sum + m.totalCalories, 0)
+
+          return (
+            <div key={type} className="bg-neutral-800 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <span className="font-medium">{label}</span>
+                  <span className="text-neutral-400 text-sm ml-2">
+                    {typeCalories} cal
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleAddClick(type)}
+                  className="p-2 bg-neutral-700 rounded-full hover:bg-primary transition-colors"
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+
+              {typeMeals.length === 0 ? (
+                <div className="text-neutral-500 text-sm">
+                  No {label.toLowerCase()} logged yet
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {typeMeals.map((meal) => (
+                    <div key={meal.id} className="bg-neutral-700/50 rounded-lg p-3">
+                      <div className="space-y-2">
+                        {meal.foods.map((food, index) => (
+                          <div
+                            key={`${meal.id}-${index}`}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium truncate">{food.name}</div>
+                              <div className="text-xs text-neutral-400">
+                                {food.protein ? `P: ${food.protein}g` : ''}
+                                {food.carbs ? ` C: ${food.carbs}g` : ''}
+                                {food.fat ? ` F: ${food.fat}g` : ''}
+                              </div>
+                            </div>
+                            <span className="text-neutral-300 ml-2">{food.calories} cal</span>
+                          </div>
+                        ))}
+                      </div>
+                      {/* Meal actions */}
+                      <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-neutral-600">
+                        <button
+                          onClick={() => handleEditClick(meal)}
+                          className="p-2 text-neutral-400 hover:text-primary hover:bg-neutral-600 rounded-lg transition-colors"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(meal)}
+                          className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      <AddMealModal
+        isOpen={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        mealType={selectedMealType}
+        onSave={handleSaveMeal}
+      />
+
+      <EditMealModal
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false)
+          setSelectedMeal(null)
+        }}
+        meal={selectedMeal}
+        onSave={handleUpdateMeal}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false)
+          setSelectedMeal(null)
+        }}
+        title="Delete Meal"
+        message={`Are you sure you want to delete this ${selectedMeal?.type || 'meal'}? This action cannot be undone.`}
+        confirmLabel="Delete"
+        onConfirm={handleConfirmDelete}
+        variant="danger"
+      />
+    </div>
+  )
+}
