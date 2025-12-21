@@ -39,22 +39,40 @@ interface MealsState {
   meals: Meal[]
   loading: boolean
   unsubscribe: (() => void) | null
+  selectedDate: Date
 
   addMeal: (type: MealType, foods: FoodItem[]) => Promise<void>
   updateMeal: (id: string, foods: FoodItem[]) => Promise<void>
   deleteMeal: (id: string) => Promise<void>
-  subscribeToMeals: () => void
+  subscribeToMeals: (date?: Date) => void
+  setSelectedDate: (date: Date) => void
   cleanup: () => void
-  getTodaysMeals: () => Meal[]
-  getTodaysCalories: () => number
-  getTodaysMacros: () => { protein: number; carbs: number; fat: number }
+  getSelectedDateMeals: () => Meal[]
+  getSelectedDateCalories: () => number
+  getSelectedDateMacros: () => { protein: number; carbs: number; fat: number }
   getMealsByType: (type: MealType) => Meal[]
+  isToday: () => boolean
+  // For Dashboard - returns calories only if viewing today, otherwise 0
+  getTodaysCalories: () => number
+}
+
+const getStartOfDay = (date: Date): Date => {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+const getEndOfDay = (date: Date): Date => {
+  const d = new Date(date)
+  d.setHours(23, 59, 59, 999)
+  return d
 }
 
 export const useMealsStore = create<MealsState>((set, get) => ({
   meals: [],
   loading: false,
   unsubscribe: null,
+  selectedDate: getStartOfDay(new Date()),
 
   addMeal: async (type: MealType, foods: FoodItem[]) => {
     const user = useAuthStore.getState().user
@@ -105,18 +123,44 @@ export const useMealsStore = create<MealsState>((set, get) => ({
     }
   },
 
-  subscribeToMeals: () => {
+  setSelectedDate: (date: Date) => {
+    const newDate = getStartOfDay(date)
+    set({ selectedDate: newDate })
+    get().subscribeToMeals(newDate)
+  },
+
+  subscribeToMeals: (date?: Date) => {
     const user = useAuthStore.getState().user
     if (!user) return
 
-    // Get today's start
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    // Clean up any existing subscription first
+    const { unsubscribe: existingUnsubscribe } = get()
+    if (existingUnsubscribe) {
+      existingUnsubscribe()
+    }
+
+    // Clear stale meals immediately
+    set({ meals: [], unsubscribe: null })
+
+    // Use provided date or selectedDate
+    const targetDate = date || get().selectedDate
+    const dayStart = getStartOfDay(targetDate)
+    const dayEnd = getEndOfDay(targetDate)
+
+    // Debug: verify timezone handling
+    console.log('Querying meals for:', {
+      localDate: targetDate.toLocaleDateString(),
+      rangeStart: dayStart.toLocaleString(),
+      rangeEnd: dayEnd.toLocaleString(),
+      utcStart: dayStart.toISOString(),
+      utcEnd: dayEnd.toISOString(),
+    })
 
     const q = query(
       collection(db, 'meals'),
       where('userId', '==', user.uid),
-      where('date', '>=', Timestamp.fromDate(today)),
+      where('date', '>=', Timestamp.fromDate(dayStart)),
+      where('date', '<=', Timestamp.fromDate(dayEnd)),
       orderBy('date', 'desc')
     )
 
@@ -125,16 +169,19 @@ export const useMealsStore = create<MealsState>((set, get) => ({
 
       snapshot.forEach((doc) => {
         const data = doc.data()
+        const mealDate = data.date.toDate()
+        console.log('Meal:', data.type, 'logged at', mealDate.toLocaleString(), '(local)')
         meals.push({
           id: doc.id,
           userId: data.userId,
-          date: data.date.toDate(),
+          date: mealDate,
           type: data.type,
           foods: data.foods,
           totalCalories: data.totalCalories,
         })
       })
 
+      console.log('Found', meals.length, 'meals for this date')
       set({ meals })
     })
 
@@ -149,30 +196,21 @@ export const useMealsStore = create<MealsState>((set, get) => ({
     }
   },
 
-  getTodaysMeals: () => {
-    const { meals } = get()
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    return meals.filter((meal) => {
-      const mealDate = new Date(meal.date)
-      mealDate.setHours(0, 0, 0, 0)
-      return mealDate.getTime() === today.getTime()
-    })
+  getSelectedDateMeals: () => {
+    // Meals are already filtered by date in the query
+    return get().meals
   },
 
-  getTodaysCalories: () => {
-    const todaysMeals = get().getTodaysMeals()
-    return todaysMeals.reduce((sum, meal) => sum + meal.totalCalories, 0)
+  getSelectedDateCalories: () => {
+    return get().meals.reduce((sum, meal) => sum + meal.totalCalories, 0)
   },
 
-  getTodaysMacros: () => {
-    const todaysMeals = get().getTodaysMeals()
+  getSelectedDateMacros: () => {
     let protein = 0
     let carbs = 0
     let fat = 0
 
-    todaysMeals.forEach((meal) => {
+    get().meals.forEach((meal) => {
       meal.foods.forEach((food) => {
         protein += food.protein || 0
         carbs += food.carbs || 0
@@ -184,6 +222,20 @@ export const useMealsStore = create<MealsState>((set, get) => ({
   },
 
   getMealsByType: (type: MealType) => {
-    return get().getTodaysMeals().filter((meal) => meal.type === type)
+    return get().meals.filter((meal) => meal.type === type)
+  },
+
+  isToday: () => {
+    const { selectedDate } = get()
+    const today = getStartOfDay(new Date())
+    return selectedDate.getTime() === today.getTime()
+  },
+
+  getTodaysCalories: () => {
+    // Only return calories if we're viewing today
+    if (get().isToday()) {
+      return get().getSelectedDateCalories()
+    }
+    return 0
   },
 }))

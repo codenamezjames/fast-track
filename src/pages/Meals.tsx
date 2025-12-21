@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Plus, Trash2, Pencil } from 'lucide-react'
+import { Plus, Trash2, Pencil, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMealsStore, type MealType, type FoodItem, type Meal } from '../stores/mealsStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import AddMealModal from '../components/meals/AddMealModal'
@@ -21,8 +21,11 @@ export default function Meals() {
     subscribeToMeals,
     cleanup,
     getMealsByType,
-    getTodaysCalories,
-    getTodaysMacros,
+    getSelectedDateCalories,
+    getSelectedDateMacros,
+    selectedDate,
+    setSelectedDate,
+    isToday,
   } = useMealsStore()
 
   const [addModalOpen, setAddModalOpen] = useState(false)
@@ -33,7 +36,19 @@ export default function Meals() {
 
   useEffect(() => {
     subscribeToMeals()
-    return () => cleanup()
+
+    // Re-subscribe when page becomes visible (handles overnight tab)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        subscribeToMeals()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      cleanup()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
 
   const handleAddClick = (type: MealType) => {
@@ -67,31 +82,84 @@ export default function Meals() {
   }
 
   const { goals } = useSettingsStore()
-  const todaysCalories = getTodaysCalories()
-  const todaysMacros = getTodaysMacros()
+  const calories = getSelectedDateCalories()
+  const macros = getSelectedDateMacros()
+
+  const goToPreviousDay = () => {
+    const prev = new Date(selectedDate)
+    prev.setDate(prev.getDate() - 1)
+    setSelectedDate(prev)
+  }
+
+  const goToNextDay = () => {
+    const next = new Date(selectedDate)
+    next.setDate(next.getDate() + 1)
+    setSelectedDate(next)
+  }
+
+  const goToToday = () => {
+    setSelectedDate(new Date())
+  }
+
+  const formatDate = (date: Date) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const yesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+    const dateOnly = new Date(date)
+    dateOnly.setHours(0, 0, 0, 0)
+
+    if (dateOnly.getTime() === today.getTime()) return 'Today'
+    if (dateOnly.getTime() === yesterday.getTime()) return 'Yesterday'
+    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+  }
 
   return (
     <div className="p-4 pb-24">
+      {/* Date navigation */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Meals</h1>
+        <button
+          onClick={goToPreviousDay}
+          className="p-2 hover:bg-neutral-700 rounded-lg transition-colors"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <div className="text-center">
+          <h1 className="text-xl font-bold">{formatDate(selectedDate)}</h1>
+          {!isToday() && (
+            <button
+              onClick={goToToday}
+              className="text-sm text-orange-400 hover:text-orange-300"
+            >
+              Go to today
+            </button>
+          )}
+        </div>
+        <button
+          onClick={goToNextDay}
+          className="p-2 hover:bg-neutral-700 rounded-lg transition-colors"
+          disabled={isToday()}
+        >
+          <ChevronRight size={24} className={isToday() ? 'text-neutral-600' : ''} />
+        </button>
       </div>
 
       {/* Daily summary */}
       <div className="bg-neutral-800 rounded-xl p-4 mb-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-neutral-400">Today's Calories</span>
+          <span className="text-neutral-400">Calories</span>
           <span className="text-sm text-neutral-400">{goals.calories} goal</span>
         </div>
         <div className="flex items-end gap-2">
-          <span className="text-3xl font-bold">{todaysCalories}</span>
+          <span className="text-3xl font-bold">{calories}</span>
           <span className="text-neutral-400 mb-1">/ {goals.calories}</span>
         </div>
         <div className="mt-3 h-2 bg-neutral-700 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all ${
-              todaysCalories > goals.calories ? 'bg-red-500' : 'bg-orange-500'
+              calories > goals.calories ? 'bg-red-500' : 'bg-orange-500'
             }`}
-            style={{ width: `${Math.min(100, (todaysCalories / goals.calories) * 100)}%` }}
+            style={{ width: `${Math.min(100, (calories / goals.calories) * 100)}%` }}
           />
         </div>
       </div>
@@ -100,37 +168,37 @@ export default function Meals() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="bg-neutral-800 rounded-xl p-3">
           <div className="text-center mb-2">
-            <div className="text-lg font-semibold text-blue-400">{todaysMacros.protein}g</div>
+            <div className="text-lg font-semibold text-blue-400">{macros.protein}g</div>
             <div className="text-xs text-neutral-400">/ {goals.protein}g Protein</div>
           </div>
           <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-400 rounded-full"
-              style={{ width: `${Math.min(100, (todaysMacros.protein / goals.protein) * 100)}%` }}
+              style={{ width: `${Math.min(100, (macros.protein / goals.protein) * 100)}%` }}
             />
           </div>
         </div>
         <div className="bg-neutral-800 rounded-xl p-3">
           <div className="text-center mb-2">
-            <div className="text-lg font-semibold text-green-400">{todaysMacros.carbs}g</div>
+            <div className="text-lg font-semibold text-green-400">{macros.carbs}g</div>
             <div className="text-xs text-neutral-400">/ {goals.carbs}g Carbs</div>
           </div>
           <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-green-400 rounded-full"
-              style={{ width: `${Math.min(100, (todaysMacros.carbs / goals.carbs) * 100)}%` }}
+              style={{ width: `${Math.min(100, (macros.carbs / goals.carbs) * 100)}%` }}
             />
           </div>
         </div>
         <div className="bg-neutral-800 rounded-xl p-3">
           <div className="text-center mb-2">
-            <div className="text-lg font-semibold text-yellow-400">{todaysMacros.fat}g</div>
+            <div className="text-lg font-semibold text-yellow-400">{macros.fat}g</div>
             <div className="text-xs text-neutral-400">/ {goals.fat}g Fat</div>
           </div>
           <div className="h-1 bg-neutral-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-yellow-400 rounded-full"
-              style={{ width: `${Math.min(100, (todaysMacros.fat / goals.fat) * 100)}%` }}
+              style={{ width: `${Math.min(100, (macros.fat / goals.fat) * 100)}%` }}
             />
           </div>
         </div>

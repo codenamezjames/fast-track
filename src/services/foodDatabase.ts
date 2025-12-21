@@ -106,3 +106,43 @@ export function clearRecentFoods(): void {
     // Ignore localStorage errors
   }
 }
+
+export async function lookupBarcode(barcode: string): Promise<FoodSearchResult | null> {
+  if (!barcode.trim()) return null
+
+  try {
+    const response = await fetch(
+      `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`
+    )
+    if (!response.ok) throw new Error('Failed to fetch')
+
+    const data = await response.json()
+
+    if (data.status !== 1 || !data.product) return null
+
+    const product = data.product
+    const n = product.nutriments || {}
+
+    // Prefer per-serving data if available, otherwise use per 100g
+    const useServing = product.nutrition_data_per === 'serving' && n['energy-kcal_serving']
+
+    const calories = Math.round(useServing ? (n['energy-kcal_serving'] || 0) : (n['energy-kcal_100g'] || 0))
+
+    // Only return if we have calorie data
+    if (calories <= 0) return null
+
+    return {
+      id: product._id || barcode,
+      name: product.product_name || 'Unknown Product',
+      brand: product.brands,
+      calories,
+      protein: Math.round(useServing ? (n.proteins_serving || 0) : (n.proteins_100g || 0)),
+      carbs: Math.round(useServing ? (n.carbohydrates_serving || 0) : (n.carbohydrates_100g || 0)),
+      fat: Math.round(useServing ? (n.fat_serving || 0) : (n.fat_100g || 0)),
+      servingSize: product.serving_size || (useServing ? 'per serving' : 'per 100g'),
+    }
+  } catch (error) {
+    console.error('Barcode lookup error:', error)
+    return null
+  }
+}

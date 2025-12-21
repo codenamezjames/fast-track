@@ -34,9 +34,9 @@ export default function Dashboard() {
 
   // Meals
   const {
-    subscribeToMeals,
     cleanup: cleanupMeals,
     getTodaysCalories,
+    setSelectedDate,
   } = useMealsStore()
 
   // Workouts
@@ -81,7 +81,8 @@ export default function Dashboard() {
   // Subscribe to all stores
   useEffect(() => {
     subscribeToFasts()
-    subscribeToMeals()
+    // Reset to today when Dashboard mounts (in case user was viewing another date in Meals)
+    setSelectedDate(new Date())
     subscribeToWorkouts()
     subscribeToMeasurements()
     subscribeToActivities()
