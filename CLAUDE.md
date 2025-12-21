@@ -42,8 +42,14 @@ npm run lint
 Components -> Zustand stores -> Firebase Firestore
 
 ### Stores
-- `src/stores/authStore.ts` - Authentication state and actions (login, register, logout)
-- Future stores: mealsStore, workoutsStore, measurementsStore
+- `src/stores/authStore.ts` - Authentication state and actions
+- `src/stores/mealsStore.ts` - Meal logging and calorie tracking
+- `src/stores/workoutsStore.ts` - Workout routines and exercise logs
+- `src/stores/measurementsStore.ts` - Weight, height, BMI tracking
+- `src/stores/activityStore.ts` - Activity tracking (run, walk, bike)
+- `src/stores/fastingStore.ts` - Intermittent fasting timer
+- `src/stores/streakStore.ts` - Duolingo-style streak system
+- `src/stores/settingsStore.ts` - User goals and preferences
 
 ## Key Directories
 
@@ -106,8 +112,8 @@ The app is automatically deployed to GitHub Pages via GitHub Actions when pushin
 ## Feature Implementation Status
 
 - [x] Phase 1: Foundation (scaffold, Firebase, auth, navigation, dark theme)
-- [ ] Phase 2: Meals (food tracking, OpenFoodFacts, Google Vision AI)
-- [ ] Phase 3: Workouts (strength training, custom routines)
-- [ ] Phase 4: Measurements (weight, BMI, body measurements)
-- [ ] Phase 5: GPS (basic distance/activity tracking)
-- [ ] Phase 6: Polish (PWA offline, Health app integration)
+- [x] Phase 2: Meals (food tracking, OpenFoodFacts, barcode scanning)
+- [x] Phase 3: Workouts (strength training, custom routines, workout logs)
+- [x] Phase 4: Measurements (weight, height, BMI, daily goals)
+- [x] Phase 5: Activity (timer-based tracking, manual distance entry)
+- [ ] Phase 6: Polish (PWA install prompt, enhanced offline, Health app integration)

@@ -7,11 +7,28 @@ import Workouts from './pages/Workouts'
 import Activity from './pages/Activity'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
+import { InstallPrompt, OfflineIndicator, UpdatePrompt } from './components/pwa'
+import { usePWA } from './hooks/usePWA'
 import './index.css'
 
 export default function App() {
+  const {
+    isOnline,
+    isInstallable,
+    needRefresh,
+    installApp,
+    updateApp,
+    dismissUpdate,
+  } = usePWA()
+
   return (
     <HashRouter>
+      <OfflineIndicator isOnline={isOnline} />
+      <UpdatePrompt
+        needRefresh={needRefresh}
+        onUpdate={updateApp}
+        onDismiss={dismissUpdate}
+      />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<MainLayout />}>
@@ -23,6 +40,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
+      <InstallPrompt isInstallable={isInstallable} onInstall={installApp} />
     </HashRouter>
   )
 }
