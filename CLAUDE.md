@@ -116,4 +116,4 @@ The app is automatically deployed to GitHub Pages via GitHub Actions when pushin
 - [x] Phase 3: Workouts (strength training, custom routines, workout logs)
 - [x] Phase 4: Measurements (weight, height, BMI, daily goals)
 - [x] Phase 5: Activity (timer-based tracking, manual distance entry)
-- [ ] Phase 6: Polish (PWA install prompt, enhanced offline, Health app integration)
+- [x] Phase 6: Polish (PWA install prompt, enhanced offline, Capacitor + Health integration)

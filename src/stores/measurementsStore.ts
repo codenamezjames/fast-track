@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
+import { useHealthStore } from './healthStore'
 
 export interface Measurement {
   id: string
@@ -57,6 +58,18 @@ export const useMeasurementsStore = create<MeasurementsState>((set, get) => ({
         ...data,
       })
       set({ loading: false })
+
+      // Sync to health app
+      const healthStore = useHealthStore.getState()
+      if (data.weight) {
+        healthStore.syncWeight(data.weight)
+      }
+      if (data.height) {
+        healthStore.syncHeight(data.height)
+      }
+      if (data.bodyFat) {
+        healthStore.syncBodyFat(data.bodyFat)
+      }
     } catch (error) {
       console.error('Error adding measurement:', error)
       set({ loading: false })

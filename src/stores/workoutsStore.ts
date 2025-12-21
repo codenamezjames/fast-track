@@ -14,6 +14,7 @@ import {
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
 import { useStreakStore } from './streakStore'
+import { useHealthStore } from './healthStore'
 
 export interface Exercise {
   id: string
@@ -143,6 +144,11 @@ export const useWorkoutsStore = create<WorkoutsState>((set, get) => ({
       // Update streak - workout completed
       if (completed) {
         useStreakStore.getState().updateTodayActivity({ workoutCompleted: true })
+
+        // Sync to health app
+        const endTime = new Date()
+        const caloriesEstimate = duration * 5 // Rough estimate: 5 cal/min for strength training
+        useHealthStore.getState().syncWorkout(activeWorkout.startTime, endTime, caloriesEstimate)
       }
     } catch (error) {
       console.error('Error logging workout:', error)

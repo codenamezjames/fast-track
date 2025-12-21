@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import AddMeasurementModal from '../components/profile/AddMeasurementModal'
+import HealthSettings from '../components/profile/HealthSettings'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 
@@ -227,6 +228,12 @@ export default function Profile() {
             </Button>
           </div>
         )}
+      </div>
+
+      {/* Health App Integration */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3">Health Integration</h2>
+        <HealthSettings />
       </div>
 
       <div>

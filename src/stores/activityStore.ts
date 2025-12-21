@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
+import { useHealthStore } from './healthStore'
 
 export type ActivityType = 'run' | 'walk' | 'bike' | 'other'
 
@@ -92,6 +93,18 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
       })
 
       set({ activeSession: null, loading: false })
+
+      // Sync to health app (only for run/walk/bike)
+      if (activeSession.type === 'run' || activeSession.type === 'walk' || activeSession.type === 'bike') {
+        const healthStore = useHealthStore.getState()
+        healthStore.syncActivity(
+          activeSession.type,
+          activeSession.startTime,
+          endTime,
+          distance,
+          calories
+        )
+      }
     } catch (error) {
       console.error('Error saving activity:', error)
       set({ loading: false })
