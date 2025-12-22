@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import AddMeasurementModal from '../components/profile/AddMeasurementModal'
-import HealthSettings from '../components/profile/HealthSettings'
+// import HealthSettings from '../components/profile/HealthSettings' // TODO: Enable when health sync is working
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 import SuccessCelebration from '../components/ui/SuccessCelebration'
@@ -233,11 +233,12 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Health App Integration */}
+      {/* TODO: Enable Health App Integration when health sync is working
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-3">Health Integration</h2>
         <HealthSettings />
       </div>
+      */}
 
       <div>
         <h2 className="text-lg font-semibold mb-3">More</h2>
