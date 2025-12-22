@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { User, Scale, Ruler, Target, Plus, Settings, LogOut, Activity, ChevronDown, ChevronUp } from 'lucide-react'
+import { User, Scale, Ruler, Target, Plus, Settings, LogOut, Activity, ChevronDown, ChevronUp, TrendingDown, Edit2 } from 'lucide-react'
 import IconButton from '../components/ui/IconButton'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import AddMeasurementModal from '../components/profile/AddMeasurementModal'
+import EditGoalsModal from '../components/profile/EditGoalsModal'
 // import HealthSettings from '../components/profile/HealthSettings' // TODO: Enable when health sync is working
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
@@ -29,6 +30,11 @@ function formatDate(date: Date): string {
   return date.toLocaleDateString()
 }
 
+function formatTargetDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
 export default function Profile() {
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
@@ -42,9 +48,10 @@ export default function Profile() {
     getBMI,
   } = useMeasurementsStore()
 
-  const { goals, updateGoals } = useSettingsStore()
+  const { goals, profile, metrics, hasCompletedSetup, updateGoals } = useSettingsStore()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [goalsModalOpen, setGoalsModalOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
   const [editingGoals, setEditingGoals] = useState({
@@ -59,12 +66,23 @@ export default function Profile() {
     return () => cleanup()
   }, [])
 
+  // Sync editing goals with store
+  useEffect(() => {
+    setEditingGoals({
+      calories: goals.calories.toString(),
+      protein: goals.protein.toString(),
+      carbs: goals.carbs.toString(),
+      fat: goals.fat.toString(),
+    })
+  }, [goals])
+
   const latestWeight = getLatestWeight()
   const latestHeight = getLatestHeight()
   const bmi = getBMI()
   const bmiCategory = bmi ? getBMICategory(bmi) : null
 
   const latestMeasurement = measurements[0]
+  const hasSetupGoals = hasCompletedSetup()
 
   const handleSave = async (data: { weight?: number; height?: number; bodyFat?: number }) => {
     await addMeasurement(data)
@@ -97,6 +115,103 @@ export default function Profile() {
           <div className="font-semibold">{user?.email || 'Guest User'}</div>
           <div className="text-neutral-400 text-sm">Personal account</div>
         </div>
+      </div>
+
+      {/* Weight Loss Goals Section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold">Weight Loss Goals</h2>
+          <IconButton
+            icon={<Edit2 size={16} />}
+            onClick={() => setGoalsModalOpen(true)}
+            variant="neutral"
+            className="hover:bg-primary"
+          />
+        </div>
+
+        {hasSetupGoals ? (
+          <div className="space-y-3">
+            {/* Main calorie target */}
+            <div className="bg-primary/10 border border-primary/30 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-primary">Daily Calorie Target</div>
+                  <div className="text-2xl font-bold">{goals.calories.toLocaleString()}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-neutral-400">Goal</div>
+                  <div className="font-medium">
+                    {profile.currentWeight} → {profile.targetWeight} kg
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress & metrics */}
+            <div className="bg-neutral-800 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingDown size={16} className="text-green-400" />
+                <span className="text-sm font-medium">Your Plan</span>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-neutral-400">Weekly loss</div>
+                  <div className="font-medium">{metrics.weeklyLoss?.toFixed(2) || '--'} kg/week</div>
+                </div>
+                <div>
+                  <div className="text-neutral-400">Target date</div>
+                  <div className="font-medium">
+                    {profile.targetDate ? formatTargetDate(profile.targetDate) : '--'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-neutral-400">Your TDEE</div>
+                  <div className="font-medium">{metrics.tdee?.toLocaleString() || '--'} cal</div>
+                </div>
+                <div>
+                  <div className="text-neutral-400">Daily deficit</div>
+                  <div className="font-medium text-red-400">-{metrics.dailyDeficit?.toLocaleString() || '--'} cal</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Macros */}
+            <div className="bg-neutral-800 rounded-xl p-4">
+              <div className="text-sm font-medium text-neutral-400 mb-3">Daily Macros</div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <div className="text-lg font-bold">{goals.protein}g</div>
+                  <div className="text-xs text-neutral-400">Protein</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold">{goals.carbs}g</div>
+                  <div className="text-xs text-neutral-400">Carbs</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold">{goals.fat}g</div>
+                  <div className="text-xs text-neutral-400">Fat</div>
+                </div>
+              </div>
+            </div>
+
+            {profile.isAutoCaloriesEnabled && (
+              <p className="text-xs text-neutral-500 text-center">
+                Calories auto-update when you log new weight measurements
+              </p>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => setGoalsModalOpen(true)}
+            className="w-full bg-neutral-800 border-2 border-dashed border-neutral-700 rounded-xl p-6 text-center hover:border-primary transition-colors"
+          >
+            <Target size={32} className="mx-auto mb-2 text-neutral-500" />
+            <div className="font-medium">Set Up Weight Loss Goals</div>
+            <div className="text-sm text-neutral-400 mt-1">
+              Calculate your personalized calorie target
+            </div>
+          </button>
+        )}
       </div>
 
       <div className="mb-6">
@@ -181,7 +296,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Daily Goals Settings */}
+      {/* Manual Goals Override */}
       <div className="mb-6">
         <button
           onClick={() => setSettingsOpen(!settingsOpen)}
@@ -190,7 +305,7 @@ export default function Profile() {
           <div className="flex items-center gap-4">
             <Settings size={20} className="text-primary" />
             <div className="text-left">
-              <div className="font-medium">Daily Goals</div>
+              <div className="font-medium">Manual Goals Override</div>
               <div className="text-sm text-neutral-400">
                 {goals.calories} cal | {goals.protein}g protein
               </div>
@@ -201,6 +316,9 @@ export default function Profile() {
 
         {settingsOpen && (
           <div className="mt-2 bg-neutral-800 rounded-xl p-4 space-y-4">
+            <p className="text-xs text-neutral-500">
+              Override the calculated goals with custom values. This will disable auto-updates.
+            </p>
             <Input
               label="Daily Calorie Goal"
               type="number"
@@ -267,6 +385,11 @@ export default function Profile() {
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
         currentHeight={latestHeight}
+      />
+
+      <EditGoalsModal
+        isOpen={goalsModalOpen}
+        onClose={() => setGoalsModalOpen(false)}
       />
 
       {showCelebration && (

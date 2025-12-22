@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Plus, Trash2 } from 'lucide-react'
 import Modal from '../ui/Modal'
-import Button from '../ui/Button'
 import Input from '../ui/Input'
+import IconButton from '../ui/IconButton'
+import AddItemButton from '../ui/AddItemButton'
+import ModalFooter from '../ui/ModalFooter'
+import { Trash2 } from 'lucide-react'
+import { useListForm } from '../../hooks/useListForm'
 import type { Exercise, WorkoutRoutine } from '../../stores/workoutsStore'
 
 interface EditRoutineModalProps {
@@ -12,6 +15,13 @@ interface EditRoutineModalProps {
   onSave: (id: string, name: string, exercises: Exercise[]) => Promise<void>
 }
 
+const createDefaultExercise = (): Exercise => ({
+  id: `ex-${Date.now()}`,
+  name: '',
+  sets: 3,
+  reps: 10,
+})
+
 export default function EditRoutineModal({
   isOpen,
   onClose,
@@ -19,42 +29,24 @@ export default function EditRoutineModal({
   onSave,
 }: EditRoutineModalProps) {
   const [name, setName] = useState('')
-  const [exercises, setExercises] = useState<Exercise[]>([])
   const [saving, setSaving] = useState(false)
+  const exerciseList = useListForm<Exercise>({
+    initialItems: [],
+    defaultItem: createDefaultExercise(),
+    minItems: 1,
+    validateItem: (e) => e.name.trim().length > 0,
+  })
 
   useEffect(() => {
     if (routine) {
       setName(routine.name)
-      setExercises([...routine.exercises])
+      exerciseList.setItems([...routine.exercises])
     }
   }, [routine])
 
-  const handleAddExercise = () => {
-    setExercises([
-      ...exercises,
-      { id: `ex-${Date.now()}`, name: '', sets: 3, reps: 10 },
-    ])
-  }
-
-  const handleRemoveExercise = (index: number) => {
-    if (exercises.length > 1) {
-      setExercises(exercises.filter((_, i) => i !== index))
-    }
-  }
-
-  const handleExerciseChange = (
-    index: number,
-    field: keyof Exercise,
-    value: string | number
-  ) => {
-    const updated = [...exercises]
-    updated[index] = { ...updated[index], [field]: value }
-    setExercises(updated)
-  }
-
   const handleSave = async () => {
     if (!routine || !name.trim()) return
-    const validExercises = exercises.filter((e) => e.name.trim())
+    const validExercises = exerciseList.getValidItems()
     if (validExercises.length === 0) return
 
     setSaving(true)
@@ -68,8 +60,12 @@ export default function EditRoutineModal({
 
   const handleClose = () => {
     setName('')
-    setExercises([])
+    exerciseList.resetItems([])
     onClose()
+  }
+
+  const handleAddExercise = () => {
+    exerciseList.addItem(createDefaultExercise())
   }
 
   if (!routine) return null
@@ -89,19 +85,20 @@ export default function EditRoutineModal({
             Exercises
           </label>
 
-          {exercises.map((exercise, index) => (
+          {exerciseList.items.map((exercise, index) => (
             <div key={exercise.id} className="bg-neutral-800 rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-neutral-400">
                   Exercise #{index + 1}
                 </span>
-                {exercises.length > 1 && (
-                  <button
-                    onClick={() => handleRemoveExercise(index)}
-                    className="p-1 text-red-400 hover:bg-red-400/10 rounded"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                {exerciseList.items.length > 1 && (
+                  <IconButton
+                    icon={<Trash2 size={16} />}
+                    onClick={() => exerciseList.removeItem(index)}
+                    variant="red"
+                    appearance="ghost"
+                    size="sm"
+                  />
                 )}
               </div>
 
@@ -109,7 +106,7 @@ export default function EditRoutineModal({
                 placeholder="Exercise name"
                 value={exercise.name}
                 onChange={(e) =>
-                  handleExerciseChange(index, 'name', e.target.value)
+                  exerciseList.updateItem(index, 'name', e.target.value)
                 }
               />
 
@@ -119,7 +116,7 @@ export default function EditRoutineModal({
                   placeholder="Sets"
                   value={exercise.sets}
                   onChange={(e) =>
-                    handleExerciseChange(index, 'sets', parseInt(e.target.value) || 0)
+                    exerciseList.updateItem(index, 'sets', Number.parseInt(e.target.value) || 0)
                   }
                 />
                 <Input
@@ -127,7 +124,7 @@ export default function EditRoutineModal({
                   placeholder="Reps"
                   value={exercise.reps}
                   onChange={(e) =>
-                    handleExerciseChange(index, 'reps', parseInt(e.target.value) || 0)
+                    exerciseList.updateItem(index, 'reps', Number.parseInt(e.target.value) || 0)
                   }
                 />
                 <Input
@@ -135,29 +132,26 @@ export default function EditRoutineModal({
                   placeholder="Weight"
                   value={exercise.weight || ''}
                   onChange={(e) =>
-                    handleExerciseChange(index, 'weight', parseInt(e.target.value) || 0)
+                    exerciseList.updateItem(index, 'weight', Number.parseInt(e.target.value) || 0)
                   }
                 />
               </div>
             </div>
           ))}
 
-          <button
+          <AddItemButton
+            label="Add Exercise"
             onClick={handleAddExercise}
-            className="w-full py-3 border-2 border-dashed border-neutral-700 rounded-xl text-neutral-400 hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
-          >
-            <Plus size={18} />
-            Add Exercise
-          </button>
+          />
         </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={handleClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="flex-1" disabled={saving}>
-            Save Changes
-          </Button>
+        <div className="pt-4">
+          <ModalFooter
+            onCancel={handleClose}
+            onSave={handleSave}
+            saveLabel="Save Changes"
+            loading={saving}
+          />
         </div>
       </div>
     </Modal>

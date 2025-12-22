@@ -15,6 +15,7 @@ import {
 import { db } from '../lib/firebase'
 import { useAuthStore } from './authStore'
 import { useHealthStore } from './healthStore'
+import { useSettingsStore } from './settingsStore'
 
 export interface Measurement {
   id: string
@@ -69,6 +70,15 @@ export const useMeasurementsStore = create<MeasurementsState>((set, get) => ({
       }
       if (data.bodyFat) {
         healthStore.syncBodyFat(data.bodyFat)
+      }
+
+      // Auto-recalculate calories if enabled and weight changed
+      const settingsStore = useSettingsStore.getState()
+      if (settingsStore.profile.isAutoCaloriesEnabled && data.weight) {
+        const height = data.height || get().getLatestHeight()
+        if (height) {
+          settingsStore.recalculateCalories(data.weight, height)
+        }
       }
     } catch (error) {
       console.error('Error adding measurement:', error)

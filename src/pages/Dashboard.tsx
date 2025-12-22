@@ -7,6 +7,7 @@ import { useWorkoutsStore } from '../stores/workoutsStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
 import { useActivityStore } from '../stores/activityStore'
 import { useStreakStore } from '../stores/streakStore'
+import { useSettingsStore } from '../stores/settingsStore'
 import MotivationalGreeting from '../components/dashboard/MotivationalGreeting'
 import HeroFastingCard from '../components/dashboard/HeroFastingCard'
 import StatCardEnhanced from '../components/dashboard/StatCardEnhanced'
@@ -18,10 +19,10 @@ import MilestoneCelebration from '../components/streak/MilestoneCelebration'
 import DailyGoalCelebration from '../components/streak/DailyGoalCelebration'
 import NextActionSuggestion from '../components/dashboard/NextActionSuggestion'
 
-const CALORIE_GOAL = 2200
 const WORKOUT_GOAL = 4
 
 export default function Dashboard() {
+  const { goals } = useSettingsStore()
   const navigate = useNavigate()
 
   // Fasting
@@ -125,7 +126,7 @@ export default function Dashboard() {
   const latestWeight = getLatestWeight()
   const todaysDistance = getTodaysDistance()
   const fastingStreak = getFastingStreak()
-  const caloriesProgress = (todaysCalories / CALORIE_GOAL) * 100
+  const caloriesProgress = (todaysCalories / goals.calories) * 100
 
   // Today's activity status
   const todayComplete = isTodayComplete()
@@ -245,9 +246,9 @@ export default function Dashboard() {
             icon={<Utensils size={18} />}
             label="Calories"
             value={todaysCalories.toLocaleString()}
-            goal={CALORIE_GOAL}
+            goal={goals.calories}
             current={todaysCalories}
-            subtext={`of ${CALORIE_GOAL.toLocaleString()}`}
+            subtext={`of ${goals.calories.toLocaleString()}`}
             onClick={() => navigate('/meals')}
             variant="orange"
           />

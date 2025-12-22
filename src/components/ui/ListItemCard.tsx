@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Trash2 } from 'lucide-react'
 import IconButton from './IconButton'
 

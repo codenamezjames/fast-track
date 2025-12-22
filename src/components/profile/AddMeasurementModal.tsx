@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Modal from '../ui/Modal'
-import Button from '../ui/Button'
 import Input from '../ui/Input'
+import ModalFooter from '../ui/ModalFooter'
 
 interface AddMeasurementModalProps {
   isOpen: boolean
@@ -64,13 +64,11 @@ export default function AddMeasurementModal({
           onChange={(e) => setBodyFat(e.target.value)}
         />
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="flex-1">
-            Save
-          </Button>
+        <div className="pt-4">
+          <ModalFooter
+            onCancel={onClose}
+            onSave={handleSave}
+          />
         </div>
       </div>
     </Modal>

@@ -1,4 +1,4 @@
-import { ReactNode, ButtonHTMLAttributes } from 'react'
+import type { ReactNode, ButtonHTMLAttributes } from 'react'
 
 type IconButtonVariant = 'primary' | 'orange' | 'red' | 'blue' | 'purple' | 'neutral'
 type IconButtonAppearance = 'solid' | 'ghost'

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Modal from '../ui/Modal'
-import Button from '../ui/Button'
 import Input from '../ui/Input'
+import ModalFooter from '../ui/ModalFooter'
 import type { Activity } from '../../stores/activityStore'
 
 interface EditActivityModalProps {
@@ -80,17 +80,14 @@ export default function EditActivityModal({
           Calories will be recalculated based on duration
         </div>
 
-        <div className="flex gap-3 pt-2">
-          <Button variant="secondary" onClick={handleClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={saving || !distance || !duration}
-            className="flex-1"
-          >
-            Save Changes
-          </Button>
+        <div className="pt-2">
+          <ModalFooter
+            onCancel={handleClose}
+            onSave={handleSave}
+            saveLabel="Save Changes"
+            saveDisabled={!distance || !duration}
+            loading={saving}
+          />
         </div>
       </div>
     </Modal>

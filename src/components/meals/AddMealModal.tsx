@@ -1,9 +1,14 @@
 import { useState } from 'react'
-import { Plus, Trash2 } from 'lucide-react'
 import Modal from '../ui/Modal'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import FoodSearch from './FoodSearch'
+import ListItemCard from '../ui/ListItemCard'
+import AddItemButton from '../ui/AddItemButton'
+import ModalFooter from '../ui/ModalFooter'
+import MacroTotals from './MacroTotals'
+import { useManualEntry } from '../../hooks/useManualEntry'
+import { calculateMacroTotals, formatMacroSummary } from '../../lib/macroUtils'
 import type { MealType, FoodItem } from '../../stores/mealsStore'
 import { addToRecentFoods, type FoodSearchResult } from '../../services/foodDatabase'
 
@@ -21,6 +26,8 @@ const mealTypeLabels: Record<MealType, string> = {
   snack: 'Snack',
 }
 
+const defaultManualFood: FoodItem = { name: '', calories: 0 }
+
 export default function AddMealModal({
   isOpen,
   onClose,
@@ -28,8 +35,7 @@ export default function AddMealModal({
   onSave,
 }: AddMealModalProps) {
   const [foods, setFoods] = useState<FoodItem[]>([])
-  const [showManualEntry, setShowManualEntry] = useState(false)
-  const [manualFood, setManualFood] = useState<FoodItem>({ name: '', calories: 0 })
+  const manual = useManualEntry<FoodItem>(defaultManualFood)
 
   const handleFoodSearchSelect = (result: FoodSearchResult) => {
     const food: FoodItem = {
@@ -49,38 +55,28 @@ export default function AddMealModal({
   }
 
   const handleAddManualFood = () => {
-    if (manualFood.name.trim() && manualFood.calories > 0) {
-      setFoods([...foods, { ...manualFood }])
-      setManualFood({ name: '', calories: 0 })
-      setShowManualEntry(false)
+    if (manual.manualValue.name.trim() && manual.manualValue.calories > 0) {
+      setFoods([...foods, { ...manual.manualValue }])
+      manual.closeManualEntry()
     }
-  }
-
-  const handleManualChange = (field: keyof FoodItem, value: string | number) => {
-    setManualFood({ ...manualFood, [field]: value })
   }
 
   const handleSave = () => {
     if (foods.length > 0) {
       onSave(foods)
       setFoods([])
-      setShowManualEntry(false)
-      setManualFood({ name: '', calories: 0 })
+      manual.reset()
       onClose()
     }
   }
 
   const handleClose = () => {
     setFoods([])
-    setShowManualEntry(false)
-    setManualFood({ name: '', calories: 0 })
+    manual.reset()
     onClose()
   }
 
-  const totalCalories = foods.reduce((sum, f) => sum + (f.calories || 0), 0)
-  const totalProtein = foods.reduce((sum, f) => sum + (f.protein || 0), 0)
-  const totalCarbs = foods.reduce((sum, f) => sum + (f.carbs || 0), 0)
-  const totalFat = foods.reduce((sum, f) => sum + (f.fat || 0), 0)
+  const totals = calculateMacroTotals(foods)
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={`Add ${mealTypeLabels[mealType]}`}>
@@ -99,45 +95,28 @@ export default function AddMealModal({
           <div className="space-y-2">
             <label className="block text-sm text-neutral-400">Added Foods</label>
             {foods.map((food, index) => (
-              <div
+              <ListItemCard
                 key={index}
-                className="bg-neutral-800 rounded-xl p-3 flex items-center justify-between"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{food.name}</div>
-                  <div className="text-sm text-neutral-400">
-                    {food.calories} cal
-                    {food.protein ? ` | P:${food.protein}g` : ''}
-                    {food.carbs ? ` C:${food.carbs}g` : ''}
-                    {food.fat ? ` F:${food.fat}g` : ''}
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleRemoveFood(index)}
-                  className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg ml-2"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
+                title={food.name}
+                subtitle={formatMacroSummary(food)}
+                onRemove={() => handleRemoveFood(index)}
+              />
             ))}
           </div>
         )}
 
         {/* Manual Entry Toggle */}
-        {!showManualEntry ? (
-          <button
-            onClick={() => setShowManualEntry(true)}
-            className="w-full py-3 border-2 border-dashed border-neutral-700 rounded-xl text-neutral-400 hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
-          >
-            <Plus size={18} />
-            Add Food Manually
-          </button>
+        {!manual.showManualEntry ? (
+          <AddItemButton
+            label="Add Food Manually"
+            onClick={manual.openManualEntry}
+          />
         ) : (
           <div className="bg-neutral-800 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-neutral-400">Manual Entry</span>
               <button
-                onClick={() => setShowManualEntry(false)}
+                onClick={manual.closeManualEntry}
                 className="text-xs text-neutral-400 hover:text-white"
               >
                 Cancel
@@ -146,25 +125,25 @@ export default function AddMealModal({
 
             <Input
               placeholder="Food name"
-              value={manualFood.name}
-              onChange={(e) => handleManualChange('name', e.target.value)}
+              value={manual.manualValue.name}
+              onChange={(e) => manual.updateManualField('name', e.target.value)}
             />
 
             <div className="grid grid-cols-2 gap-3">
               <Input
                 type="number"
                 placeholder="Calories *"
-                value={manualFood.calories || ''}
+                value={manual.manualValue.calories || ''}
                 onChange={(e) =>
-                  handleManualChange('calories', parseInt(e.target.value) || 0)
+                  manual.updateManualField('calories', parseInt(e.target.value) || 0)
                 }
               />
               <Input
                 type="number"
                 placeholder="Protein (g)"
-                value={manualFood.protein || ''}
+                value={manual.manualValue.protein || ''}
                 onChange={(e) =>
-                  handleManualChange('protein', parseInt(e.target.value) || 0)
+                  manual.updateManualField('protein', parseInt(e.target.value) || 0)
                 }
               />
             </div>
@@ -173,17 +152,17 @@ export default function AddMealModal({
               <Input
                 type="number"
                 placeholder="Carbs (g)"
-                value={manualFood.carbs || ''}
+                value={manual.manualValue.carbs || ''}
                 onChange={(e) =>
-                  handleManualChange('carbs', parseInt(e.target.value) || 0)
+                  manual.updateManualField('carbs', parseInt(e.target.value) || 0)
                 }
               />
               <Input
                 type="number"
                 placeholder="Fat (g)"
-                value={manualFood.fat || ''}
+                value={manual.manualValue.fat || ''}
                 onChange={(e) =>
-                  handleManualChange('fat', parseInt(e.target.value) || 0)
+                  manual.updateManualField('fat', parseInt(e.target.value) || 0)
                 }
               />
             </div>
@@ -196,28 +175,21 @@ export default function AddMealModal({
 
         {/* Totals */}
         {foods.length > 0 && (
-          <div className="py-3 border-t border-neutral-700">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-neutral-400">Total Calories</span>
-              <span className="text-xl font-semibold">{totalCalories}</span>
-            </div>
-            <div className="flex justify-between text-sm text-neutral-400">
-              <span>Protein: {totalProtein}g</span>
-              <span>Carbs: {totalCarbs}g</span>
-              <span>Fat: {totalFat}g</span>
-            </div>
-          </div>
+          <MacroTotals
+            calories={totals.calories}
+            protein={totals.protein}
+            carbs={totals.carbs}
+            fat={totals.fat}
+          />
         )}
 
         {/* Actions */}
-        <div className="flex gap-3">
-          <Button variant="secondary" onClick={handleClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="flex-1" disabled={foods.length === 0}>
-            Save Meal
-          </Button>
-        </div>
+        <ModalFooter
+          onCancel={handleClose}
+          onSave={handleSave}
+          saveLabel="Save Meal"
+          saveDisabled={foods.length === 0}
+        />
       </div>
     </Modal>
   )
