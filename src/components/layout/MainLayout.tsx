@@ -1,6 +1,7 @@
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import BottomNav from './BottomNav'
+import PageTransition from '../ui/PageTransition'
 
 export default function MainLayout() {
   const { user, initialized } = useAuthStore()
@@ -19,7 +20,9 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen pb-20">
-      <Outlet />
+      <PageTransition>
+        <Outlet />
+      </PageTransition>
       <BottomNav />
     </div>
   )

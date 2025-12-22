@@ -6,6 +6,7 @@ import Input from '../components/ui/Input'
 import Modal from '../components/ui/Modal'
 import EditActivityModal from '../components/activity/EditActivityModal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
+import SuccessCelebration from '../components/ui/SuccessCelebration'
 
 const activityTypes: { type: ActivityType; label: string; icon: React.ReactNode }[] = [
   { type: 'run', label: 'Run', icon: <PersonStanding size={24} /> },
@@ -66,6 +67,7 @@ export default function Activity() {
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   useEffect(() => {
     subscribeToActivities()
@@ -101,6 +103,7 @@ export default function Activity() {
     await endActivity(dist)
     setDistance('')
     setEndModalOpen(false)
+    setShowCelebration(true)
   }
 
   const handleCancel = () => {
@@ -314,6 +317,13 @@ export default function Activity() {
         onConfirm={handleConfirmDelete}
         variant="danger"
       />
+
+      {showCelebration && (
+        <SuccessCelebration
+          type="activity"
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }

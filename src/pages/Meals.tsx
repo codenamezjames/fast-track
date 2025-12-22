@@ -5,6 +5,7 @@ import { useSettingsStore } from '../stores/settingsStore'
 import AddMealModal from '../components/meals/AddMealModal'
 import EditMealModal from '../components/meals/EditMealModal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
+import SuccessCelebration from '../components/ui/SuccessCelebration'
 
 const mealTypes: { type: MealType; label: string }[] = [
   { type: 'breakfast', label: 'Breakfast' },
@@ -33,6 +34,7 @@ export default function Meals() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedMealType, setSelectedMealType] = useState<MealType>('breakfast')
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   useEffect(() => {
     subscribeToMeals()
@@ -68,6 +70,7 @@ export default function Meals() {
 
   const handleSaveMeal = async (foods: FoodItem[]) => {
     await addMeal(selectedMealType, foods)
+    setShowCelebration(true)
   }
 
   const handleUpdateMeal = async (id: string, foods: FoodItem[]) => {
@@ -306,6 +309,13 @@ export default function Meals() {
         onConfirm={handleConfirmDelete}
         variant="danger"
       />
+
+      {showCelebration && (
+        <SuccessCelebration
+          type="meal"
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }

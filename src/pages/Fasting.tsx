@@ -5,6 +5,7 @@ import FastingTimeline from '../components/fasting/FastingTimeline'
 import FastingPresets from '../components/fasting/FastingPresets'
 import Button from '../components/ui/Button'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
+import SuccessCelebration from '../components/ui/SuccessCelebration'
 
 function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000)
@@ -46,6 +47,7 @@ export default function Fasting() {
   const [elapsedMs, setElapsedMs] = useState(0)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedFast, setSelectedFast] = useState<FastingSession | null>(null)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   // Subscribe to fasts on mount
   useEffect(() => {
@@ -81,6 +83,9 @@ export default function Fasting() {
   const handleToggleFast = async () => {
     if (isFasting) {
       await endFast(isComplete)
+      if (isComplete) {
+        setShowCelebration(true)
+      }
     } else {
       await startFast()
     }
@@ -244,6 +249,13 @@ export default function Fasting() {
         onConfirm={handleConfirmDelete}
         variant="danger"
       />
+
+      {showCelebration && (
+        <SuccessCelebration
+          type="fast"
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }

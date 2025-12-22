@@ -6,6 +6,7 @@ import EditRoutineModal from '../components/workouts/EditRoutineModal'
 import EditWorkoutLogModal from '../components/workouts/EditWorkoutLogModal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 import Button from '../components/ui/Button'
+import SuccessCelebration from '../components/ui/SuccessCelebration'
 
 function formatTimeAgo(date: Date): string {
   const now = new Date()
@@ -41,6 +42,7 @@ export default function Workouts() {
   const [selectedRoutine, setSelectedRoutine] = useState<WorkoutRoutine | null>(null)
   const [selectedLog, setSelectedLog] = useState<WorkoutLog | null>(null)
   const [exercisesCompleted, setExercisesCompleted] = useState(0)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   useEffect(() => {
     subscribeToData()
@@ -66,6 +68,9 @@ export default function Workouts() {
 
   const handleEndWorkout = async (completed: boolean) => {
     await endWorkout(completed, exercisesCompleted)
+    if (completed) {
+      setShowCelebration(true)
+    }
   }
 
   const handleEditLog = (log: WorkoutLog) => {
@@ -312,6 +317,13 @@ export default function Workouts() {
         onConfirm={handleConfirmDeleteLog}
         variant="danger"
       />
+
+      {showCelebration && (
+        <SuccessCelebration
+          type="workout"
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }

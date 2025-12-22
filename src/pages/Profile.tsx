@@ -8,6 +8,7 @@ import AddMeasurementModal from '../components/profile/AddMeasurementModal'
 import HealthSettings from '../components/profile/HealthSettings'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
+import SuccessCelebration from '../components/ui/SuccessCelebration'
 
 function getBMICategory(bmi: number): { label: string; color: string } {
   if (bmi < 18.5) return { label: 'Underweight', color: 'text-yellow-400' }
@@ -44,6 +45,7 @@ export default function Profile() {
 
   const [modalOpen, setModalOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [showCelebration, setShowCelebration] = useState(false)
   const [editingGoals, setEditingGoals] = useState({
     calories: goals.calories.toString(),
     protein: goals.protein.toString(),
@@ -65,6 +67,7 @@ export default function Profile() {
 
   const handleSave = async (data: { weight?: number; height?: number; bodyFat?: number }) => {
     await addMeasurement(data)
+    setShowCelebration(true)
   }
 
   const handleGoalChange = (field: keyof typeof editingGoals, value: string) => {
@@ -263,6 +266,13 @@ export default function Profile() {
         onSave={handleSave}
         currentHeight={latestHeight}
       />
+
+      {showCelebration && (
+        <SuccessCelebration
+          type="measurement"
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }
