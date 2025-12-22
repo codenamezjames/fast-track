@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Plus, Trash2, Pencil, ChevronLeft, ChevronRight } from 'lucide-react'
+import IconButton from '../components/ui/IconButton'
 import { useMealsStore, type MealType, type FoodItem, type Meal } from '../stores/mealsStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import AddMealModal from '../components/meals/AddMealModal'
@@ -222,12 +223,12 @@ export default function Meals() {
                     {typeCalories} cal
                   </span>
                 </div>
-                <button
+                <IconButton
+                  icon={<Plus size={18} />}
                   onClick={() => handleAddClick(type)}
-                  className="p-2 bg-neutral-700 rounded-full hover:bg-orange-500 transition-colors"
-                >
-                  <Plus size={18} />
-                </button>
+                  variant="neutral"
+                  className="hover:bg-orange-500"
+                />
               </div>
 
               {typeMeals.length === 0 ? (
@@ -258,18 +259,18 @@ export default function Meals() {
                       </div>
                       {/* Meal actions */}
                       <div className="flex justify-end gap-2 mt-3 pt-2 border-t border-neutral-600">
-                        <button
+                        <IconButton
+                          icon={<Pencil size={16} />}
                           onClick={() => handleEditClick(meal)}
-                          className="p-2 text-neutral-400 hover:text-orange-400 hover:bg-orange-400/10 rounded-lg transition-colors"
-                        >
-                          <Pencil size={16} />
-                        </button>
-                        <button
+                          variant="orange"
+                          appearance="ghost"
+                        />
+                        <IconButton
+                          icon={<Trash2 size={16} />}
                           onClick={() => handleDeleteClick(meal)}
-                          className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                          variant="red"
+                          appearance="ghost"
+                        />
                       </div>
                     </div>
                   ))}

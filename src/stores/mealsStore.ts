@@ -12,6 +12,7 @@ import {
   Timestamp,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
+import { getStartOfDay, getEndOfDay } from '../lib/dateUtils'
 import { useAuthStore } from './authStore'
 import { useStreakStore } from './streakStore'
 
@@ -54,18 +55,6 @@ interface MealsState {
   isToday: () => boolean
   // For Dashboard - returns calories only if viewing today, otherwise 0
   getTodaysCalories: () => number
-}
-
-const getStartOfDay = (date: Date): Date => {
-  const d = new Date(date)
-  d.setHours(0, 0, 0, 0)
-  return d
-}
-
-const getEndOfDay = (date: Date): Date => {
-  const d = new Date(date)
-  d.setHours(23, 59, 59, 999)
-  return d
 }
 
 export const useMealsStore = create<MealsState>((set, get) => ({

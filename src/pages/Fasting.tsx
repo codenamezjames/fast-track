@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Play, Square, Flame, Clock, Trophy, Trash2 } from 'lucide-react'
+import IconButton from '../components/ui/IconButton'
 import { useFastingStore, type FastingSession } from '../stores/fastingStore'
+import { formatTimeAgo } from '../lib/dateUtils'
 import FastingTimeline from '../components/fasting/FastingTimeline'
 import FastingPresets from '../components/fasting/FastingPresets'
 import Button from '../components/ui/Button'
@@ -16,17 +18,6 @@ function formatDuration(ms: number): string {
   return `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-function formatTimeAgo(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffDays > 0) return `${diffDays}d ago`
-  if (diffHours > 0) return `${diffHours}h ago`
-  return 'Just now'
 }
 
 export default function Fasting() {
@@ -223,12 +214,12 @@ export default function Fasting() {
                       <div className="font-mono">{formatDuration(duration)}</div>
                       <div className="text-xs text-neutral-400">duration</div>
                     </div>
-                    <button
+                    <IconButton
+                      icon={<Trash2 size={16} />}
                       onClick={() => handleDeleteClick(fast)}
-                      className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                      variant="red"
+                      appearance="ghost"
+                    />
                   </div>
                 </div>
               )

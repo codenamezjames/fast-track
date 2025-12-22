@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Play, Square, MapPin, Timer, Flame, PersonStanding, Bike, Pencil, Trash2 } from 'lucide-react'
+import IconButton from '../components/ui/IconButton'
+import SelectionButton from '../components/ui/SelectionButton'
 import { useActivityStore, type ActivityType, type Activity } from '../stores/activityStore'
+import { formatDuration, formatElapsedTime, formatTimeAgo } from '../lib/dateUtils'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Modal from '../components/ui/Modal'
@@ -13,38 +16,6 @@ const activityTypes: { type: ActivityType; label: string; icon: React.ReactNode 
   { type: 'walk', label: 'Walk', icon: <PersonStanding size={24} /> },
   { type: 'bike', label: 'Bike', icon: <Bike size={24} /> },
 ]
-
-function formatDuration(minutes: number): string {
-  const hrs = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  if (hrs > 0) {
-    return `${hrs}h ${mins}m`
-  }
-  return `${mins}m`
-}
-
-function formatElapsed(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000)
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-  }
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`
-}
-
-function formatTimeAgo(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffDays > 0) return `${diffDays}d ago`
-  if (diffHours > 0) return `${diffHours}h ago`
-  return 'Just now'
-}
 
 export default function Activity() {
   const {
@@ -146,7 +117,7 @@ export default function Activity() {
                 {activeSession.type.charAt(0).toUpperCase() + activeSession.type.slice(1)} in progress
               </div>
               <div className="text-5xl font-bold font-mono">
-                {formatElapsed(elapsedMs)}
+                {formatElapsedTime(elapsedMs)}
               </div>
             </div>
 
@@ -186,18 +157,15 @@ export default function Activity() {
 
             <div className="flex gap-2 mb-6">
               {activityTypes.map(({ type, label, icon }) => (
-                <button
+                <SelectionButton
                   key={type}
+                  selected={selectedType === type}
                   onClick={() => setSelectedType(type)}
-                  className={`flex-1 py-3 px-2 rounded-xl text-center transition-colors ${
-                    selectedType === type
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-neutral-700 text-neutral-300'
-                  }`}
+                  variant="blue"
                 >
                   <div className="flex justify-center mb-1">{icon}</div>
                   <div className="text-sm">{label}</div>
-                </button>
+                </SelectionButton>
               ))}
             </div>
 
@@ -241,18 +209,18 @@ export default function Activity() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button
+                    <IconButton
+                      icon={<Pencil size={16} />}
                       onClick={() => handleEditClick(activity)}
-                      className="p-2 text-neutral-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors"
-                    >
-                      <Pencil size={16} />
-                    </button>
-                    <button
+                      variant="blue"
+                      appearance="ghost"
+                    />
+                    <IconButton
+                      icon={<Trash2 size={16} />}
                       onClick={() => handleDeleteClick(activity)}
-                      className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                      variant="red"
+                      appearance="ghost"
+                    />
                   </div>
                 </div>
               </div>
@@ -270,7 +238,7 @@ export default function Activity() {
         <div className="space-y-4">
           <div className="text-center mb-4">
             <div className="text-sm text-neutral-400">Duration</div>
-            <div className="text-3xl font-bold">{formatElapsed(elapsedMs)}</div>
+            <div className="text-3xl font-bold">{formatElapsedTime(elapsedMs)}</div>
           </div>
 
           <Input

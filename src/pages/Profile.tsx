@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { User, Scale, Ruler, Target, Plus, Settings, LogOut, Activity, ChevronDown, ChevronUp } from 'lucide-react'
+import IconButton from '../components/ui/IconButton'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { useMeasurementsStore } from '../stores/measurementsStore'
@@ -101,12 +102,12 @@ export default function Profile() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold">Body Measurements</h2>
-          <button
+          <IconButton
+            icon={<Plus size={18} />}
             onClick={() => setModalOpen(true)}
-            className="p-2 bg-neutral-800 rounded-full hover:bg-primary transition-colors"
-          >
-            <Plus size={18} />
-          </button>
+            variant="neutral"
+            className="hover:bg-primary"
+          />
         </div>
 
         <div className="space-y-3">

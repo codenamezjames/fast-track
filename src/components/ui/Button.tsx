@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'purple' | 'orange' | 'red' | 'blue'
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'purple' | 'orange' | 'red' | 'blue' | 'dashed'
   size?: 'sm' | 'md' | 'lg'
   animated?: boolean
   children: React.ReactNode
@@ -29,6 +29,7 @@ export default function Button({
     orange: 'bg-orange-500 text-white hover:bg-orange-600',
     red: 'bg-red-500 text-white hover:bg-red-600',
     blue: 'bg-blue-500 text-white hover:bg-blue-600',
+    dashed: 'border-2 border-dashed border-neutral-700 text-neutral-400 bg-transparent hover:border-primary hover:text-primary',
   }
 
   const sizes = {

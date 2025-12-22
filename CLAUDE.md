@@ -34,6 +34,12 @@ npm run preview
 
 # Linting
 npm run lint
+
+# Native builds (Capacitor)
+npm run build:ios      # Build for iOS
+npm run build:android  # Build for Android
+npm run open:ios       # Open iOS project in Xcode
+npm run open:android   # Open Android project in Android Studio
 ```
 
 ## Architecture
@@ -50,15 +56,22 @@ Components -> Zustand stores -> Firebase Firestore
 - `src/stores/fastingStore.ts` - Intermittent fasting timer
 - `src/stores/streakStore.ts` - Duolingo-style streak system
 - `src/stores/settingsStore.ts` - User goals and preferences
+- `src/stores/healthStore.ts` - Health app integration (Capacitor Health Connect)
 
 ## Key Directories
 
-- `src/pages/` - Page components (Dashboard, Meals, Workouts, Activity, Profile, Login)
+- `src/pages/` - Page components (Dashboard, Meals, Workouts, Activity, Fasting, Profile, Login)
 - `src/components/` - Reusable React components
   - `src/components/layout/` - Layout components (MainLayout, BottomNav)
+  - `src/components/ui/` - Shared UI components (Button, IconButton, Modal, Input, etc.)
+  - `src/components/meals/` - Meal-related components (AddMealModal, FoodSearch, MacroTotals)
+  - `src/components/workouts/` - Workout-related components (CreateRoutineModal, etc.)
+  - `src/components/fasting/` - Fasting-related components (FastingPresets, FastingTimeline)
+  - `src/components/streak/` - Streak and celebration components
+  - `src/components/dashboard/` - Dashboard widgets
 - `src/stores/` - Zustand stores
-- `src/lib/` - Utilities, Firebase config
-- `src/hooks/` - Custom React hooks
+- `src/lib/` - Utilities (dateUtils, macroUtils, Firebase config)
+- `src/hooks/` - Custom React hooks (useListForm, useManualEntry, useCelebrationPhase)
 - `public/` - Static assets, PWA icons
 
 ## Conventions
@@ -80,6 +93,7 @@ Components -> Zustand stores -> Firebase Firestore
 - `#/meals` - Meal tracking
 - `#/workouts` - Workout tracking
 - `#/activity` - GPS activity tracking
+- `#/fasting` - Intermittent fasting timer
 - `#/profile` - Profile, measurements, settings
 - `#/login` - Authentication
 
@@ -117,3 +131,62 @@ The app is automatically deployed to GitHub Pages via GitHub Actions when pushin
 - [x] Phase 4: Measurements (weight, height, BMI, daily goals)
 - [x] Phase 5: Activity (timer-based tracking, manual distance entry)
 - [x] Phase 6: Polish (PWA install prompt, enhanced offline, Capacitor + Health integration)
+
+## Animation System
+
+The app includes a comprehensive animation library defined in `src/index.css`:
+- Page transitions (`PageTransition` component)
+- List item animations (`AnimatedList` component)
+- Success celebrations (`SuccessCelebration` component)
+- Button micro-interactions (hover scale 1.02x, active press 0.98x)
+- Utility animations (float, wiggle, pulse)
+
+## Native App (Capacitor)
+
+The app supports native iOS/Android builds via Capacitor:
+- `capacitor.config.ts` - Capacitor configuration
+- `ios/` - iOS native project
+- `android/` - Android native project
+- Health app integration via capacitor-health plugin (currently read-only sync)
+
+## Shared Utilities
+
+### Date & Time (`src/lib/dateUtils.ts`)
+- `getStartOfDay(date?)` - Get midnight of given date
+- `getEndOfDay(date?)` - Get 23:59:59 of given date
+- `getDateString(date?)` - Format as YYYY-MM-DD
+- `getWeekDates()` - Get last 7 days as date strings
+- `formatTimeAgo(date)` - Format as "Xd ago", "Xh ago", or "Just now"
+- `formatDuration(minutes)` - Format as "Xh Xm" or "Xm"
+- `formatElapsedTime(ms)` - Format as "H:MM:SS" or "M:SS"
+
+### Macro Calculations (`src/lib/macroUtils.ts`)
+- `calculateMacroTotals(foods[])` - Sum calories, protein, carbs, fat
+
+## Custom Hooks
+
+- `useListForm` - Generic list management for modals (add, remove, update items)
+- `useManualEntry` - Toggle-based manual entry form state
+- `useCelebrationPhase` - Phase-based animation state (enter → show → exit)
+
+## UI Component Library
+
+### Buttons (`src/components/ui/`)
+- `Button` - Standard button with variants (primary, secondary, danger, ghost, purple, orange, red, blue, dashed)
+- `IconButton` - Icon-only button with solid/ghost appearances and section colors
+- `SelectionButton` - Toggle button for selection groups
+
+### Modal Components
+- `Modal` - Base modal wrapper
+- `ModalFooter` - Standard Cancel/Save button pair
+- `ListItemCard` - Item card with remove button
+- `AddItemButton` - Dashed border "Add X" button
+
+### Section Color Scheme
+| Section | Color | Hex |
+|---------|-------|-----|
+| Meals | Orange | `#f97316` |
+| Workouts | Red | `#ef4444` |
+| Activity | Blue | `#3b82f6` |
+| Fasting | Purple | `#8b5cf6` |
+| Profile/General | Primary | `#1976d2` |

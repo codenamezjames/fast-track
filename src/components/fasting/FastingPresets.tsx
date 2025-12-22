@@ -1,4 +1,5 @@
 import { FASTING_PRESETS, type FastingPreset } from '../../stores/fastingStore'
+import SelectionButton from '../ui/SelectionButton'
 
 interface FastingPresetsProps {
   selected: FastingPreset
@@ -13,21 +14,19 @@ export default function FastingPresets({ selected, onSelect, disabled }: Fasting
         const isSelected = selected.name === preset.name
 
         return (
-          <button
+          <SelectionButton
             key={preset.name}
+            selected={isSelected}
             onClick={() => onSelect(preset)}
             disabled={disabled}
-            className={`py-3 px-2 rounded-xl text-center transition-all ${
-              isSelected
-                ? 'bg-violet-500 text-white'
-                : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-            } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            variant="purple"
+            className="flex-none"
           >
             <div className="font-semibold">{preset.name}</div>
             <div className="text-xs opacity-75">
               {preset.fastHours}h fast
             </div>
-          </button>
+          </SelectionButton>
         )
       })}
     </div>

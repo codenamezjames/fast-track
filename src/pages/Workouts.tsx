@@ -1,23 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Plus, Dumbbell, Clock, Play, Trash2, Check, Pencil } from 'lucide-react'
+import IconButton from '../components/ui/IconButton'
 import { useWorkoutsStore, type Exercise, type WorkoutRoutine, type WorkoutLog } from '../stores/workoutsStore'
+import { formatTimeAgo } from '../lib/dateUtils'
 import CreateRoutineModal from '../components/workouts/CreateRoutineModal'
 import EditRoutineModal from '../components/workouts/EditRoutineModal'
 import EditWorkoutLogModal from '../components/workouts/EditWorkoutLogModal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 import Button from '../components/ui/Button'
 import SuccessCelebration from '../components/ui/SuccessCelebration'
-
-function formatTimeAgo(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffDays > 0) return `${diffDays}d ago`
-  if (diffHours > 0) return `${diffHours}h ago`
-  return 'Just now'
-}
 
 export default function Workouts() {
   const {
@@ -98,12 +89,12 @@ export default function Workouts() {
     <div className="p-4 pb-24">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Workouts</h1>
-        <button
+        <IconButton
+          icon={<Plus size={24} />}
           onClick={() => setModalOpen(true)}
-          className="bg-red-500 text-white p-2 rounded-full"
-        >
-          <Plus size={24} />
-        </button>
+          variant="red"
+          size="lg"
+        />
       </div>
 
       {/* Active Workout */}
@@ -200,25 +191,24 @@ export default function Workouts() {
                 </div>
                 <div className="flex items-center gap-2">
                   {!activeWorkout && (
-                    <button
+                    <IconButton
+                      icon={<Play size={18} />}
                       onClick={() => handleStartWorkout(routine.id)}
-                      className="p-2 bg-red-500 rounded-full"
-                    >
-                      <Play size={18} />
-                    </button>
+                      variant="red"
+                    />
                   )}
-                  <button
+                  <IconButton
+                    icon={<Pencil size={18} />}
                     onClick={() => handleEditRoutine(routine)}
-                    className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-full"
-                  >
-                    <Pencil size={18} />
-                  </button>
-                  <button
+                    variant="red"
+                    appearance="ghost"
+                  />
+                  <IconButton
+                    icon={<Trash2 size={18} />}
                     onClick={() => deleteRoutine(routine.id)}
-                    className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-full"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                    variant="red"
+                    appearance="ghost"
+                  />
                 </div>
               </div>
             ))}
@@ -259,18 +249,18 @@ export default function Workouts() {
                     <span>{log.duration} min</span>
                   </div>
                   <div className="flex gap-1">
-                    <button
+                    <IconButton
+                      icon={<Pencil size={16} />}
                       onClick={() => handleEditLog(log)}
-                      className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                    >
-                      <Pencil size={16} />
-                    </button>
-                    <button
+                      variant="red"
+                      appearance="ghost"
+                    />
+                    <IconButton
+                      icon={<Trash2 size={16} />}
                       onClick={() => handleDeleteLogClick(log)}
-                      className="p-2 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                      variant="red"
+                      appearance="ghost"
+                    />
                   </div>
                 </div>
               </div>

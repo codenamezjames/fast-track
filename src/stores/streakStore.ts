@@ -9,6 +9,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
+import { getDateString, getWeekDates } from '../lib/dateUtils'
 import { useAuthStore } from './authStore'
 
 // Milestones to celebrate
@@ -52,21 +53,6 @@ interface StreakState {
   triggerDailyGoal: () => void
   getStreakIntensity: () => 'cold' | 'warm' | 'hot' | 'fire' | 'inferno'
   isTodayComplete: () => boolean
-}
-
-function getDateString(date: Date = new Date()): string {
-  return date.toISOString().split('T')[0]
-}
-
-function getWeekDates(): string[] {
-  const dates: string[] = []
-  const today = new Date()
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today)
-    d.setDate(d.getDate() - i)
-    dates.push(getDateString(d))
-  }
-  return dates
 }
 
 const defaultStreakData: StreakData = {
