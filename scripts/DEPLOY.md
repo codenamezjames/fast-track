@@ -247,6 +247,34 @@ docker exec fast-track-mongo mongosh -u admin -p $MONGO_PASSWORD --authenticatio
 └─────────────────────────────────────────────────────────┘
 ```
 
+## Public Domain Access (Cloudflare Tunnel)
+
+If you have a Cloudflare tunnel configured, update `/etc/cloudflared/config.yml`:
+
+```yaml
+ingress:
+  - hostname: ft.theflyingdutchman.online
+    service: http://localhost:8088
+  - hostname: api-ft.theflyingdutchman.online
+    service: http://localhost:3000
+  - service: http_status:404
+```
+
+Then restart the tunnel:
+
+```bash
+sudo systemctl restart cloudflared
+```
+
+Make sure your `.env` includes both origins for CORS:
+
+```env
+CORS_ORIGIN=http://theflyingdutchman.local:8088,https://ft.theflyingdutchman.online
+VITE_API_URL=https://api-ft.theflyingdutchman.online/api
+```
+
+---
+
 ## File Locations
 
 | What | Where |
@@ -256,3 +284,4 @@ docker exec fast-track-mongo mongosh -u admin -p $MONGO_PASSWORD --authenticatio
 | MongoDB data | Docker volume `fast-track_mongo_data` |
 | Deploy logs | `journalctl -u fast-track-deploy` |
 | Container logs | `docker compose logs` |
+| Cloudflare config | `/etc/cloudflared/config.yml` |
