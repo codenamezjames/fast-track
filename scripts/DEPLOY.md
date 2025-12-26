@@ -51,7 +51,7 @@ cd /opt/fast-track
 docker compose up -d
 ```
 
-Access the app at: `http://theflyingdutchman.local:8080`
+Access the app at: `http://theflyingdutchman.local:8088`
 
 ---
 
@@ -238,7 +238,7 @@ docker exec fast-track-mongo mongosh -u admin -p $MONGO_PASSWORD --authenticatio
 │                                                         │
 │  ┌───────────┐    ┌───────────┐    ┌───────────────┐   │
 │  │   Web     │───▶│    API    │───▶│   MongoDB     │   │
-│  │  :8080    │    │   :3000   │    │    :27017     │   │
+│  │  :8088    │    │   :3000   │    │    :27017     │   │
 │  │  (nginx)  │    │ (Express) │    │   (mongo:7)   │   │
 │  └───────────┘    └───────────┘    └───────────────┘   │
 │                                                         │
