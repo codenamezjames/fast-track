@@ -13,6 +13,8 @@ import activitiesRoutes from './routes/activities.js'
 import measurementsRoutes from './routes/measurements.js'
 import fastsRoutes from './routes/fasts.js'
 import streaksRoutes from './routes/streaks.js'
+import notificationsRoutes from './routes/notifications.js'
+import { initScheduler } from './scheduler/index.js'
 
 dotenv.config()
 
@@ -41,6 +43,7 @@ app.get('/api/health', (_req, res) => {
 
 // Public routes
 app.use('/api/auth', authRoutes)
+app.use('/api/notifications', notificationsRoutes) // Has its own auth for specific routes
 
 // Protected routes
 app.use('/api/meals', authMiddleware, mealsRoutes)
@@ -68,6 +71,7 @@ app.use(
 const start = async () => {
   try {
     await connectDB()
+    initScheduler()
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`)
     })

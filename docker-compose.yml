@@ -25,6 +25,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-in-production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8088}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@example.com}
     ports:
       - "3000:3000"
     depends_on:
@@ -37,6 +40,7 @@ services:
       context: ./packages/web
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+        VITE_VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
     container_name: fast-track-web
     restart: unless-stopped
     ports:

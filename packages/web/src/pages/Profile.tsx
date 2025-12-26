@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { User, Scale, Ruler, Target, Plus, Settings, LogOut, Activity, ChevronDown, ChevronUp, TrendingDown, Edit2 } from 'lucide-react'
+import { User, Scale, Ruler, Target, Plus, Settings, LogOut, Activity, ChevronDown, ChevronUp, TrendingDown, Edit2, Bell } from 'lucide-react'
 import IconButton from '../components/ui/IconButton'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
@@ -10,6 +10,7 @@ import EditGoalsModal from '../components/profile/EditGoalsModal'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 import SuccessCelebration from '../components/ui/SuccessCelebration'
+import { NotificationSettings } from '../components/notifications'
 
 function getBMICategory(bmi: number): { label: string; color: string } {
   if (bmi < 18.5) return { label: 'Underweight', color: 'text-yellow-400' }
@@ -347,6 +348,15 @@ export default function Profile() {
             </Button>
           </div>
         )}
+      </div>
+
+      {/* Notifications */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+          <Bell size={18} className="text-primary" />
+          Notifications
+        </h2>
+        <NotificationSettings />
       </div>
 
       <div>

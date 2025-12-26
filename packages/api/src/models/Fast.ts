@@ -7,6 +7,8 @@ export interface IFast extends Document {
   goalHours: number
   completed: boolean
   notes?: string
+  notified80Percent: boolean
+  notifiedComplete: boolean
 }
 
 const fastSchema = new mongoose.Schema<IFast>({
@@ -31,6 +33,14 @@ const fastSchema = new mongoose.Schema<IFast>({
     default: false,
   },
   notes: String,
+  notified80Percent: {
+    type: Boolean,
+    default: false,
+  },
+  notifiedComplete: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 fastSchema.index({ userId: 1, startTime: -1 })
