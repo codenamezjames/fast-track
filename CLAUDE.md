@@ -34,6 +34,12 @@ npm run preview
 
 # Linting
 npm run lint
+
+# Testing
+npm test              # Run tests once
+npm run test:watch    # Run tests in watch mode (API only)
+npm run test:ui       # Run tests with UI (Web only)
+npm run test:coverage # Run tests with coverage report
 ```
 
 ## Project Structure
@@ -212,3 +218,87 @@ The app includes a comprehensive animation library defined in `src/index.css`:
 | Activity | Blue | `#3b82f6` |
 | Fasting | Purple | `#8b5cf6` |
 | Profile/General | Primary | `#1976d2` |
+
+## Testing
+
+### Frontend Testing (Vitest + React Testing Library)
+
+The web package uses Vitest for unit and component testing.
+
+```bash
+cd packages/web
+npm test              # Run tests once
+npm run test:ui       # Run tests with interactive UI
+npm run test:coverage # Generate coverage report
+```
+
+**Test Structure:**
+- `*.test.ts` - Unit tests for utilities and stores
+- `*.test.tsx` - Component tests
+- `src/test/setup.ts` - Global test configuration
+
+**Example Tests:**
+- `src/lib/dateUtils.test.ts` - Utility function tests
+- `src/components/ui/Button.test.tsx` - Component tests
+- `src/stores/settingsStore.test.ts` - Zustand store tests
+
+**Writing Tests:**
+```typescript
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+describe('Component', () => {
+  it('should render', () => {
+    render(<Component />)
+    expect(screen.getByText('Hello')).toBeInTheDocument()
+  })
+})
+```
+
+### Backend Testing (Jest + Supertest + MongoDB Memory Server)
+
+The API package uses Jest for unit and integration testing.
+
+```bash
+cd packages/api
+npm test              # Run tests once
+npm run test:watch    # Run tests in watch mode
+npm run test:coverage # Generate coverage report
+```
+
+**Test Structure:**
+- `*.test.ts` - Unit and integration tests
+- `src/test/setup.ts` - MongoDB Memory Server helpers
+- `src/test/testApp.ts` - Express app for testing
+
+**Example Tests:**
+- `src/models/User.test.ts` - Model tests
+- `src/routes/auth.test.ts` - Route/API endpoint tests
+
+**Writing Tests:**
+```typescript
+import request from 'supertest'
+import { createTestApp } from '../test/testApp'
+import { connectTestDB, clearTestDB, disconnectTestDB } from '../test/setup'
+
+const app = createTestApp()
+
+describe('API Endpoint', () => {
+  beforeAll(async () => await connectTestDB())
+  afterEach(async () => await clearTestDB())
+  afterAll(async () => await disconnectTestDB())
+
+  it('should return data', async () => {
+    const response = await request(app)
+      .get('/api/endpoint')
+      .expect(200)
+
+    expect(response.body).toBeDefined()
+  })
+})
+```
+
+### Continuous Integration
+
+Tests run automatically on GitHub Actions for all pull requests and pushes to main/master/develop branches. See `.github/workflows/test.yml`.
