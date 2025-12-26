@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fast Track is a personal fitness and lifestyle tracking PWA built with React, TypeScript, and Firebase. Features include meal logging with AI food analysis, workout tracking with custom routines, GPS activity tracking, and body measurements/BMI tracking.
+Fast Track is a personal fitness and lifestyle tracking PWA built with React, TypeScript, and a custom Express/MongoDB backend. Features include meal logging with AI food analysis, workout tracking with custom routines, GPS activity tracking, and body measurements/BMI tracking.
 
 ## Tech Stack
 
-- **Frontend**: React 18 + TypeScript + Vite
+- **Frontend**: React 19 + TypeScript + Vite
 - **State**: Zustand
 - **Styling**: Tailwind CSS v4
-- **Backend**: Firebase (Auth, Firestore)
-- **Routing**: React Router v6 (HashRouter for GitHub Pages)
+- **Backend**: Express.js + MongoDB (JWT auth)
+- **Routing**: React Router v7 (HashRouter for GitHub Pages)
 - **Icons**: Lucide React
 - **Food Database**: OpenFoodFacts API
 - **AI Food Analysis**: Google Cloud Vision API
@@ -34,18 +34,37 @@ npm run preview
 
 # Linting
 npm run lint
-
-# Native builds (Capacitor)
-npm run build:ios      # Build for iOS
-npm run build:android  # Build for Android
-npm run open:ios       # Open iOS project in Xcode
-npm run open:android   # Open Android project in Android Studio
 ```
+
+## Project Structure
+
+This is a monorepo using npm workspaces:
+
+```
+fast-track/
+├── packages/
+│   ├── api/          # Express.js backend (MongoDB, JWT auth)
+│   └── web/          # React frontend (Vite, Tailwind)
+├── docker-compose.yml
+└── package.json      # Workspace root
+```
+
+### API Package (`packages/api`)
+- Express.js REST API
+- MongoDB with Mongoose ODM
+- JWT authentication (access + refresh tokens)
+- Routes: auth, meals, routines, workout-logs, activities, measurements, fasts, streaks
+
+### Web Package (`packages/web`)
+- React 19 + TypeScript + Vite
+- Zustand state management
+- Tailwind CSS v4
+- PWA with offline support
 
 ## Architecture
 
 ### Data Flow
-Components -> Zustand stores -> Firebase Firestore
+Components -> Zustand stores -> REST API -> MongoDB
 
 ### Stores
 - `src/stores/authStore.ts` - Authentication state and actions
@@ -56,7 +75,6 @@ Components -> Zustand stores -> Firebase Firestore
 - `src/stores/fastingStore.ts` - Intermittent fasting timer
 - `src/stores/streakStore.ts` - Duolingo-style streak system
 - `src/stores/settingsStore.ts` - User goals and preferences
-- `src/stores/healthStore.ts` - Health app integration (Capacitor Health Connect)
 
 ## Key Directories
 
@@ -70,7 +88,7 @@ Components -> Zustand stores -> Firebase Firestore
   - `src/components/streak/` - Streak and celebration components
   - `src/components/dashboard/` - Dashboard widgets
 - `src/stores/` - Zustand stores
-- `src/lib/` - Utilities (dateUtils, macroUtils, Firebase config)
+- `src/lib/` - Utilities (dateUtils, macroUtils, api client)
 - `src/hooks/` - Custom React hooks (useListForm, useManualEntry, useCelebrationPhase)
 - `public/` - Static assets, PWA icons
 
@@ -99,38 +117,50 @@ Components -> Zustand stores -> Firebase Firestore
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` and configure:
-
+### Web Package (`packages/web/.env.local`)
 ```env
-VITE_FIREBASE_API_KEY=your-api-key
-VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123456789:web:abc123
+VITE_API_URL=http://localhost:3000/api
 VITE_GOOGLE_CLOUD_VISION_API_KEY=your-vision-api-key
+```
+
+### API Package (`packages/api/.env`)
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/fast-track
+JWT_SECRET=your-jwt-secret
+JWT_REFRESH_SECRET=your-refresh-secret
 ```
 
 ## Development Notes
 
 - Personal use app - single user, simplified auth flow
-- PWA with offline support via Firestore persistence
+- PWA with offline support
 - Mobile-first design with bottom navigation
 - HashRouter used for GitHub Pages compatibility
-- All pages have placeholder content ready for feature implementation
+- Monorepo structure with npm workspaces
 
-## GitHub Pages Deployment
+## Deployment
 
-The app is automatically deployed to GitHub Pages via GitHub Actions when pushing to the `main` branch. Make sure to configure the Firebase secrets in your repository settings.
+### Local Development (Docker)
+```bash
+npm run up        # Start all services (MongoDB, API, Web)
+npm run down      # Stop all services
+npm run logs      # View logs
+npm run rebuild   # Rebuild and restart
+```
+
+### GitHub Pages
+The web frontend can be deployed to GitHub Pages via GitHub Actions. Configure `API_URL` secret in repository settings to point to your hosted API.
 
 ## Feature Implementation Status
 
-- [x] Phase 1: Foundation (scaffold, Firebase, auth, navigation, dark theme)
+- [x] Phase 1: Foundation (scaffold, auth, navigation, dark theme)
 - [x] Phase 2: Meals (food tracking, OpenFoodFacts, barcode scanning)
 - [x] Phase 3: Workouts (strength training, custom routines, workout logs)
 - [x] Phase 4: Measurements (weight, height, BMI, daily goals)
 - [x] Phase 5: Activity (timer-based tracking, manual distance entry)
-- [x] Phase 6: Polish (PWA install prompt, enhanced offline, Capacitor + Health integration)
+- [x] Phase 6: Polish (PWA install prompt, enhanced offline)
+- [x] Phase 7: Backend Migration (Express/MongoDB API, JWT auth, Docker)
 
 ## Animation System
 
@@ -140,14 +170,6 @@ The app includes a comprehensive animation library defined in `src/index.css`:
 - Success celebrations (`SuccessCelebration` component)
 - Button micro-interactions (hover scale 1.02x, active press 0.98x)
 - Utility animations (float, wiggle, pulse)
-
-## Native App (Capacitor)
-
-The app supports native iOS/Android builds via Capacitor:
-- `capacitor.config.ts` - Capacitor configuration
-- `ios/` - iOS native project
-- `android/` - Android native project
-- Health app integration via capacitor-health plugin (currently read-only sync)
 
 ## Shared Utilities
 
