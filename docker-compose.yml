@@ -24,7 +24,7 @@ services:
       MONGODB_URI: mongodb://admin:${MONGO_PASSWORD:-changeme}@mongodb:27017/fasttrack?authSource=admin
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-in-production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8088}
     ports:
       - "3000:3000"
     depends_on:
