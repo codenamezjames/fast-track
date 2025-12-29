@@ -30,10 +30,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column({ serializeAs: null })
   declare password: string
 
-  @column({
-    prepare: (value: Record<string, any>) => JSON.stringify(value),
-    consume: (value: string) => JSON.parse(value),
-  })
+  @column()
   declare notificationPreferences: Record<string, any>
 
   @column.dateTime({ autoCreate: true })
