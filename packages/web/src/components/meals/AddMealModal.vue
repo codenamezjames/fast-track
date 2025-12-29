@@ -76,7 +76,7 @@ function handleClose() {
 </script>
 
 <template>
-  <Modal :open="open" title="Add Meal" size="lg" @close="handleClose">
+  <Modal :model-value="open" title="Add Meal" max-width="lg" @update:model-value="(val) => !val && handleClose()">
     <div class="add-meal-modal">
       <!-- Meal Type Selection -->
       <div class="add-meal-modal__section">
