@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY packages/web/package*.json ./packages/web/
 
 # Install dependencies
-RUN npm ci --workspace=@fast-track/web
+RUN npm ci --workspace=web
 
 # Copy source code
 COPY packages/web ./packages/web

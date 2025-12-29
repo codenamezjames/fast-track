@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY packages/api/package*.json ./packages/api/
 
 # Install dependencies
-RUN npm ci --workspace=@fast-track/api
+RUN npm ci --workspace=api
 
 # Copy source code
 COPY packages/api ./packages/api
@@ -30,7 +30,7 @@ COPY package*.json ./
 COPY packages/api/package*.json ./packages/api/
 
 # Install production dependencies only
-RUN npm ci --workspace=@fast-track/api --omit=dev
+RUN npm ci --workspace=api --omit=dev
 
 # Copy built application
 COPY --from=builder /app/packages/api/build ./packages/api/build
