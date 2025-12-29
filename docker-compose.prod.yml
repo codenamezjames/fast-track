@@ -1,0 +1,109 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fast-track-v2-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-fast_track}
+    volumes:
+      - fast_track_v2_postgres_data:/var/lib/postgresql/data
+    networks:
+      - fast-track-v2-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fast-track-v2-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - fast_track_v2_redis_data:/data
+    networks:
+      - fast-track-v2-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    container_name: fast-track-v2-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      LOG_LEVEL: info
+      APP_KEY: ${APP_KEY}
+      SESSION_DRIVER: cookie
+      # Database
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_DATABASE: ${POSTGRES_DB:-fast_track}
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      # CORS
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://ft.theflyingdutchman.online}
+      # VAPID (for Web Push)
+      VAPID_SUBJECT: ${VAPID_SUBJECT}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fast-track-v2-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  web:
+    build:
+      context: ./packages/web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api-ft.theflyingdutchman.online/api}
+        VITE_VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+    container_name: fast-track-v2-web
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    depends_on:
+      - api
+    networks:
+      - fast-track-v2-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  fast_track_v2_postgres_data:
+    driver: local
+  fast_track_v2_redis_data:
+    driver: local
+
+networks:
+  fast-track-v2-network:
+    driver: bridge
