@@ -1,58 +1,42 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  /* Color Palette - Dark Theme First */
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-surface-variant: #334155;
+@layer base {
+  :root {
+    /* Color Palette - Dark Theme First */
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-surface-variant: #334155;
 
-  --color-primary: #1976d2;
-  --color-primary-dark: #1565c0;
-  --color-primary-light: #42a5f5;
+    --color-primary: #1976d2;
+    --color-primary-dark: #1565c0;
+    --color-primary-light: #42a5f5;
 
-  --color-secondary: #26a69a;
-  --color-secondary-dark: #00897b;
-  --color-secondary-light: #4db6ac;
+    --color-secondary: #26a69a;
+    --color-secondary-dark: #00897b;
+    --color-secondary-light: #4db6ac;
 
-  --color-accent: #9c27b0;
+    --color-accent: #9c27b0;
 
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-  --color-success: #10b981;
-  --color-info: #3b82f6;
+    --color-error: #ef4444;
+    --color-warning: #f59e0b;
+    --color-success: #10b981;
+    --color-info: #3b82f6;
 
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-disabled: #64748b;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #cbd5e1;
+    --color-text-disabled: #64748b;
 
-  --color-border: #334155;
-  --color-divider: #1e293b;
+    --color-border: #334155;
+    --color-divider: #1e293b;
 
-  /* Section Colors */
-  --color-meals: #f97316; /* orange */
-  --color-workouts: #ef4444; /* red */
-  --color-activity: #3b82f6; /* blue */
-  --color-fasting: #8b5cf6; /* purple */
-
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-
-  /* Border Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    /* Section Colors */
+    --color-meals: #f97316;
+    --color-workouts: #ef4444;
+    --color-activity: #3b82f6;
+    --color-fasting: #8b5cf6;
+  }
 }
 
 /* Base Styles */
