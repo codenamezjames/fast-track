@@ -67,7 +67,6 @@ export default function Dashboard() {
     fetchStreak,
     dismissMilestone,
     dismissDailyGoal,
-    triggerDailyGoal,
     getStreakIntensity,
     isTodayComplete,
   } = useStreakStore()
@@ -156,7 +155,7 @@ export default function Dashboard() {
               count={streakData.currentStreak}
               intensity={getStreakIntensity()}
               size="lg"
-              onClick={triggerDailyGoal}
+              onClick={() => navigate('/streaks')}
             />
             <StreakFreezeIndicator
               available={streakData.freezesAvailable}

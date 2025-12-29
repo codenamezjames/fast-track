@@ -72,3 +72,38 @@ export function formatElapsedTime(ms: number): string {
   }
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
+
+// Month utilities
+
+export function getStartOfMonth(date: Date = new Date()): Date {
+  const d = new Date(date)
+  d.setDate(1)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+export function getEndOfMonth(date: Date = new Date()): Date {
+  const d = new Date(date)
+  d.setMonth(d.getMonth() + 1)
+  d.setDate(0) // Last day of previous month
+  d.setHours(23, 59, 59, 999)
+  return d
+}
+
+export function getMonthDates(month: Date = new Date()): string[] {
+  const dates: string[] = []
+  const start = getStartOfMonth(month)
+  const end = getEndOfMonth(month)
+
+  const current = new Date(start)
+  while (current <= end) {
+    dates.push(getDateString(current))
+    current.setDate(current.getDate() + 1)
+  }
+
+  return dates
+}
+
+export function formatMonthYear(date: Date): string {
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}

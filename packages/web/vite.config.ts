@@ -6,6 +6,16 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   // Base path - use VITE_BASE_PATH for Docker (default '/'), '/fast-track/' for GitHub Pages
   base: process.env.VITE_BASE_PATH || (process.env.GITHUB_ACTIONS ? '/fast-track/' : '/'),
+  server: {
+    host: '0.0.0.0',  // Listen on all interfaces for Docker
+    port: 5173,
+    hmr: {
+      clientPort: 5173,  // Match exposed port
+    },
+    watch: {
+      usePolling: true,  // Required for Docker volume file watching
+    },
+  },
   plugins: [
     react(),
     VitePWA({

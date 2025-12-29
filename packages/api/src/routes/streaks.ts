@@ -64,6 +64,63 @@ router.get('/daily-activities', async (req: AuthRequest, res: Response) => {
   }
 })
 
+// GET /api/streaks/history - Get historical activity data with stats
+router.get('/history', async (req: AuthRequest, res: Response) => {
+  try {
+    const { startDate, endDate } = req.query
+
+    if (!startDate || !endDate || typeof startDate !== 'string' || typeof endDate !== 'string') {
+      res.status(400).json({ error: 'startDate and endDate query parameters required (YYYY-MM-DD)' })
+      return
+    }
+
+    // Fetch activities in date range
+    const activities = await DailyActivity.find({
+      userId: req.userId,
+      date: { $gte: startDate, $lte: endDate },
+    }).sort({ date: 1 })
+
+    // Calculate statistics
+    const totalDays = activities.length
+    const activeDays = activities.filter((a) => a.streakMaintained).length
+    const completionRate = totalDays > 0 ? Math.round((activeDays / totalDays) * 100) : 0
+
+    // Day of week breakdown (0 = Sunday, 6 = Saturday)
+    const dayOfWeekCounts = [0, 0, 0, 0, 0, 0, 0]
+    activities.forEach((a) => {
+      if (a.streakMaintained) {
+        const dayOfWeek = new Date(a.date).getDay()
+        dayOfWeekCounts[dayOfWeek]++
+      }
+    })
+
+    const dayOfWeekBreakdown = dayOfWeekCounts.map((count, day) => ({ day, count }))
+    const bestDayOfWeek = dayOfWeekCounts.indexOf(Math.max(...dayOfWeekCounts))
+
+    // Activity type breakdown
+    const activityBreakdown = {
+      fasting: activities.filter((a) => a.fastCompleted).length,
+      meals: activities.filter((a) => a.mealsLogged).length,
+      workouts: activities.filter((a) => a.workoutCompleted).length,
+    }
+
+    res.json({
+      activities,
+      stats: {
+        totalDays,
+        activeDays,
+        completionRate,
+        bestDayOfWeek,
+        dayOfWeekBreakdown,
+        activityBreakdown,
+      },
+    })
+  } catch (error) {
+    console.error('Get streak history error:', error)
+    res.status(500).json({ error: 'Failed to fetch streak history' })
+  }
+})
+
 // PUT /api/daily-activities/:date - Upsert daily activity for date
 router.put('/daily-activities/:date', async (req: AuthRequest, res: Response) => {
   try {

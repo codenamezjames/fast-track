@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { api } from '../lib/api'
-import { getDateString, getWeekDates } from '../lib/dateUtils'
+import { getDateString, getWeekDates, getStartOfMonth, getEndOfMonth } from '../lib/dateUtils'
 import { useAuthStore } from './authStore'
 
 export const MILESTONES = [3, 7, 14, 30, 50, 100, 150, 200, 365, 500, 1000]
@@ -45,6 +45,20 @@ interface DailyActivityResponse {
   streakMaintained: boolean
 }
 
+export interface HistoryStats {
+  totalDays: number
+  activeDays: number
+  completionRate: number
+  bestDayOfWeek: number
+  dayOfWeekBreakdown: { day: number; count: number }[]
+  activityBreakdown: { fasting: number; meals: number; workouts: number }
+}
+
+interface HistoryResponse {
+  activities: DailyActivityResponse[]
+  stats: HistoryStats
+}
+
 interface StreakState {
   streakData: StreakData
   weekActivities: DailyActivity[]
@@ -52,6 +66,12 @@ interface StreakState {
   loading: boolean
   showMilestone: number | null
   showDailyGoal: boolean
+
+  // History state
+  monthActivities: DailyActivity[]
+  selectedMonth: Date
+  historyStats: HistoryStats | null
+  historyLoading: boolean
 
   fetchStreak: () => Promise<void>
   updateTodayActivity: (activity: Partial<DailyActivity>) => Promise<void>
@@ -63,6 +83,10 @@ interface StreakState {
   triggerDailyGoal: () => void
   getStreakIntensity: () => 'cold' | 'warm' | 'hot' | 'fire' | 'inferno'
   isTodayComplete: () => boolean
+
+  // History actions
+  fetchMonthHistory: (month: Date) => Promise<void>
+  setSelectedMonth: (month: Date) => void
 }
 
 const defaultStreakData: StreakData = {
@@ -82,6 +106,12 @@ export const useStreakStore = create<StreakState>((set, get) => ({
   loading: false,
   showMilestone: null,
   showDailyGoal: false,
+
+  // History state
+  monthActivities: [],
+  selectedMonth: new Date(),
+  historyStats: null,
+  historyLoading: false,
 
   fetchStreak: async () => {
     const user = useAuthStore.getState().user
@@ -344,5 +374,43 @@ export const useStreakStore = create<StreakState>((set, get) => ({
   isTodayComplete: () => {
     const { todayActivity } = get()
     return todayActivity?.streakMaintained ?? false
+  },
+
+  // History actions
+  fetchMonthHistory: async (month: Date) => {
+    const user = useAuthStore.getState().user
+    if (!user) return
+
+    set({ historyLoading: true })
+    try {
+      const startDate = getDateString(getStartOfMonth(month))
+      const endDate = getDateString(getEndOfMonth(month))
+
+      const response = await api.get<HistoryResponse>(
+        `/streaks/history?startDate=${startDate}&endDate=${endDate}`
+      )
+
+      const activities: DailyActivity[] = response.activities.map((a) => ({
+        date: a.date,
+        fastCompleted: a.fastCompleted,
+        mealsLogged: a.mealsLogged,
+        workoutCompleted: a.workoutCompleted,
+        streakMaintained: a.streakMaintained,
+      }))
+
+      set({
+        monthActivities: activities,
+        historyStats: response.stats,
+        historyLoading: false,
+      })
+    } catch (error) {
+      console.error('Error fetching month history:', error)
+      set({ historyLoading: false })
+    }
+  },
+
+  setSelectedMonth: (month: Date) => {
+    set({ selectedMonth: month })
+    get().fetchMonthHistory(month)
   },
 }))

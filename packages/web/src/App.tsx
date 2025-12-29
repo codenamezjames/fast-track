@@ -6,6 +6,7 @@ import Meals from './pages/Meals'
 import Workouts from './pages/Workouts'
 import Activity from './pages/Activity'
 import Profile from './pages/Profile'
+import Streaks from './pages/Streaks'
 import Login from './pages/Login'
 import { InstallPrompt, OfflineIndicator, UpdatePrompt } from './components/pwa'
 import { usePWA } from './hooks/usePWA'
@@ -31,6 +32,7 @@ export default function App() {
       />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/streaks" element={<Streaks />} />
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/fasting" element={<Fasting />} />
