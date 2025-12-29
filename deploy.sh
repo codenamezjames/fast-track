@@ -7,7 +7,7 @@ SERVER_HOST="theflyingdutchman.local"
 SERVER_USER="theflyingdutchman"
 DEPLOY_DIR="/home/theflyingdutchman/dev/fast-track-v2"
 OLD_DIR="/home/theflyingdutchman/dev/fast-track"
-REPO_URL="https://github.com/yourusername/fast-track.git"  # Update with your repo URL
+REPO_URL="https://github.com/codenamezjames/fast-track.git"
 
 echo "🚀 Fast Track v2 Deployment Script"
 echo "=================================="

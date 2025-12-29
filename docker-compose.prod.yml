@@ -34,8 +34,8 @@ services:
 
   api:
     build:
-      context: ./packages/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./packages/api/Dockerfile
     container_name: fast-track-v2-api
     restart: unless-stopped
     environment:
@@ -79,8 +79,8 @@ services:
 
   web:
     build:
-      context: ./packages/web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./packages/web/Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL:-https://api-ft.theflyingdutchman.online/api}
         VITE_VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
