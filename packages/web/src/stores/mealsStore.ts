@@ -56,7 +56,13 @@ export const useMealsStore = defineStore('meals', () => {
     error.value = null
 
     try {
-      const response = await api.post<{ meal: Meal }>('/meals', data)
+      // Format date as YYYY-MM-DD for backend validator
+      const formattedDate = data.date.toISOString().split('T')[0]
+
+      const response = await api.post<{ meal: Meal }>('/meals', {
+        ...data,
+        date: formattedDate,
+      })
       meals.value.unshift(response.data.meal)
       return response.data.meal
     } catch (err: any) {
@@ -80,7 +86,13 @@ export const useMealsStore = defineStore('meals', () => {
     error.value = null
 
     try {
-      const response = await api.put<{ meal: Meal }>(`/meals/${id}`, data)
+      // Format date as YYYY-MM-DD for backend validator if provided
+      const payload = { ...data }
+      if (payload.date) {
+        payload.date = payload.date.toISOString().split('T')[0] as any
+      }
+
+      const response = await api.put<{ meal: Meal }>(`/meals/${id}`, payload)
       const index = meals.value.findIndex((m) => m.id === id)
       if (index !== -1) {
         meals.value[index] = response.data.meal
