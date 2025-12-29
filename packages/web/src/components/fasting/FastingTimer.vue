@@ -45,7 +45,7 @@ async function handleEnd() {
           <Timer :size="48" :stroke-width="1.5" />
         </div>
         <p class="fasting-timer__empty-text">No active fast</p>
-        <Button variant="primary" @click="handleStart">
+        <Button variant="fasting" @click="handleStart">
           <Play :size="18" />
           Start Fasting
         </Button>

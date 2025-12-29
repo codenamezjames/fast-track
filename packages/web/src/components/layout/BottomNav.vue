@@ -11,14 +11,15 @@ interface NavItem {
   path: string
   icon: any
   label: string
+  color: string
 }
 
 const navItems: NavItem[] = [
-  { name: 'dashboard', path: '/', icon: Home, label: 'Home' },
-  { name: 'meals', path: '/meals', icon: Utensils, label: 'Meals' },
-  { name: 'workouts', path: '/workouts', icon: Dumbbell, label: 'Workouts' },
-  { name: 'activity', path: '/activity', icon: Activity, label: 'Activity' },
-  { name: 'fasting', path: '/fasting', icon: Timer, label: 'Fasting' },
+  { name: 'dashboard', path: '/', icon: Home, label: 'Home', color: 'var(--color-primary)' },
+  { name: 'meals', path: '/meals', icon: Utensils, label: 'Meals', color: 'var(--color-meals)' },
+  { name: 'workouts', path: '/workouts', icon: Dumbbell, label: 'Workouts', color: 'var(--color-workouts)' },
+  { name: 'activity', path: '/activity', icon: Activity, label: 'Activity', color: 'var(--color-activity)' },
+  { name: 'fasting', path: '/fasting', icon: Timer, label: 'Fasting', color: 'var(--color-fasting)' },
 ]
 
 const isActive = computed(() => (path: string) => {
@@ -36,6 +37,7 @@ function navigate(path: string) {
       v-for="item in navItems"
       :key="item.name"
       :class="['bottom-nav__item', { 'bottom-nav__item--active': isActive(item.path) }]"
+      :style="{ color: isActive(item.path) ? item.color : undefined }"
       @click="navigate(item.path)"
     >
       <component :is="item.icon" :size="24" :stroke-width="isActive(item.path) ? 2.5 : 2" />
@@ -75,10 +77,6 @@ function navigate(path: string) {
 
 .bottom-nav__item:active {
   transform: scale(0.95);
-}
-
-.bottom-nav__item--active {
-  color: var(--color-primary);
 }
 
 .bottom-nav__label {
