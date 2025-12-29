@@ -20,10 +20,19 @@ export function useDateUtils() {
   /**
    * Format date as YYYY-MM-DD
    */
-  function getDateString(date: Date = new Date()): string {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
+  function getDateString(date?: Date | string): string {
+    let d: Date
+    if (!date) {
+      d = new Date()
+    } else if (typeof date === 'string') {
+      d = new Date(date)
+    } else {
+      d = date
+    }
+
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
     return `${year}-${month}-${day}`
   }
 
