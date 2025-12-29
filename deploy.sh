@@ -139,7 +139,7 @@ ssh ${SERVER_USER}@${SERVER_HOST} << ENDSSH
     cd ${DEPLOY_DIR}
 
     echo "Running migrations..."
-    docker compose -f docker-compose.prod.yml exec -T api node ace migration:run --force
+    docker compose -f docker-compose.prod.yml exec -T api node build/ace.js migration:run --force
 
     echo "✓ Migrations completed"
 ENDSSH
